@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>D3 Server-side Demo</title>
+    <title>Bitemporal Document Insert/Update Demo</title>
 
     <style>
       body {
@@ -19,32 +19,65 @@
         stroke-width: 1px;
       }
 
-      .svg-chart .bar { fill: #4682B4; }
+      .svg-chart .g { fill: #4682B4; }
+
+      #tooltip {
+              position: absolute;
+              width: auto;
+              height: auto;
+              padding: 10px;
+              background-color: white;
+              -webkit-border-radius: 10px;
+              -moz-border-radius: 10px;
+              border-radius: 10px;
+              -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+              -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+              box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+              pointer-events: none;
+      }
+
+      #tooltip.hidden {
+              display: none;
+      }
+
+      #tooltip p {
+              margin: 0;
+              font-family: sans-serif;
+              font-size: 15px;
+              line-height: 18px;
+      }
     </style>
 
   </head>
   <body>
-    <h1>D3 Server-side Demo</h1>
-    <%-
-      barChartHelper.getBarChart({
-        data: fixtureData,
-        width: 400,
-        height: 300,
-        xAxisLabel: '2012',
-        yAxisLabel: 'Views',
-        containerId: 'bar-chart-small'
-      })
-    %>
-    <hr>
-    <%-
-      barChartHelper.getBarChart({
-        data: fixtureData,
+    <h1>MarkLogic Bitemporal Visualization Demo</h1>
+    <div id="tooltip" class="hidden">
+        <p><strong>Content</strong></p>
+        <p><span id="value"></span></p>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="public/moment.js"></script>
+    <script type="text/javascript" src="public/d3.js"></script>
+    <script type="text/javascript" src="public/bar_chart.js"></script>
+    <script type="text/javascript" src="public/bar_chart_helper.js"></script>
+    <div id="option">
+    <input name="updateButton" 
+                 type="button" 
+                value="Update" 
+                onclick="updateBarChart()" />
+    </div>
+    <div id="bar-chart-large"></div>
+    <script type="text/javascript">
+    $.get( "/data", function( data ) {
+      getBarChart({
+        data: data,
         width: 800,
         height: 600,
-        xAxisLabel: '2012',
-        yAxisLabel: 'Views',
+        xAxisLabel: 'System',
+        yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
       })
-    %>
-  </body>
+    });
+</script>
+</body>
 </html>
