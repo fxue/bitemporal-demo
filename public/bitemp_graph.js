@@ -1,5 +1,3 @@
-
-
 var barChart = function() {
 
   // default values for configurable input parameters
@@ -21,13 +19,14 @@ var barChart = function() {
   var axisLabelMargin;
 
   function onMouseMove(d){
+    if (d != undefined) {
     var coordinates = [0, 0];
-    coordinates = d3.mouse(this);
     d3.select("#tooltip")
-      .style("left", coordinates[0] + "px")
-      .style("top", coordinates[1] + "px")
+      .style("left", d3.event.pageX + "px")
+      .style("top", d3.event.pageY + "px")
       .select("#value")
-      .text(JSON.stringify(d.content,undefined, 2));
+      //.text(JSON.stringify(d.content,undefined, 2));
+      .text(d.content.data)
 
     //Show the tooltip
     d3.select("#tooltip").classed("hidden", false);
@@ -36,6 +35,7 @@ var barChart = function() {
     .transition()
     .duration(500)
     .attr("opacity", "0.7");
+    }
   }
 
   function onMouseOut(d){
@@ -203,7 +203,7 @@ var barChart = function() {
       })
       .attr('height', 0)
       .attr('width', 0)
-      .on("mouseover",onMouseMove)
+      .on("mousemove",onMouseMove)
       .on("mouseout",onMouseOut)
       .style('opacity', 0)
         .transition()
@@ -327,7 +327,7 @@ var barChart = function() {
     });
 
     g.selectAll('rect')
-    .on("mouseover",onMouseMove)
+    .on("mousemove",onMouseMove)
     .on("mouseout", onMouseOut);
   };
 
