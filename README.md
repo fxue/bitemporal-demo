@@ -15,6 +15,7 @@ You can configure the server with the following:
 
 - First create element range index : valStart valEnd sysStart sysEnd
 - create axis
+- 
 declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
  
