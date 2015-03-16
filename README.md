@@ -13,8 +13,8 @@ Each box represents a document version.
 
 You can configure the server with the following:
 
-1. First create element range index : valStart valEnd sysStart sysEnd
-2. create axis
+- First create element range index : valStart valEnd sysStart sysEnd
+- create axis
 declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
  
@@ -23,11 +23,11 @@ temporal.axisCreate("valid",
 temporal.axisCreate("system",
       cts.elementReference("sysStart"),cts.elementReference("sysEnd"))// query
       
-3. create collection
+- create collection
 
 declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
  
 temporal.collectionCreate("temporal","system","valid");
 
-4. Refer to the workspace file for an example walk through
+- Refer to the workspace file for an example walk through
