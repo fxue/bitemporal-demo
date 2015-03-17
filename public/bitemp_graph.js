@@ -183,9 +183,12 @@ var barChart = function() {
       var c=0;
       split = g.selectAll('.split')
       .data(data)
-      .enter();
+      .enter()
+      .append('g')
+      .attr('class','split');
 
-      r = split.append('rect')
+      r = split
+      .append('rect')
       .attr('class', 'split')
       .attr('stroke','black')
       .attr('stroke-width','2')
@@ -206,22 +209,38 @@ var barChart = function() {
       .on("mousemove",onMouseMove)
       .on("mouseout",onMouseOut)
       .style('opacity', 0)
-        .transition()
-          .duration(1000)
-          .style('opacity', 1)
-          .attr('height', function(d) {
-            var bValStart = yScale(moment(d.content.valStart).toDate());
-            var bValEnd = yScale(moment(d.content.valEnd).toDate());
-            var h=-bValEnd+bValStart;
-            return h;
-          })
-          .attr('width', function(d) {
-            var bSysStart = xScale(moment(d.content.sysStart).toDate());
-            var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-            if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-            var w=bSysEnd-bSysStart;
-            return w;
-          });
+      .transition()
+      .duration(1000)
+      .style('opacity', 1)
+      .attr('height', function(d) {
+        var bValStart = yScale(moment(d.content.valStart).toDate());
+        var bValEnd = yScale(moment(d.content.valEnd).toDate());
+        var h=-bValEnd+bValStart;
+        return h;
+      })
+      .attr('width', function(d) {
+        var bSysStart = xScale(moment(d.content.sysStart).toDate());
+        var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
+        if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
+        var w=bSysEnd-bSysStart;
+        return w;
+      });
+
+
+      split.append("text")
+      .attr('class','tooltip-txt')
+      .style("text-anchor", "middle")
+      .attr('x', function(d) {
+        var barx1 = xScale(moment(d.content.sysStart).toDate());
+        var barx2 = xScale(moment(d.content.sysEnd).toDate());
+        return (barx1+barx2)/2;
+      })
+      .attr('y', function(d) {
+        var bary1 = yScale(moment(d.content.valStart).toDate());
+        var bary2 = yScale(moment(d.content.valEnd).toDate());
+        return (bary1+bary2)/2;;
+      })
+      .text(function(d) { return d.content.data;});
 
     };
   };
