@@ -12,7 +12,8 @@ var barChart = function() {
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
 
-  var color = d3.scale.category20c();
+  var color = 
+    d3.scale.category10();
 
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
@@ -70,8 +71,12 @@ var barChart = function() {
       moment.min(data.map(function(d){
         return moment(d.content.sysStart);
       })).toDate();
-      var maxdate = new Date();
-      
+      //var maxdate = new Date();
+      var maxdate =
+      moment.max(data.map(function(d){
+        return moment(d.content.sysStart);
+      })).add(10, 'y').toDate();
+
       console.log("xmin="+mindate," xmax="+maxdate);
 
       xScale = d3.time.scale()
@@ -86,7 +91,7 @@ var barChart = function() {
 
       xAxis = d3.svg.axis()
       .scale(xScale)
-      .ticks(5)
+      .ticks(10)
       .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
       .outerTickSize(0)
       .orient('bottom')
@@ -136,6 +141,13 @@ var barChart = function() {
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+      var colorDomain = [];
+      data.map(function(d){
+        colorDomain.push(d.content.data);
+      });
+
+      color.domain(colorDomain);
+
     }
 
     function addXAxisLabel() {
@@ -147,7 +159,9 @@ var barChart = function() {
       .call(xAxis)
       .append('text')
       .attr('class', 'axis-label')
-      .attr('y', margin.left)
+      .attr('y', margin.bottom)
+      .attr('x', (width-margin.left)/2)
+      .text(xAxisLabel);
     }
 
     function addYAxisLabel() {
@@ -193,8 +207,9 @@ var barChart = function() {
       .attr('stroke','black')
       .attr('stroke-width','2')
       .attr('fill',function(d) {
-        var colorNum = Math.floor(c%20); c++;
-        return color(colorNum);
+        //var colorNum = Math.floor(c%20); c++;
+        //return color(colorNum);
+        return color(d.content.data);
       })
       .attr('x', function(d) {
         var barx = xScale(moment(d.content.sysStart).toDate());
@@ -232,8 +247,14 @@ var barChart = function() {
       .style("text-anchor", "middle")
       .attr('x', function(d) {
         var barx1 = xScale(moment(d.content.sysStart).toDate());
-        var barx2 = xScale(moment(d.content.sysEnd).toDate());
-        return (barx1+barx2)/2;
+        if (d.content.sysEnd.startsWith("9999")) {
+          var barx2 = xScale(moment(d.content.sysStart).add(10, 'y').toDate());
+          return (barx1+barx2)/2;
+        }
+        else {
+          var barx2 = xScale(moment(d.content.sysEnd).toDate());
+          return (barx1+barx2)/2;
+        }
       })
       .attr('y', function(d) {
         var bary1 = yScale(moment(d.content.valStart).toDate());
@@ -319,9 +340,11 @@ var barChart = function() {
     .attr('stroke','black')
     .attr('stroke-width','2')
     .attr('fill',function(d) {
-      var colorNum = Math.floor((c+cnt)%20)+1; 
-      c++;
-      return color(colorNum);
+      //var colorNum = Math.floor((c+cnt)%20)+1; 
+      //c++;
+      //return color(colorNum);
+
+      return color(d.content.data);
     })
     .attr('x', function(d) {
       var barx = xScale(moment(d.content.sysStart).toDate());
