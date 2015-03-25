@@ -14,11 +14,3 @@ var getBarChart = function (params) {
 
   return svg;
 };
-
-var updateBarChart = function (collection) {
- console.log("updating...")
- $.get( "/data?collection="+collection, function( data ) {
-  chart.updateBarChartData(data);
-});
-};
-

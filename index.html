@@ -73,19 +73,6 @@
     </div>
     </p>
 
-    <p>
-    <div id="col">
-    <input name="collection" 
-                 type="text" 
-                value="1.json"/>
-    </div>
-    <div id="update">
-    <input name="updateButton" 
-                 type="button" 
-                value="Update Visualization"/>
-    </div>
-    </p>
-
     <div id="bar-chart-large"></div>
     <script type="text/javascript">
     $.get( "/data", function( data ) {
@@ -110,9 +97,6 @@
         "/update?collection"+col+"&uri="+uri+
         "&validstart="+vs+"&validend="+ve+
         "&system="+sys+"&content="+d);
-    });
-    $("input[name='updateButton']").click(function(){ 
-      updateBarChart($("input[name='collection']").val()); 
     });
     </script>
    </body>

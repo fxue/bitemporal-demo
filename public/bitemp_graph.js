@@ -18,36 +18,6 @@ var barChart = function() {
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
-
-  function onMouseMove(d){
-    if (d != undefined) {
-    var coordinates = [0, 0];
-    d3.select("#tooltip")
-      .style("left", d3.event.pageX + "px")
-      .style("top", d3.event.pageY + "px")
-      .select("#value")
-      //.text(JSON.stringify(d.content,undefined, 2));
-      .text(d.content.data)
-
-    //Show the tooltip
-    d3.select("#tooltip").classed("hidden", false);
-
-    d3.select(this)
-    .transition()
-    .duration(500)
-    .attr("opacity", "0.7");
-    }
-  }
-
-  function onMouseOut(d){
-    
-    d3.select(this)
-    .transition()
-    .duration(250)
-    .attr("opacity", "1.0");
-    d3.select("#tooltip").classed("hidden", true);
-  }
-
   var chart = function(container) {
 
     setDimensions();
@@ -221,8 +191,6 @@ var barChart = function() {
       })
       .attr('height', 0)
       .attr('width', 0)
-      .on("mousemove",onMouseMove)
-      .on("mouseout",onMouseOut)
       .style('opacity', 0)
       .transition()
       .duration(1000)
@@ -270,107 +238,6 @@ var barChart = function() {
     var n = 0;
     this.each(function() { ++n; });
     return n;
-  };
-
-  chart.updateBarChartData = function (newdata) {
-    var c=0;
-
-    var vmindate = 
-    moment.min(newdata.map(function(d){
-      return moment(d.content.valStart);
-    })).toDate();
-
-    var vmaxdate = 
-    moment.max(newdata.map(function(d){
-      return moment(d.content.valEnd);
-    })).toDate();
-
-    console.log("ymin="+vmindate," ymax="+vmaxdate);
-    yScale.domain([vmindate, vmaxdate]);
-
-    yAxis = d3.svg.axis()
-    .scale(yScale)
-    .ticks(15)
-    .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-    .outerTickSize(0)
-    .orient('left')
-    .tickFormat(d3.time.format("%Y-%m-%d"));
-
-    g.selectAll('.yaxis').remove();
-    g.append('g')
-    .attr('class', 'yaxis ')
-    .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
-    .call(yAxis)
-
-    g.selectAll('.split').data(newdata).exit().remove();
-
-    transition = g.selectAll('.split')
-    .data(newdata)
-    .transition()
-    .duration(800)
-    .attr('x', function(d) {
-      var barx = xScale(moment(d.content.sysStart).toDate());
-      return barx;
-    })
-    .attr('y', function(d) {
-      var bary = yScale(moment(d.content.valEnd).toDate());
-      return bary;
-    })
-    .attr('height', function(d) {
-      var bValStart = yScale(moment(d.content.valStart).toDate());
-      var bValEnd = yScale(moment(d.content.valEnd).toDate());
-      var h=-bValEnd+bValStart;
-      return h;
-    })
-    .attr('width', function(d) {
-      var bSysStart = xScale(moment(d.content.sysStart).toDate());
-      var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-      if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-      var w=bSysEnd-bSysStart;
-      return w;
-    });
-
-    var cnt = g.selectAll('.split').size();
-    enter = g.selectAll('.split')
-    .data(newdata)
-    .enter();
-
-    enter.append('rect')
-    .attr('class', 'split')
-    .attr('stroke','black')
-    .attr('stroke-width','2')
-    .attr('fill',function(d) {
-      //var colorNum = Math.floor((c+cnt)%20)+1; 
-      //c++;
-      //return color(colorNum);
-
-      return color(d.content.data);
-    })
-    .attr('x', function(d) {
-      var barx = xScale(moment(d.content.sysStart).toDate());
-      return barx;
-    })
-    .attr('y', function(d) {
-      var bary = yScale(moment(d.content.valEnd).toDate());
-      return bary;
-    })
-    .attr('height', function(d) {
-      var bValStart = yScale(moment(d.content.valStart).toDate());
-      var bValEnd = yScale(moment(d.content.valEnd).toDate());
-      var h=-bValEnd+bValStart;
-      return h;
-    })
-    .attr('width', function(d) {
-      var bSysStart = xScale(moment(d.content.sysStart).toDate());
-      var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-      if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-      var w=bSysEnd-bSysStart;
-      return w;
-    });
-
-    g.selectAll('rect')
-    .on("mousemove",onMouseMove)
-    .on("mouseout", onMouseOut);
   };
 
   chart.data = function(value) {

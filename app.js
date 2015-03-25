@@ -60,8 +60,7 @@ app.get('/update', function(req, res) {
       systemTime : sys
     };
 
-  console.log(
-    "INGEST DOCS ",newdoc);
+  console.log("INGEST DOCS ",newdoc);
 
   db.documents.write(newdoc)
   .result(
@@ -76,7 +75,7 @@ app.get('/update', function(req, res) {
 });
 app.get('/delete', function(req, res) {
   // delete temporal document
-
+  // TODO add your code here...
 
 });
 app.get('/', function(req, res) {
