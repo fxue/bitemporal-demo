@@ -1,5 +1,5 @@
 {
-  "name": "d3-server-side-demo",
+  "name": "marklogic-bitemporal-visualization-demo",
   "description": "uses d3.js to render svg charts on the server-side",
   "version": "0.0.2",
   "private": true,
@@ -11,9 +11,10 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "~4.5.1",
+    "d3": "~3.4.9",
     "ejs": "~1.0.0",
-    "d3": "~3.4.9"
+    "express": "~4.5.1",
+    "marklogic": "^1.0.1"
   },
   "repository": {
     "type": "git",

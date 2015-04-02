@@ -1,5 +1,3 @@
-
-
 var barChart = function() {
 
   // default values for configurable input parameters
@@ -14,39 +12,12 @@ var barChart = function() {
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
 
-  var color = d3.scale.category20c();
+  var color = 
+    d3.scale.category10();
 
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
-
-  function onMouseMove(d){
-    var coordinates = [0, 0];
-    coordinates = d3.mouse(this);
-    d3.select("#tooltip")
-      .style("left", coordinates[0] + "px")
-      .style("top", coordinates[1] + "px")
-      .select("#value")
-      .text(JSON.stringify(d.content,undefined, 2));
-
-    //Show the tooltip
-    d3.select("#tooltip").classed("hidden", false);
-
-    d3.select(this)
-    .transition()
-    .duration(500)
-    .attr("opacity", "0.7");
-  }
-
-  function onMouseOut(d){
-    
-    d3.select(this)
-    .transition()
-    .duration(250)
-    .attr("opacity", "1.0");
-    d3.select("#tooltip").classed("hidden", true);
-  }
-
   var chart = function(container) {
 
     setDimensions();
@@ -70,8 +41,12 @@ var barChart = function() {
       moment.min(data.map(function(d){
         return moment(d.content.sysStart);
       })).toDate();
-      var maxdate = new Date();
-      
+      //var maxdate = new Date();
+      var maxdate =
+      moment.max(data.map(function(d){
+        return moment(d.content.sysStart);
+      })).add(10, 'y').toDate();
+
       console.log("xmin="+mindate," xmax="+maxdate);
 
       xScale = d3.time.scale()
@@ -86,7 +61,7 @@ var barChart = function() {
 
       xAxis = d3.svg.axis()
       .scale(xScale)
-      .ticks(5)
+      .ticks(10)
       .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
       .outerTickSize(0)
       .orient('bottom')
@@ -136,6 +111,13 @@ var barChart = function() {
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+      var colorDomain = [];
+      data.map(function(d){
+        colorDomain.push(d.content.data);
+      });
+
+      color.domain(colorDomain);
+
     }
 
     function addXAxisLabel() {
@@ -147,7 +129,9 @@ var barChart = function() {
       .call(xAxis)
       .append('text')
       .attr('class', 'axis-label')
-      .attr('y', margin.left)
+      .attr('y', margin.bottom)
+      .attr('x', (width-margin.left)/2)
+      .text(xAxisLabel);
     }
 
     function addYAxisLabel() {
@@ -183,15 +167,19 @@ var barChart = function() {
       var c=0;
       split = g.selectAll('.split')
       .data(data)
-      .enter();
+      .enter()
+      .append('g')
+      .attr('class','split');
 
-      r = split.append('rect')
+      r = split
+      .append('rect')
       .attr('class', 'split')
       .attr('stroke','black')
       .attr('stroke-width','2')
       .attr('fill',function(d) {
-        var colorNum = Math.floor(c%20); c++;
-        return color(colorNum);
+        //var colorNum = Math.floor(c%20); c++;
+        //return color(colorNum);
+        return color(d.content.data);
       })
       .attr('x', function(d) {
         var barx = xScale(moment(d.content.sysStart).toDate());
@@ -203,25 +191,45 @@ var barChart = function() {
       })
       .attr('height', 0)
       .attr('width', 0)
-      .on("mouseover",onMouseMove)
-      .on("mouseout",onMouseOut)
       .style('opacity', 0)
-        .transition()
-          .duration(1000)
-          .style('opacity', 1)
-          .attr('height', function(d) {
-            var bValStart = yScale(moment(d.content.valStart).toDate());
-            var bValEnd = yScale(moment(d.content.valEnd).toDate());
-            var h=-bValEnd+bValStart;
-            return h;
-          })
-          .attr('width', function(d) {
-            var bSysStart = xScale(moment(d.content.sysStart).toDate());
-            var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-            if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-            var w=bSysEnd-bSysStart;
-            return w;
-          });
+      .transition()
+      .duration(1000)
+      .style('opacity', 1)
+      .attr('height', function(d) {
+        var bValStart = yScale(moment(d.content.valStart).toDate());
+        var bValEnd = yScale(moment(d.content.valEnd).toDate());
+        var h=-bValEnd+bValStart;
+        return h;
+      })
+      .attr('width', function(d) {
+        var bSysStart = xScale(moment(d.content.sysStart).toDate());
+        var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
+        if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
+        var w=bSysEnd-bSysStart;
+        return w;
+      });
+
+
+      split.append("text")
+      .attr('class','tooltip-txt')
+      .style("text-anchor", "middle")
+      .attr('x', function(d) {
+        var barx1 = xScale(moment(d.content.sysStart).toDate());
+        if (d.content.sysEnd.startsWith("9999")) {
+          var barx2 = xScale(moment(d.content.sysStart).add(10, 'y').toDate());
+          return (barx1+barx2)/2;
+        }
+        else {
+          var barx2 = xScale(moment(d.content.sysEnd).toDate());
+          return (barx1+barx2)/2;
+        }
+      })
+      .attr('y', function(d) {
+        var bary1 = yScale(moment(d.content.valStart).toDate());
+        var bary2 = yScale(moment(d.content.valEnd).toDate());
+        return (bary1+bary2)/2;;
+      })
+      .text(function(d) { return d.content.data;});
 
     };
   };
@@ -230,105 +238,6 @@ var barChart = function() {
     var n = 0;
     this.each(function() { ++n; });
     return n;
-  };
-
-  chart.updateBarChartData = function (newdata) {
-    var c=0;
-
-    var vmindate = 
-    moment.min(newdata.map(function(d){
-      return moment(d.content.valStart);
-    })).toDate();
-
-    var vmaxdate = 
-    moment.max(newdata.map(function(d){
-      return moment(d.content.valEnd);
-    })).toDate();
-
-    console.log("ymin="+vmindate," ymax="+vmaxdate);
-    yScale.domain([vmindate, vmaxdate]);
-
-    yAxis = d3.svg.axis()
-    .scale(yScale)
-    .ticks(15)
-    .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-    .outerTickSize(0)
-    .orient('left')
-    .tickFormat(d3.time.format("%Y-%m-%d"));
-
-    g.selectAll('.yaxis').remove();
-    g.append('g')
-    .attr('class', 'yaxis ')
-    .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
-    .call(yAxis)
-
-    g.selectAll('.split').data(newdata).exit().remove();
-
-    transition = g.selectAll('.split')
-    .data(newdata)
-    .transition()
-    .duration(800)
-    .attr('x', function(d) {
-      var barx = xScale(moment(d.content.sysStart).toDate());
-      return barx;
-    })
-    .attr('y', function(d) {
-      var bary = yScale(moment(d.content.valEnd).toDate());
-      return bary;
-    })
-    .attr('height', function(d) {
-      var bValStart = yScale(moment(d.content.valStart).toDate());
-      var bValEnd = yScale(moment(d.content.valEnd).toDate());
-      var h=-bValEnd+bValStart;
-      return h;
-    })
-    .attr('width', function(d) {
-      var bSysStart = xScale(moment(d.content.sysStart).toDate());
-      var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-      if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-      var w=bSysEnd-bSysStart;
-      return w;
-    });
-
-    var cnt = g.selectAll('.split').size();
-    enter = g.selectAll('.split')
-    .data(newdata)
-    .enter();
-
-    enter.append('rect')
-    .attr('class', 'split')
-    .attr('stroke','black')
-    .attr('stroke-width','2')
-    .attr('fill',function(d) {
-      var colorNum = Math.floor((c+cnt)%20)+1; 
-      c++;
-      return color(colorNum);
-    })
-    .attr('x', function(d) {
-      var barx = xScale(moment(d.content.sysStart).toDate());
-      return barx;
-    })
-    .attr('y', function(d) {
-      var bary = yScale(moment(d.content.valEnd).toDate());
-      return bary;
-    })
-    .attr('height', function(d) {
-      var bValStart = yScale(moment(d.content.valStart).toDate());
-      var bValEnd = yScale(moment(d.content.valEnd).toDate());
-      var h=-bValEnd+bValStart;
-      return h;
-    })
-    .attr('width', function(d) {
-      var bSysStart = xScale(moment(d.content.sysStart).toDate());
-      var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-      if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-      var w=bSysEnd-bSysStart;
-      return w;
-    });
-
-    g.selectAll('rect')
-    .on("mouseover",onMouseMove)
-    .on("mouseout", onMouseOut);
   };
 
   chart.data = function(value) {

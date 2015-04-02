@@ -1,14 +1,10 @@
-
 var chart;
 var getBarChart = function (params) {
 
   chart = barChart()
   .data(params.data)
   .width(params.width)
-  .height(params.height)
-  .xAxisLabel(params.xAxisLabel)
-  .yAxisLabel(params.yAxisLabel);
-
+  .height(params.height);
 
   d3.select('body').append('div').attr('id', params.containerId).call(chart);
 
@@ -18,11 +14,3 @@ var getBarChart = function (params) {
 
   return svg;
 };
-
-var updateBarChart = function () {
- console.log("updating...")
- $.get( "/data", function( data ) {
-  chart.updateBarChartData(data);
-});
-};
-
