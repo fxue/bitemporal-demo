@@ -215,7 +215,8 @@ var barChart = function() {
       .style("text-anchor", "middle")
       .attr('x', function(d) {
         var barx1 = xScale(moment(d.content.sysStart).toDate());
-        if (d.content.sysEnd.startsWith("9999")) {
+        if (!d.content.sysEnd) return 0;
+        if (d.content.sysEnd.indexOf("9999")==0) {
           var barx2 = xScale(moment(d.content.sysStart).add(10, 'y').toDate());
           return (barx1+barx2)/2;
         }
