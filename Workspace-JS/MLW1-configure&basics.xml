@@ -1,0 +1,48 @@
+<export><workspace name="MLW1-configure&amp;basics"><query name="CreateRangeIndex" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">var admin = require("/MarkLogic/admin.xqy");
+var config = admin.getConfiguration();
+var dbid = xdmp.database("Documents");
+
+// Element Range Index : JSON property OR XML element
+// Attribute Range Index : XML attribute
+// Path Range Index : XML/JSON path e.g. /system/start
+
+var validStart = admin.databaseRangeElementIndex("dateTime", "", "valStart", "", fn.false() );
+var validEnd   = admin.databaseRangeElementIndex("dateTime", "", "valEnd", "", fn.false() );
+var systemStart = admin.databaseRangeElementIndex("dateTime", "", "sysStart", "", fn.false() );
+var systemEnd   = admin.databaseRangeElementIndex("dateTime", "", "sysEnd", "", fn.false() );
+
+config = admin.databaseAddRangeElementIndex(config, dbid, validStart);
+config = admin.databaseAddRangeElementIndex(config, dbid, validEnd);
+config = admin.databaseAddRangeElementIndex(config, dbid, systemStart);
+config = admin.databaseAddRangeElementIndex(config, dbid, systemEnd);
+admin.saveConfiguration(config);</query><query name="createAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+var temporal=require("/MarkLogic/temporal.xqy");
+ 
+// navigate to Schemas as content source to check on the axis configuration files
+
+temporal.axisCreate("valid",cts.elementReference("valStart"),cts.elementReference("valEnd"))
+temporal.axisCreate("system",cts.elementReference("sysStart"),cts.elementReference("sysEnd"))</query><query name="checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// this is a query, no need to declare update
+var temporal=require("/MarkLogic/temporal.xqy");
+ 
+temporal.axes()</query><query name="createCollection" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+var temporal=require("/MarkLogic/temporal.xqy");
+
+temporal.collectionCreate("temporal","system","valid")</query><query name="checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// TODO - write code to check on if temporal collection has been created</query><query name="normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// collection is a way to group documents together uniquely identified by a string
+// one document can be in any number of collections
+
+// temporal collection is different, 
+// TODO - try putting a temporal collection in the collection setting
+
+xdmp.documentInsert(
+  "foo.json",                // URI
+  { foo : "bar" },           // content
+  xdmp.defaultPermissions(),  // permission setting
+  ["collection1","col2"],     // collection setting
+  10
+)</query><query name="retrieveDocument" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// Two ways of seeing a document:
+// 1. Use fn.doc() function
+// 2. Click "Explore" button and navigate
+
+fn.doc("foo.json")</query></workspace></export>

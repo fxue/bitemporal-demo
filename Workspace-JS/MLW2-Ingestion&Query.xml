@@ -1,0 +1,161 @@
+<export><workspace name="MLW2-Ingestion&amp;Query"><query name="Fiona1" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// Eva buys house 2001 recorded 2002 
+
+// system time will be populated by the system
+// valid time in content will be kept intact
+// observe what error we get and go to second tab
+
+// when you came back from the second tab
+// run this again and do explore, observe "addr.json" content
+
+var root = {
+"sysStart": null,    
+"sysEnd": null,
+"valStart": "2001-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "Fiona"}
+    
+temporal.documentInsert("myTemporal","addr.json",root)
+  
+// provide system time, need to turn on LSQT to enable this - see next Tab
+temporal.statementSetSystemTime("2002-01-01T00:00:00Z")</query><query name="setLSQT" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// LSQT - Last Stable Query Time - more later in workspace #4
+// Used in conjunction with temporal.setStatementSystemTime()
+// Now go back to tab 1
+
+temporal.setUseLsqt("myTemporal",true)</query><query name="Finn1" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// navigate to localhost:3000 to see what versions we have
+
+// Fiona buys house 2001 recorded 2002
+// Finn buys house 2004 recorded 2004
+
+// after the query, explore in Query Console and find out which collections the documents belong to?
+
+var root = {
+"sysStart": null,
+"sysEnd": null,
+"valStart": "2004-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "Finn"}
+    
+temporal.documentInsert("myTemporal","addr.json",root)
+temporal.statementSetSystemTime("2004-01-01T00:00:00Z")</query><query name="QueryStudy" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// cts.period(t) =&gt; [t,t+dt) dt is the smallest time unit
+// cts.period(t1,t2)  =&gt; [t1,t2)
+// study difference between ISO_CONTAINS &amp; ALN_CONTAINS, ISO_OVERLAPS &amp; ALN_OVERLAPS
+// experiment with different axis/operator/period
+
+// for operator defs : http://docs.marklogic.com/guide/temporal/searching#id_78584
+
+cts.search(
+    cts.periodRangeQuery(
+      "myValid",          // axis name
+      "ISO_CONTAINS",   // operator name 
+      cts.period("2002-01-01T00:00:00Z","2003-01-01T00:00:00Z"))
+      //cts.period("9999-12-31T23:59:59Z")
+  )
+  
+  </query><query name="Fiona2" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// first find on the visualization which version we want to change
+// write query to get that version
+var result = 
+cts.search(
+  cts.andQuery([
+    cts.jsonPropertyValueQuery("data","Fiona"),
+    cts.periodRangeQuery(
+      "mySystem","ALN_MEETS",
+      cts.period("9999-12-31T23:59:59Z"))])
+  ).toArray()
+
+// Fiona buys house 2001 recorded 2002 - lag
+// Finn buys house 2004 recorded 2004
+// Fiona actually bought house 2000 recorded 2007 - correction
+
+var doc = result[0].toObject();
+doc.valStart = "2000-01-01T00:00:00Z";
+var str = 
+  temporal.documentInsert(
+    "myTemporal","addr.json",doc);
+temporal.statementSetSystemTime("2007-01-01T00:00:00Z")
+</query><query name="Quiz:Finn2" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// Fiona buys house 2001 recorded 2002 - lag
+// Finn buys house 2004 recorded 2004
+// Fiona actually bought house 2000 recorded 2007 - correction
+// Finn actually bought house 2003 recorded 2008 - correction
+
+
+declareUpdate();
+var result = 
+cts.search(
+  cts.andQuery([
+    cts.jsonPropertyValueQuery("data","????"),
+    cts.periodRangeQuery(
+      "????","???",
+      cts.period(?????))])
+  ).toArray()
+
+var doc = result[0].toObject();
+doc.**** = "????-01-01T00:00:00Z";
+var str = 
+  temporal.documentInsert(
+    "myTemporal","addr.json",doc);
+temporal.statementSetSystemTime("????-01-01T00:00:00Z")
+</query><query name="Exercise1" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// what happens when system time is not provided?
+// look at the content of this document, what happens when you run this tab multiple times?
+
+var root = {
+"sysStart": null,
+"sysEnd": null,
+"valStart": "2002-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "bar"
+}
+    
+temporal.documentInsert("myTemporal","bar.json",root,)</query><query name="Exercise2" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+
+// Fiona buys house 2001 recorded 2002 - lag
+// Finn buys house 2004 recorded 2004
+// Fiona actually bought house 2000 recorded 2007 - correction
+// Finn actually bought house 2003 recorded 2008 - correction
+// QUIZ : Finn then sold house to Jake 2007 recorded 2009?
+// QUIZ : Finn actually bought house 2005 recorded 2010?
+
+// PUT YOUR CODE HERE</query><query name="Exercise3" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// who did we think owned the house mid-2000 as of 2005 / 2010 ?
+// who did we think owned the house 2002/2007 as of 2010 ?
+// what is the difference when you change ISO to ALN ?
+cts.search(
+  cts.andQuery([
+    cts.periodRangeQuery(
+      "mySystem","ISO_CONTAINS",
+      cts.period("????-??-01T00:00:00Z")),
+    cts.periodRangeQuery(
+      "myValid","ISO_CONTAINS",
+      cts.period("????-??-01T00:00:00Z"))])
+).toArray()</query><query name="Exercise4" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// this exercise is about collections and bitemporal
+// Write query to find all non-temporal documents and latest temporal documents
+// use case: query database without historical versions
+</query><query name="temporalDelete" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// in 2015, you found out everything you knew was wrong
+
+// check the content of "addr.json", what changed? what does it mean?
+// which collections does "addr.json" belong to? Is it still latest?
+
+
+declareUpdate();
+
+temporal.documentDelete("myTemporal","addr.json")</query><query name="collectionOptions" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">var temporal=require("/MarkLogic/temporal.xqy");
+ 
+// "updates-safe" or "updates-admin-override"?
+temporal.collectionGetOptions("myTemporal")</query><query name="versionManipulation" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// you should get an error if "updates-safe"
+// For regulated industries, absolutely NO non-temporal APIs can be used on temporal versions
+// To disable this, change option with the next tab, then admin users can modify temporal versions
+
+xdmp.documentInsert("addr.json",{foo:"bar"})</query><query name="collectionSetOptions" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+var temporal=require("/MarkLogic/temporal.xqy");
+ 
+// "updates-safe" or "updates-admin-override"
+temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="cleanupTemporalDocs" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
+xdmp.collectionDelete("addr.json")</query></workspace></export>

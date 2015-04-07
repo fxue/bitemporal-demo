@@ -1,0 +1,266 @@
+<export><workspace name="MLW4-Semantics"><query name="Enable Triple Index" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">xquery version "1.0-ml";
+import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
+(: Get the configuration :)
+let $config := admin:get-configuration()
+let $Sample-Database := xdmp:database()
+let $c := admin:database-set-triple-index($config, $Sample-Database, fn:true())
+return admin:save-configuration($c)</query><query name="Luna in SFO" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="javascript">declareUpdate();
+
+// Luna lived in San Francisco between 2001 and 2005. 
+// We recorded this on 2006-01-01T00:00:00Z
+var root = {
+  "sysStart": null,
+  "sysEnd": null,
+  "valStart": "2001-01-01T00:00:00Z",
+  "valEnd": "2006-01-01T00:00:00Z",
+  "Comments": "Luna lived in SFO between 2001-01-01T00:00:00Z and 2006-01-01T00:00:00Z",
+  "triples" :
+  [
+    {
+      "triple" : {
+        "subject" : {"value" : "Luna", "datatype" : "http://www.w3.org/2001/XMLSchema#string"},
+        "predicate" : "city",     // predicates need to be iri for SPARQL queries to work
+        "object" : {"value" : "San Francisco", "datatype" : "http://www.w3.org/2001/XMLSchema#string"}
+      }
+    },
+    {
+      "triple" : {
+        "subject" : {"value" : "San Francisco", "datatype" : "http://www.w3.org/2001/XMLSchema#string"},
+        "predicate" : "state",     // predicates need to be iri for SPARQL queries to work
+        "object" : {"value" : "California", "datatype" : "http://www.w3.org/2001/XMLSchema#string"}
+      }
+    }
+  ]
+}
+    
+temporal.documentInsert("myTemporal","triple.json",root)
+temporal.statementSetSystemTime("2006-01-01T00:00:00Z")</query><query name="Luna Moved to Denver" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="javascript">declareUpdate();
+
+// Luna moved in Denver on 2004-01-01T00:00:00Z and lived there until 2007-01-01T00:00:00Z. 
+// We knew about this on 2008-01-01T00:00:00Z
+var root = {
+  "sysStart": null,
+  "sysEnd": null,
+  "valStart": "2004-01-01T00:00:00Z",
+  "valEnd": "2007-01-01T00:00:00Z",
+  "Comments": "Luna lived in Denver between 2004-01-01T00:00:00Z and 2007-01-01T00:00:00",
+  "triples" :
+  [
+    {
+      "triple" : {
+        "subject" : {"value" : "Luna", "datatype" : "http://www.w3.org/2001/XMLSchema#string"},
+        "predicate" : "http://www.w3.org/ns/prov#livesin",     // predicates need to be iri for SPARQL queries to work
+        "object" : {"value" : "Denver", "datatype" : "http://www.w3.org/2001/XMLSchema#string"}
+      }
+    },
+    {
+      "triple" : {
+        "subject" : {"value" : "Denver", "datatype" : "http://www.w3.org/2001/XMLSchema#string"},
+        "predicate" : "state",     // predicates need to be iri for SPARQL queries to work
+        "object" : {"value" : "Colorado", "datatype" : "http://www.w3.org/2001/XMLSchema#string"}
+      }
+    }
+  ]
+}
+temporal.documentInsert("myTemporal","LunaAddrTemporal.json",root)
+temporal.statementSetSystemTime("2008-01-01T00:00:00Z")</query><query name="Eva Stay at LA" focus="false" active="true" content-source="15207296243617144201:0:Apps" mode="javascript">declareUpdate();
+
+// Correction: Eva lived in San Francisco between 2001 and 2003. She moved to LA on 2004-01-01T00:00:00Z
+// This is recorded as 2 events - one to 'correct' her stay at SFO and another to indicate her stay at LA
+// This document records her move to LA. 
+// We recorded this on 2007-01-01T00:00:00Z
+var root = {
+  "sysStart": null,
+  "sysEnd": null,
+  "valStart": "2004-01-01T00:00:00Z",
+  "valEnd": "2005-12-31T11:59:59Z",
+  "Comments": "Eva lived in LA between 2004-01-01T00:00:00Z and 2005-12-31T59:59:59Z",
+  "triples" :
+  [
+    {
+      "triple" : {
+        "subject" : {"value" : "Eva", "datatype" : "http://www.w3.org/2001/XMLSchema#string"},
+        "predicate" : "city",     // predicates needs to be iri for SPARQL queries to work
+        "object" : {"value" : "LA", "datatype" : "http://www.w3.org/2001/XMLSchema#string"}
+      }
+    }
+  ]
+}
+    
+temporal.documentInsert("temporal","EvaAddr_Temporal.json",root)
+temporal.statementSetSystemTime("2014-01-01T00:00:01Z")</query><query name="BiTemporal Query" focus="false" active="true" content-source="7900001892146779296:0:Apps" mode="javascript">// Query bi-temporally
+
+cts.search(cts.periodRangeQuery(
+    "valid",
+    "ISO_OVERLAPS",
+    cts.period(xs.dateTime("2001-04-03T16:10:00"),
+               xs.dateTime("2014-04-03T16:12:00")) ))</query><query name="Where Luna Lived in 2002" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: Which city, state did Luna live in 2002. City and state info comes from triples :)
+
+let $q := '
+  SELECT 
+    ?city ?state
+  WHERE {
+    "Luna" &lt;city&gt; ?city .
+    ?city &lt;state&gt; ?state . 
+  }
+'
+return
+  sem:sparql(
+    $q,
+    (),
+    (),
+    sem:store(
+      (),
+      cts:period-range-query(
+        "valid",
+        "ALN_CONTAINS",
+        cts:period(
+          xs:dateTime("2002-01-01T00:00:00Z") ))
+      )
+    )</query><query name="Where Luna lived  between 2000 &amp; 2007" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: Which cities and states did Luna live in between 2000 and 2006. City, state info comes from triples :)
+
+let $q := '
+SELECT 
+  ?o
+WHERE {
+  "Luna" &lt;city&gt; ?o
+  }
+  '
+return
+  sem:sparql(
+    $q,
+    (),
+    (),
+    sem:store(
+      (),
+      cts:period-range-query(
+        "valid",
+        "ISO_OVERLAPS",
+        cts:period(
+          xs:dateTime("2000-01-01T00:00:00Z"),
+          xs:dateTime("2007-01-01T00:00:00Z")) )
+      )
+    )</query><query name="In 2006, what did we know about where Eva lived" focus="false" active="false" content-source="13199000469121224597:0:Apps" mode="xquery">(: What did I know between during the year 2006 about where Luna lived. We search on system time. City, state info comes from triples :)
+
+import module namespace sem = "http://marklogic.com/semantics" at "MarkLogic/semantics.xqy";
+
+let $q := '
+  SELECT 
+    ?city ?state
+  WHERE {
+    "Luna" &lt;city&gt; ?city .
+    ?city &lt;state&gt; ?state . 
+  }
+'
+return
+  sem:sparql(
+    $q,
+    (),
+    (),
+    sem:store(
+      (),
+      cts:period-range-query(
+        "system",
+        "ISO_CONTAINS",
+        cts:period(
+          xs:dateTime("2006-01-01T00:00:00Z")) )
+      )
+    )</query><query name="In 2007, what we did know about where Eva lived" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: What did I know during the year 2007 about where Luna lived. We search on system time 
+   At this time, we know that Luna lived in SFO and Denver. City, state info comes from triples :)
+
+import module namespace sem = "http://marklogic.com/semantics" at "MarkLogic/semantics.xqy";
+
+let $q := '
+  SELECT 
+    ?city ?state
+  WHERE {
+    "Luna" &lt;city&gt; ?city .
+    ?city &lt;state&gt; ?state . 
+  }
+'
+
+return
+  sem:sparql(
+    $q,
+    (),
+    (),
+    sem:store(
+      (),
+      cts:period-range-query(
+        "system",
+        "ISO_CONTAINS",
+        cts:period(
+          xs:dateTime("2007-01-01T00:00:00Z")) )
+      )
+    )</query><query name="In 2007, what we did know between 2004 and 2005" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: What did I know  during the year 2007 about where Luna lived between 2004 and 2005. We search on 
+   system time and valid time :)
+   
+let $q := '
+  SELECT 
+    ?city ?state
+  WHERE {
+    "Luna" &lt;city&gt; ?city .
+    ?city &lt;state&gt; ?state . 
+  }
+'
+
+return
+  sem:sparql(
+    $q,
+    (),
+    (),
+    sem:store(
+      (),
+      cts:and-query((
+        cts:period-range-query(
+          "system",
+          "ISO_CONTAINS",
+          cts:period(
+            xs:dateTime("2007-01-01T00:00:00Z")) ),
+        cts:period-range-query(
+          "valid",
+          "ISO_CONTAINS",
+          cts:period(
+            xs:dateTime("2004-01-01T00:00:00Z"),            
+            xs:dateTime("2005-01-01T00:00:00Z")) )
+        ))            
+      )
+    )
+
+ </query><query name="In 2009, what we did know between 2004 and 2005" focus="true" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: What did I know  during the year 2008 about where Luna lived between 2004 and 2005. We search on 
+   system time and valid time. Note that Luna moved in Denver on 2004-01-01T00:00:00Z and lived there 
+   until 2007-01-01T00:00:00Z. We knew about this on 2008-01-01T00:00:00Z  :)
+   
+let $q := '
+  SELECT 
+    ?city ?state
+  WHERE {
+    "Luna" &lt;city&gt; ?city .
+    ?city &lt;state&gt; ?state . 
+  }
+'
+
+return
+  sem:sparql(
+    $q,
+    (),
+    (),
+    sem:store(
+      (),
+      cts:and-query((
+        cts:period-range-query(
+          "system",
+          "ISO_CONTAINS",
+          cts:period(
+            xs:dateTime("2009-01-01T00:00:00Z")) ),
+        cts:period-range-query(
+          "valid",
+          "ISO_CONTAINS",
+          cts:period(
+            xs:dateTime("2004-01-01T00:00:00Z"),            
+            xs:dateTime("2005-01-01T00:00:00Z")) )
+        ))            
+      )
+    )
+
+ </query></workspace></export>

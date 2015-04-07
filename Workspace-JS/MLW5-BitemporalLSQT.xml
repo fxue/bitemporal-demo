@@ -1,0 +1,73 @@
+<export><workspace name="MLW5-BitemporalLSQT"><query name="clearEnvironment" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate();
+
+xdmp.collectionDelete("tradeData");
+temporal.setUseLsqt("myTemporal",true)</query><query name="getLSQT" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+
+// what is the value of LSQT now?
+// you can also see a temporal.lsqt file, thats where the timestamp is stored  
+
+temporal.getLsqt("myTemporal")</query><query name="insert1" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+  
+var root = {
+"sysStart": null,    
+"sysEnd": null,
+"valStart": "2001-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "v1"}
+    
+temporal.documentInsert("myTemporal","doc1.json",root)
+temporal.statementSetSystemTime("2000-01-01T00:00:00Z")</query><query name="advanceLSQT" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+
+// advanceLsqt("temporal",lag)    lag is in millisecond
+// LSQT = max(systemStart) - lag
+// No query after LSQT - ensured by cts.lsqtQuery() 
+// No update before LSQT - ensured by temporal.documentInsert()
+  
+temporal.advanceLsqt("myTemporal",1)</query><query name="insert2" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+// for the same URI, system time has to move forward  
+var root = {
+"sysStart": null,    
+"sysEnd": null,
+"valStart": "2001-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "v1"}
+    
+temporal.documentInsert("myTemporal","doc1.json",root)
+temporal.statementSetSystemTime("2000-01-01T00:00:00Z")</query><query name="inserrt3" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+var root = {
+"sysStart": null,    
+"sysEnd": null,
+"valStart": "2001-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "v1"}
+    
+temporal.documentInsert("myTemporal","doc2.json",root)
+temporal.statementSetSystemTime("2000-01-01T00:00:00Z")</query><query name="advanceLSQT" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+
+// advanceLsqt("temporal",lag)    lag is in millisecond
+// LSQT = max(systemStart) - lag
+// No query after LSQT - ensured by cts.lsqtQuery() 
+// No update before LSQT - ensured by temporal.documentInsert()
+  
+temporal.advanceLsqt("myTemporal",0)</query><query name="lsqtQuery" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">// gives all the document before lsqt
+
+cts.search(cts.lsqtQuery("myTemporal"))</query><query name="insert4" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+  
+// system time has to be strictly larger than LSQT
+var root = {
+"sysStart": null,    
+"sysEnd": null,
+"valStart": "2001-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "v1"}
+    
+temporal.documentInsert("myTemporal","doc3.json",root)
+temporal.statementSetSystemTime("2001-01-01T00:00:00Z")</query><query name="lsqtQuery" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">// gives all the document before lsqt
+
+cts.search(cts.lsqtQuery("myTemporal"))</query><query name="automation" focus="false" active="true" content-source="as:875749716052773037:" mode="javascript">declareUpdate()
+  
+// background thread will advance lsqt every 1 second with lag of 2 seconds
+  
+temporal.setLsqtAutomation("myTemporal",true,1000,2000)</query><query name="lsqtQUery" focus="true" active="true" content-source="as:875749716052773037:" mode="javascript">// gives all the document before lsqt
+
+cts.search(cts.lsqtQuery("myTemporal"))</query></workspace></export>
