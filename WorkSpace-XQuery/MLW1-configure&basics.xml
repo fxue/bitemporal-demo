@@ -1,0 +1,55 @@
+<export><workspace name="MLW1-configure&amp;basics"><query name="CreateRangeIndex" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml";
+import module namespace admin = "http://marklogic.com/xdmp/admin" 
+    at "/MarkLogic/admin.xqy";
+let $config := admin:get-configuration()
+let $dbid := xdmp:database("Documents")
+let $validStart := admin:database-range-element-index("dateTime",
+"", "valStart", "", fn:false() )
+let $validEnd := admin:database-range-element-index("dateTime",
+"", "valEnd", "", fn:false() )
+let $systemStart := admin:database-range-element-index("dateTime",
+"", "sysStart", "", fn:false() )
+let $systemEnd := admin:database-range-element-index("dateTime",
+"", "sysEnd", "", fn:false() )
+let $config := admin:database-add-range-element-index($config, $dbid, $validStart)
+let $config := admin:database-add-range-element-index($config, $dbid, $validEnd)
+let $config := admin:database-add-range-element-index($config, $dbid, $systemStart)
+let $config := admin:database-add-range-element-index($config, $dbid, $systemEnd)
+return
+    admin:save-configuration($config)</query><query name="createAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml"; 
+import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
+    at "/MarkLogic/temporal.xqy";
+temporal:axis-create(
+    "myValid",
+    cts:element-reference(xs:QName("valStart")),
+    cts:element-reference(xs:QName("valEnd"))),
+temporal:axis-create(
+    "mySystem",
+    cts:element-reference(xs:QName("sysStart")),
+    cts:element-reference(xs:QName("sysEnd")));</query><query name="checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml"; 
+import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
+    at "/MarkLogic/temporal.xqy";
+temporal:axes()</query><query name="createCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml";
+import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
+     at "/MarkLogic/temporal.xqy";
+temporal:collection-create("myTemporal", "mySystem", "myValid")</query><query name="checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">// TODO - write code to check on if temporal collection has been created
+
+xquery version "1.0-ml";
+import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
+     at "/MarkLogic/temporal.xqy";</query><query name="normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: collection is a way to group documents together uniquely identified by a string
+ one document can be in any number of collections
+
+ temporal collection is different, 
+ TODO - try putting a temporal collection in the collection setting :)
+
+xdmp:document-insert(
+  "foo.xml",                (: URI :)
+  &lt;foo&gt;bar&lt;/foo&gt;,           (: content :)
+  xdmp:default-permissions(), (: permission setting :)
+  ("collection1","col2"),    (: collection setting :)
+  10
+)</query><query name="retrieveDocument" focus="true" active="true" content-source="as:13134076190478922058:" mode="xquery">(: Two ways of seeing a document:
+ 1. Use fn.doc() function
+ 2. Click "Explore" button and navigate :)
+
+fn:doc("foo.xml")</query></workspace></export>
