@@ -47,6 +47,32 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
 
+    <p>
+    <div id="insertform0">
+    <text>Temporal collection:  </text>
+    <input name="tempcol" type="text" value="temporal"/>
+    <text>   URI:  </text>
+    <input name="uri" type="text" value="1.json"/>
+    </div>
+    <div id="insertform1">
+    <text>Enter Valid Start:   </text>
+    <input name="validstart" type="date"/>
+    <text>   Enter Valid End:   </text>
+    <input name="validend" type="date"/>
+    </div>
+    <div id="insertform2">
+    <text>   Enter System Time:   </text>
+    <input name="systemtart" type="date"/>
+    <text>Enter Content:   </text>
+    <input name="content" type="text"/>
+    <text>   </text>
+    </div>
+    <div id="insertform3">
+    <input name="insert" type="button"  value="Update/Insert"/>
+    <input name="delete" type="button"  value="Delete"/>
+    </div>
+    </p>
+
     <div id="bar-chart-large"></div>
     <script type="text/javascript">
     $.get( "/data", function( data ) {
