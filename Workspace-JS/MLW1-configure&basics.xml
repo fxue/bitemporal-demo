@@ -1,4 +1,4 @@
-<export><workspace name="MLW1-configure&amp;basics"><query name="CreateRangeIndex" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">var admin = require("/MarkLogic/admin.xqy");
+<export><workspace name="MLW1-configure&amp;basics"><query name="1.CreateRangeIndex" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">var admin = require("/MarkLogic/admin.xqy");
 var config = admin.getConfiguration();
 var dbid = xdmp.database("Documents");
 
@@ -15,19 +15,19 @@ config = admin.databaseAddRangeElementIndex(config, dbid, validStart);
 config = admin.databaseAddRangeElementIndex(config, dbid, validEnd);
 config = admin.databaseAddRangeElementIndex(config, dbid, systemStart);
 config = admin.databaseAddRangeElementIndex(config, dbid, systemEnd);
-admin.saveConfiguration(config);</query><query name="createAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+admin.saveConfiguration(config);</query><query name="2.createAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
  
 // navigate to Schemas as content source to check on the axis configuration files
 
-temporal.axisCreate("valid",cts.elementReference("valStart"),cts.elementReference("valEnd"))
-temporal.axisCreate("system",cts.elementReference("sysStart"),cts.elementReference("sysEnd"))</query><query name="checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// this is a query, no need to declare update
+temporal.axisCreate("myValid",cts.elementReference("valStart"),cts.elementReference("valEnd"))
+temporal.axisCreate("mySystem",cts.elementReference("sysStart"),cts.elementReference("sysEnd"))</query><query name="3.checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// this is a query, no need to declare update
 var temporal=require("/MarkLogic/temporal.xqy");
  
-temporal.axes()</query><query name="createCollection" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+temporal.axes()</query><query name="4.createCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
 
-temporal.collectionCreate("temporal","system","valid")</query><query name="checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// TODO - write code to check on if temporal collection has been created</query><query name="normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+temporal.collectionCreate("myTemporal","mySystem","myValid")</query><query name="5.checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// TODO - write code to check on if temporal collection has been created</query><query name="6.normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
 // collection is a way to group documents together uniquely identified by a string
 // one document can be in any number of collections
@@ -41,7 +41,7 @@ xdmp.documentInsert(
   xdmp.defaultPermissions(),  // permission setting
   ["collection1","col2"],     // collection setting
   10
-)</query><query name="retrieveDocument" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// Two ways of seeing a document:
+)</query><query name="7.retrieveDocument" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">// Two ways of seeing a document:
 // 1. Use fn.doc() function
 // 2. Click "Explore" button and navigate
 

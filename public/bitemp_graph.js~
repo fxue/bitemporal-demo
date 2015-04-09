@@ -45,7 +45,7 @@ var barChart = function() {
       var maxdate =
       moment.max(data.map(function(d){
         return moment(d.content.sysStart);
-      })).add(10, 'y').toDate();
+      })).add(5, 'y').toDate();
 
       console.log("xmin="+mindate," xmax="+maxdate);
 

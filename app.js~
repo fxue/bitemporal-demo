@@ -17,7 +17,7 @@ app.use('/public', express.static(__dirname+'/public'));
 app.get('/data', function(req, res) {
   // query database for documents to be shown
   // use localhost:3000/data?collection=***
-  var name = req.param('collection') || 'addr.json';
+  var name = req.param('collection') || 'myTemporal';
   var query = db.documents.query(q.where(q.collection(name)));
   query.result(function(r){
   	// get result and log all uris
