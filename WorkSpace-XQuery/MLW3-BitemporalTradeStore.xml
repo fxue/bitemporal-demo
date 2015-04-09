@@ -1,4 +1,4 @@
-<export><workspace name="MLW3-BitemporalTradeStore"><query name="1.GenerateData" focus="true" active="true" content-source="as:2832922811275495568:" mode="xquery">(:Generate arbitary number of trade documents :)
+<export><workspace name="MLW3-BitemporalTradeStore"><query name="1.GenerateData" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">(:Generate arbitary number of trade documents :)
 
 let $numTrade := 1000  (: number of trade docs to be generated :)
 let $timeSpan := 10     (: in years :)
@@ -98,14 +98,22 @@ return xdmp:eval('
 (: TODO convert legacy document to bitemporal :)
 
 let $docs := fn:collection("legacy")
+let $INF := xs:dateTime("9999-12-31T23:59:59.99Z")
 for $doc in $docs
-  let $URI := xdmp:node-uri($doc);
-  (: alter content to be compliant with bitemporal collection :)
-  
-    
-  xdmp:document-delete($URI);
-  temporal:document-insert("myTemporal",fn:concat("/bitemporal/trade",$tradeID,".json"),$content,null,"tradeData");
-}</query><query name="5.Quiz:PosiitionByStock" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">(: TODO modify this query to be positions in the past as we know of it now :)
+let $tradeID := $doc//tradeID
+let $URI := xdmp:node-uri($doc)
+(: alter content to be compliant with bitemporal collection :)
+let $content := cts:highlight(
+  $doc,
+  cts:json-property-range-query("tradeTime","!=",""),
+  object-node {
+    "sysStart" : ?,
+    "sysEnd" : ?,
+    "valStart" : $doc//tradeTime,
+    "valEnd" : ?})    
+let $delete := xdmp:document-delete($URI)
+return temporal:document-insert("myTemporal",fn:concat("/bitemporal/trade",$tradeID,".json"),$content,(),"tradeData");
+</query><query name="5.Quiz:PosiitionByStock" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">(: TODO modify this query to be positions in the past as we know of it now :)
 
 let $positions := map:map()
 let $docs := fn:collection("tradeData")
@@ -129,14 +137,18 @@ return
   return (
     element {"trade"} {$k},
     element {"position"} {map:get($positions,$k)} 
-  )</query><query name="6.Quiz:Upade/Cancellation" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">(: TODO Write code to make corrections to trade or cancel trade
+  )</query><query name="6.Quiz:Upade/Cancellation" focus="true" active="true" content-source="as:2832922811275495568:" mode="xquery">(: TODO Write code to make corrections to trade or cancel trade
  What if all trades made by one trader was in the wrong currency(EURO, should be USD)?
   What if all trades made with one counterparty for IBM between a certain period was cancelled? :)
     (: Use checkNumber tab to see if it actually worked :)
 
-for $doc in ????
-???
-temporal.documentInsert('myTemporal',URI,doc,xdmp.defaultPermissions(),'tradeData');
+for $doc in fn:collection("tradeData")
+let $content :=
+cts:highlight(
+  $doc,
+  cts:json-property-range-query("price","!=",""),
+  $doc//price * (:How Would  you change the price?:))    
+return temporal:document-insert('myTemporal',xdmp:node-uri($doc),$content,(),'tradeData')
 
 </query><query name="7.checkNumber" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">element {"count"} {
 element {"myTemporal"} {fn:count(fn:collection("myTemporal"))},
