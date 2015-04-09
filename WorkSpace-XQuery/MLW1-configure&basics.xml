@@ -1,4 +1,4 @@
-<export><workspace name="MLW1-configure&amp;basics"><query name="CreateRangeIndex" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml";
+<export><workspace name="MLW1-configure&amp;basics"><query name="1.CreateRangeIndex" focus="true" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml";
 import module namespace admin = "http://marklogic.com/xdmp/admin" 
     at "/MarkLogic/admin.xqy";
 let $config := admin:get-configuration()
@@ -16,7 +16,7 @@ let $config := admin:database-add-range-element-index($config, $dbid, $validEnd)
 let $config := admin:database-add-range-element-index($config, $dbid, $systemStart)
 let $config := admin:database-add-range-element-index($config, $dbid, $systemEnd)
 return
-    admin:save-configuration($config)</query><query name="createAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml"; 
+    admin:save-configuration($config)</query><query name="2.createAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml"; 
 import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
     at "/MarkLogic/temporal.xqy";
 temporal:axis-create(
@@ -26,17 +26,17 @@ temporal:axis-create(
 temporal:axis-create(
     "mySystem",
     cts:element-reference(xs:QName("sysStart")),
-    cts:element-reference(xs:QName("sysEnd")));</query><query name="checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml"; 
+    cts:element-reference(xs:QName("sysEnd")));</query><query name="3.checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml"; 
 import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
     at "/MarkLogic/temporal.xqy";
-temporal:axes()</query><query name="createCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml";
+temporal:axes()</query><query name="4.createCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">xquery version "1.0-ml";
 import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
      at "/MarkLogic/temporal.xqy";
-temporal:collection-create("myTemporal", "mySystem", "myValid")</query><query name="checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">// TODO - write code to check on if temporal collection has been created
+temporal:collection-create("myTemporal", "mySystem", "myValid")</query><query name="5.checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(:TODO - write code to check on if temporal collection has been created :)
 
 xquery version "1.0-ml";
 import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
-     at "/MarkLogic/temporal.xqy";</query><query name="normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: collection is a way to group documents together uniquely identified by a string
+     at "/MarkLogic/temporal.xqy";</query><query name="6.normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: collection is a way to group documents together uniquely identified by a string
  one document can be in any number of collections
 
  temporal collection is different, 
@@ -48,7 +48,7 @@ xdmp:document-insert(
   xdmp:default-permissions(), (: permission setting :)
   ("collection1","col2"),    (: collection setting :)
   10
-)</query><query name="retrieveDocument" focus="true" active="true" content-source="as:13134076190478922058:" mode="xquery">(: Two ways of seeing a document:
+)</query><query name="7.retrieveDocument" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: Two ways of seeing a document:
  1. Use fn.doc() function
  2. Click "Explore" button and navigate :)
 
