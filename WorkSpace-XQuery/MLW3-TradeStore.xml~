@@ -1,0 +1,147 @@
+<export><workspace name="MLW3-BitemporalTradeStore"><query name="1.GenerateData" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">(:Generate arbitary number of trade documents :)
+let $numTrade := 1000 (: number of trade docs to be generated :)
+let $timeSpan := 10 (: in years :)
+let $maxTrade := 99 (: max trade amount in hundreds :)
+let $traders := ("Jacob","Daniel","Jayden","Anthony","Matthew",
+"Alexander","Ethan","David","Andrew","Nathan",
+"Sophia","Isabella","Emily","Mia","Emma",
+"Olivia","Sofia","Abigail","Samantha","Natalie")
+let $swapTypes := ("BUY","SELL")
+let $stocks := ("MMM","AXP","APPL","BA","CAT","CVX","CSCO","KO","DIS","DD",
+"XOM","GE","GS","HD","IBM","INTC","JNJ","JPM","MCD","MRK",
+"MSFT","NKE","PFE","PG","TRV","UTX","UNH","VZ","V","WMT")
+let $prices := (165.07,78.13,124.77,150.24,79.95,105.04,27.49,40.58,105.17,71.51,84.93,24.84,188.65,113.79,161.14,
+31.28,100.71,60.64,97.75,57.62,40.76,100.64,34.98,82.11,108.14,117.41,118.66,48.65,65.64,82.51)
+let $exchanges:= ("NYSE","NASDAQ","BZX","BATS","IEX")
+let $counterpartys := ("Goldman Sachs","Morgan Stanley","JPMorgan Chase","Bank of America Merrill Lynch",
+"Deutsche Bank","Citigroup","Credit Suisse","Barclays Capital","UBS","HSBC")
+let $INF := xs:dateTime("9999-12-31T23:59:59.99Z")
+let $from := xs:dateTime("2000-01-01T00:00:00.00Z")
+let $to := fn:current-dateTime()
+for $i in 1 to $numTrade
+let $stockIdx := $i mod count($stocks)+1
+let $trade-time := $from + xdmp:random(100) * 0.01 * ($to - $from)
+let $trade-id := xdmp:hash32(fn:concat($i," ",$trade-time))
+let $doc := object-node {
+"tradeID" : $trade-id,
+"tradeTime" : $trade-time,
+"trader" : $traders[$i mod count($traders)+1],
+"swapType" : $swapTypes[$i mod count($swapTypes)+1],
+"stock" : $stocks[$stockIdx],
+"price" : $prices[$stockIdx] * (1+($i mod 20-10)*0.01),
+"quantity" : ($i mod ($maxTrade)+1)*100,
+"exchange" : $exchanges[$i mod count($exchanges)+1],
+"counterparty": $counterpartys[$i mod count($counterpartys)+1]
+}
+return xdmp:document-insert(
+fn:concat("trade",$trade-id,".json"),$doc,
+xdmp:default-permissions(),("tradeData","legacy"))
+</query><query name="2.setLSQT" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">
+temporal:set-use-lsqt("myTemporal",fn:true())</query><query name="3.Quiz:GenerateBitemporalData" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">
+(: TODO rewrite code to be bitemporal data and ingest into myTemporal collection
+use checkNumber tab to validate :)
+let $numTrade := 100 (: number of trade docs to be generated :)
+let $timeSpan := 10 (: in years :)
+let $maxTrade := 99 (: max trade amount in hundreds :)
+let $traders := ("Jacob","Daniel","Jayden","Anthony","Matthew",
+"Alexander","Ethan","David","Andrew","Nathan",
+"Sophia","Isabella","Emily","Mia","Emma",
+"Olivia","Sofia","Abigail","Samantha","Natalie")
+let $swapTypes := ("BUY","SELL")
+let $stocks := ("MMM","AXP","APPL","BA","CAT","CVX","CSCO","KO","DIS","DD",
+"XOM","GE","GS","HD","IBM","INTC","JNJ","JPM","MCD","MRK",
+"MSFT","NKE","PFE","PG","TRV","UTX","UNH","VZ","V","WMT")
+let $prices := (165.07,78.13,124.77,150.24,79.95,105.04,27.49,40.58,105.17,71.51,84.93,24.84,188.65,113.79,161.14,
+31.28,100.71,60.64,97.75,57.62,40.76,100.64,34.98,82.11,108.14,117.41,118.66,48.65,65.64,82.51)
+let $exchanges:= ("NYSE","NASDAQ","BZX","BATS","IEX")
+let $counterpartys := ("Goldman Sachs","Morgan Stanley","JPMorgan Chase","Bank of America Merrill Lynch",
+"Deutsche Bank","Citigroup","Credit Suisse","Barclays Capital","UBS","HSBC")
+let $INF := xs:dateTime("9999-12-31T23:59:59.99Z")
+let $from := xs:dateTime("2000-01-01T00:00:00.00Z")
+let $to := fn:current-dateTime()
+for $i in 1 to $numTrade
+let $stockIdx := $i mod count($stocks)+1
+let $trade-time := $from + xdmp:random(100) * 0.01 * ($to - $from)
+let $trade-id := xdmp:hash32(fn:concat($i," ",$trade-time))
+let $doc := object-node {
+"tradeID" : $trade-id,
+"tradeTime" : $trade-time,
+"trader" : $traders[$i mod count($traders)+1],
+"swapType" : $swapTypes[$i mod count($swapTypes)+1],
+"stock" : $stocks[$stockIdx],
+"price" : $prices[$stockIdx] * (1+($i mod 20-10)*0.01),
+"quantity" : ($i mod ($maxTrade)+1)*100,
+"exchange" : $exchanges[$i mod count($exchanges)+1],
+"counterparty": $counterpartys[$i mod count($counterpartys)+1],
+"timestamp" :
+object-node{
+"sysStart" : ????,
+"sysEnd" : ????,
+"valStart" : ????,
+"valEnd" : ????
+}
+}
+return xdmp:eval('
+declare variable $doc external;
+temporal:document-insert("myTemporal",fn:concat("/insert/Trade",$doc//tradeID,"/json"),$doc),
+temporal:statement-set-system-time(xs:dateTime($doc//?????))',
+(xs:QName("doc"),$doc))</query><query name="4.Quiz:ConvertData" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">
+(: TODO convert legacy document to bitemporal :)
+let $docs := fn:collection("legacy")
+let $INF := xs:dateTime("9999-12-31T23:59:59.99Z")
+for $doc in $docs
+let $tradeID := $doc//tradeID
+let $URI := xdmp:node-uri($doc)
+(: alter content to be compliant with bitemporal collection :)
+let $content := cts:highlight(
+$doc,
+cts:json-property-range-query("tradeTime","!=",""),
+object-node {
+"sysStart" : ?,
+"sysEnd" : ?,
+"valStart" : $doc//tradeTime,
+"valEnd" : ?})
+let $delete := xdmp:document-delete($URI)
+return temporal:document-insert("myTemporal",fn:concat("/bitemporal/trade",$tradeID,".json"),$content,(),"tradeData");
+</query><query name="5.Quiz:PosiitionByStock" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">(: TODO modify this query to be positions in the past as we know of it now :)
+let $positions := map:map()
+let $docs := fn:collection("tradeData")
+let $populate:=
+for $doc in $docs
+let $key := $doc//stock
+let $diff := $doc//quantity
+let $put1 :=
+if (map:contains($positions,$key))
+then ()
+else map:put($positions,$key,0)
+let $old := map:get($positions,$key)
+let $put2 :=
+if ($doc//swapType eq "SELL")
+then map:put($positions,$key,$old - $diff)
+else map:put($positions,$key,$old + $diff)
+return ()
+return
+for $k in map:keys($positions)
+where map:contains($positions,$k)
+return (
+element {"trade"} {$k},
+element {"position"} {map:get($positions,$k)}
+)</query><query name="6.Quiz:Upade/Cancellation" focus="true" active="true" content-source="as:2832922811275495568:" mode="xquery">(: TODO Write code to make corrections to trade or cancel trade
+What if all trades made by one trader was in the wrong currency(EURO, should be USD)?
+What if all trades made with one counterparty for IBM between a certain period was cancelled? :)
+(: Use checkNumber tab to see if it actually worked :)
+for $doc in fn:collection("tradeData")
+let $content :=
+cts:highlight(
+$doc,
+cts:json-property-range-query("price","!=",""),
+$doc//price * (:How Would you change the price?:))
+return temporal:document-insert('myTemporal',xdmp:node-uri($doc),$content,(),'tradeData')
+</query><query name="7.checkNumber" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">element {"count"} {
+element {"myTemporal"} {fn:count(fn:collection("myTemporal"))},
+element {"tradeData"} {fn:count(fn:collection("tradeData"))},
+element {"legacy"} {fn:count(fn:collection("legacy"))},
+element {"latest"} {fn:count(fn:collection("latest"))} }
+</query><query name="8.clearEnvironment" focus="false" active="true" content-source="as:2832922811275495568:" mode="xquery">
+(: this shows how documents could be cleared while you are playing with the data generation tab :)
+xdmp:collection-delete("tradeData")</query></workspace></export>

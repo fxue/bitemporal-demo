@@ -1,8 +1,7 @@
-<export><workspace name="MLW2-Ingestion&amp;Query"><query name="1.setLSQT" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+<export><workspace name="MLW2-Ingestion&amp;Query"><query name="1.setLSQT" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
 // LSQT - Last Stable Query Time - more later in workspace #4
 // Used in conjunction with temporal.setStatementSystemTime()
-// Now go back to tab 1
 
 temporal.setUseLsqt("myTemporal",true)</query><query name="2.FionaBuy" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
@@ -10,6 +9,8 @@ temporal.setUseLsqt("myTemporal",true)</query><query name="2.FionaBuy" focus="fa
 
 // system time will be populated by the system
 // valid time in content will be kept intact
+
+// expect empty result
 // goto http://localhost:3000/
 
 var root = {
@@ -21,7 +22,7 @@ var root = {
     
 temporal.documentInsert("myTemporal","addr.json",root)
   
-// provide system time, need to turn on LSQT to enable this - see next Tab
+// provide system time to insert as if done in the past
 temporal.statementSetSystemTime("2002-01-01T00:00:00Z")    </query><query name="3.FinnBuy" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
 // navigate to localhost:3000 to see what versions we have
@@ -29,6 +30,7 @@ temporal.statementSetSystemTime("2002-01-01T00:00:00Z")    </query><query name="
 // Fiona buys house 2001 recorded 2002
 // Finn buys house 2004 recorded 2005
 
+// expect empty result
 // after the query, explore in Query Console and find out which collections the documents belong to?
 // go to http://localhost:3000/ see visualization
 
@@ -57,6 +59,7 @@ cts.search(
   
   </query><query name="5.FionaBuy2" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
+// expect empty result
 // first find on the visualization which version we want to change
 // write query to get that version
 var result = 
@@ -81,7 +84,7 @@ temporal.statementSetSystemTime("2007-01-01T00:00:00Z")
 </query><query name="6.Quiz:Finn2" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// Fiona buys house 2001 recorded 2002 - lag
 // Finn buys house 2004 recorded 2004
 // Fiona actually bought house 2000 recorded 2007 - correction
-// Finn actually bought house 2003 recorded 2008 - correction
+// QUIZ Finn actually bought house 2003 recorded 2008 - correction
 // Fill in the ???, look at tab #5 for guidance
 
 declareUpdate();
@@ -123,7 +126,7 @@ temporal.documentInsert("myTemporal","bar.json",root)</query><query name="8.Exer
 // QUIZ : Finn actually bought house 2005 recorded 2010?  -  check visualization
 
 // PUT YOUR CODE HERE</query><query name="9.Exercise" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// who did we think owned the house mid-2000 as of 2005 / 2010 ?
-// who did we think owned the house 2002/2007 as of 2010 ?
+// who did we think owned the house 2002 / 2007 as of 2010 ?
 // what is the difference when you change ISO to ALN ?
 
 cts.search(
@@ -165,5 +168,5 @@ var temporal=require("/MarkLogic/temporal.xqy");
 // updates-safe : can only manipulate temporal documents with temporal API
 // updates-admin-override : admin user can manipulate documents with normal API such as xdmp.documentInsert
 
-temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
+temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
 xdmp.collectionDelete("addr.json"),xdmp.collectionDelete("bar.json")</query></workspace></export>

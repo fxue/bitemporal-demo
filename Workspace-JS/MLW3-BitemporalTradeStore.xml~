@@ -1,0 +1,164 @@
+<export><workspace name="MLW3-BitemporalTradeStore"><query name="1.GenerateData" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">declareUpdate();
+
+// Generate arbitary number of trade documents
+// explore in the database and see 
+
+var numTrade = 1000;  // number of trade docs to be generated
+var timeSpan = 10;    // in years
+var maxTrade = 99;    // max trade amount in hundreds
+
+var traders  = ["Jacob","Daniel","Jayden","Anthony","Matthew",
+                "Alexander","Ethan","David","Andrew","Nathan",
+                "Sophia","Isabella","Emily","Mia","Emma",
+                "Olivia","Sofia","Abigail","Samantha","Natalie"];
+var swapTypes = ["BUY","SELL"];
+var stocks    = ["MMM","AXP","APPL","BA","CAT","CVX","CSCO","KO","DIS","DD",
+                "XOM","GE","GS","HD","IBM","INTC","JNJ","JPM","MCD","MRK",
+                "MSFT","NKE","PFE","PG","TRV","UTX","UNH","VZ","V","WMT"];
+var prices    = [165.07,78.13,124.77,150.24,79.95,105.04,27.49,40.58,105.17,71.51,84.93,24.84,188.65,113.79,161.14,
+                 31.28,100.71,60.64,97.75,57.62,40.76,100.64,34.98,82.11,108.14,117.41,118.66,48.65,65.64,82.51];
+var exchanges= ["NYSE","NASDAQ","BZX","BATS","IEX"];    
+var counterpartys = ["Goldman Sachs","Morgan Stanley","JPMorgan Chase","Bank of America Merrill Lynch",
+                    "Deutsche Bank","Citigroup","Credit Suisse","Barclays Capital","UBS","HSBC"];
+
+
+var INF = "9999-12-31T23:59:59.99Z" 
+var from = new Date(2000, 0, 1).getTime();
+var to = new Date()
+    
+for (var i = 0; i &lt; numTrade; i++) {
+  var stockIdx = i%stocks.length
+  var doc = {
+    tradeID     : undefined,
+    tradeTime   : new Date(from + Math.random() * (to - from)),
+    trader      : traders[i%traders.length],
+    swapType    : swapTypes[i%swapTypes.length],
+    stock       : stocks[stockIdx],
+    price       : prices[stockIdx] * (1+(i%20-10)*0.01),
+    quantity    : (i%(maxTrade)+1)*100,
+    exchange    : exchanges[i%(exchanges.length)],
+    counterparty: counterpartys[i%(counterpartys.length)]
+  }
+  doc.tradeID = xdmp.hash32(i+" "+doc.tradeTime);
+  xdmp.documentInsert("trade"+doc.tradeID+".json",doc,xdmp.defaultPermissions(),["tradeData","legacy"])
+}</query><query name="2.setLSQT" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">declareUpdate()
+temporal.setUseLsqt("myTemporal",true)</query><query name="3.QUIZ:GenerateBitemporalData" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">declareUpdate();
+
+// TODO rewrite code to be bitemporal data and ingest into myTemporal collection
+// use checkNumber tab to validate
+/* should be
+{
+"myTemporal": 101,
+"tradeData": 1100,
+"legacy": 1000,
+"latest": 100
+}
+*/
+
+var numTrade = 100;  // number of trade docs to be generated
+
+
+var timeSpan = 10;    // in years
+var maxTrade = 99;    // in hundreds
+
+var traders  = ["Jacob","Daniel","Jayden","Anthony","Matthew",
+                "Alexander","Ethan","David","Andrew","Nathan",
+                "Sophia","Isabella","Emily","Mia","Emma",
+                "Olivia","Sofia","Abigail","Samantha","Natalie"];
+var swapTypes = ["BUY","SELL"];
+var stocks    = ["MMM","AXP","APPL","BA","CAT","CVX","CSCO","KO","DIS","DD",
+                "XOM","GE","GS","HD","IBM","INTC","JNJ","JPM","MCD","MRK",
+                "MSFT","NKE","PFE","PG","TRV","UTX","UNH","VZ","V","WMT"];
+var prices    = [165.07,78.13,124.77,150.24,79.95,105.04,27.49,40.58,105.17,71.51,84.93,24.84,188.65,113.79,161.14,
+                 31.28,100.71,60.64,97.75,57.62,40.76,100.64,34.98,82.11,108.14,117.41,118.66,48.65,65.64,82.51];
+var exchanges= ["NYSE","NASDAQ","BZX","BATS","IEX"];    
+var counterpartys = ["Goldman Sachs","Morgan Stanley","JPMorgan Chase","Bank of America Merrill Lynch",
+                    "Deutsche Bank","Citigroup","Credit Suisse","Barclays Capital","UBS","HSBC"];
+
+var INF = "9999-12-31T23:59:59.99Z" 
+var from = new Date(2000, 0, 1).getTime();
+var to = new Date()
+    
+for (var i = 0; i &lt; numTrade; i++) {
+  var stockIdx = i%stocks.length
+  var tradeTime = new Date(from + Math.random() * (to - from))
+  var doc = {
+    trader      : traders[i%traders.length],
+    swapType    : swapTypes[i%swapTypes.length],
+    stock       : stocks[stockIdx],
+    price       : prices[stockIdx] * (1+(i%20-10)*0.01),
+    quantity    : (i%(maxTrade)+1)*100,
+    exchange    : exchanges[i%(exchanges.length)],
+    counterparty: counterpartys[i%(counterpartys.length)],
+    timestamps: {
+      sysStart : ???,
+      sysEnd   : ???,
+      valStart : ???,
+      valEnd   : ???
+    }
+  }
+  doc.tradeID = xdmp.hash32(i+" "+doc.tradeTime);
+  xdmp.eval(
+  "declareUpdate();"+
+  "temporal.documentInsert('myTemporal','/bitemporal/trade'+doc.tradeID+'.json',doc,xdmp.defaultPermissions(),'tradeData');" +
+  "temporal.statementSetSystemTime(doc.timestamps.valStart);",
+    {"doc": doc})
+}</query><query name="4.QUIZ:ConvertData" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">declareUpdate();
+// TODO convert legacy document to bitemporal
+// use checkNumber to check result
+/* should be 
+{
+"myTemporal": 1101,
+"tradeData": 1100,
+"legacy": 0,
+"latest": 1100
+}
+*/
+
+var INF = "9999-12-31T23:59:59.99Z" 
+var docs = fn.collection("legacy").toArray()
+for (var i=0; i&lt;docs.length; i++) {
+  var URI = xdmp.nodeUri(docs[i]);
+  var content = docs[i].toObject();
+  // alter content to be compliant with bitemporal collection
+  content.timestamps =  {
+    // fill in code here
+    }
+  xdmp.documentDelete(URI);
+  temporal.documentInsert("myTemporal","/bitemporal/trade"+content.tradeID+".json",content,null,"tradeData");
+}</query><query name="5.PosiitionByStock" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">// TODO modify this query to be positions in the past as we know of it now
+
+var positions = {};
+//var docs = fn.collection("tradeData").toArray()
+for (var i=0; i&lt;docs.length; i++) {
+  var doc = docs[i].toObject();
+  var key = doc.stock;
+  if (!positions[key]) positions[key] = 0;
+  if (doc.swapType==="SELL") positions[key] -= doc.quantity;
+  if (doc.swapType==="BUY") positions[key] += doc.quantity;
+}
+positions</query><query name="6.Upade/Cancellation" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">declareUpdate();
+
+// TODO Write code to make corrections to trade or cancel trade
+// What if all trades made by one trader was in the wrong currency(EURO, should be USD)?
+// What if all trades made with one counterparty for IBM between a certain period was cancelled?
+
+// Use checkNumber tab to see if it actually worked
+
+var tradeIDs = cts.values(cts.elementReference("tradeID"),null,null,cts.jsonPropertyValueQuery("trader","Sofia")).toArray();
+for (var i=0; i&lt;tradeIDs.length; i++) {
+  var tradeID = tradeIDs[i];
+  var URI = '/bitemporal/trade'+tradeID+'.json'
+  var doc = cts.doc(URI).toObject(); 
+  doc.price = doc.price * 1.04;
+  temporal.documentInsert('myTemporal',URI,doc,xdmp.defaultPermissions(),'tradeData');
+}
+</query><query name="7.checkNumber" focus="false" active="true" content-source="as:2832922811275495568:" mode="javascript">({myTemporal: fn.count(fn.collection("myTemporal")),
+  tradeData: fn.count(fn.collection("tradeData")),
+  legacy: fn.count(fn.collection("legacy")),
+  latest: fn.count(fn.collection("latest"))})
+
+  </query><query name="8.clearEnvironment" focus="true" active="true" content-source="as:2832922811275495568:" mode="javascript">declareUpdate();
+
+// this shows how documents could be cleared while you are playing with the data generation tab
+xdmp.collectionDelete("tradeData")</query></workspace></export>

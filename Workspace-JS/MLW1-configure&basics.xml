@@ -5,6 +5,7 @@ var dbid = xdmp.database("Documents");
 // Element Range Index : JSON property OR XML element
 // Attribute Range Index : XML attribute
 // Path Range Index : XML/JSON path e.g. /system/start
+// expect empty sequence
 
 var validStart = admin.databaseRangeElementIndex("dateTime", "", "valStart", "", fn.false() );
 var validEnd   = admin.databaseRangeElementIndex("dateTime", "", "valEnd", "", fn.false() );
@@ -19,15 +20,17 @@ admin.saveConfiguration(config);</query><query name="2.createAxis" focus="false"
 var temporal=require("/MarkLogic/temporal.xqy");
  
 // navigate to Schemas as content source to check on the axis configuration files
+// expect empty sequence
 
-temporal.axisCreate("myValid",cts.elementReference("valStart"),cts.elementReference("valEnd"))
-temporal.axisCreate("mySystem",cts.elementReference("sysStart"),cts.elementReference("sysEnd"))</query><query name="3.checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// this is a query, no need to declare update
+[temporal.axisCreate("myValid",cts.elementReference("valStart"),cts.elementReference("valEnd")),
+temporal.axisCreate("mySystem",cts.elementReference("sysStart"),cts.elementReference("sysEnd"))]</query><query name="3.checkAxis" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// this is a query, no need to declare update
 var temporal=require("/MarkLogic/temporal.xqy");
  
 temporal.axes()</query><query name="4.createCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
 
-temporal.collectionCreate("myTemporal","mySystem","myValid")</query><query name="5.checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// TODO - write code to check on if temporal collection has been created</query><query name="6.normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+temporal.collectionCreate("myTemporal","mySystem","myValid")</query><query name="5.checkCollection" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// TODO - write code to check on if temporal collection has been created
+var temporal=require("/MarkLogic/temporal.xqy");</query><query name="6.normalInsert" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
 // collection is a way to group documents together uniquely identified by a string
 // one document can be in any number of collections

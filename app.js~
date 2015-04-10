@@ -29,7 +29,7 @@ app.get('/data', function(req, res) {
   }).
   then(function(r){
     // send json back to http response
-  	console.log("rendering....");
+  	console.log("redering....");
   	res.json(r);
   });
 });
