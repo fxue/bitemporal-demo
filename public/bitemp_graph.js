@@ -6,7 +6,7 @@ var barChart = function() {
   var margin = {
     top: 10,
     right: 0,
-    bottom: 40,
+    bottom: 80,
     left: 80
   };
   var xAxisLabel = 'System Time';
