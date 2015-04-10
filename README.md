@@ -12,7 +12,7 @@ INSTALL INSTRUCTIONS
 2. Navigate to http://localhost:8000/qconsole
 3. On the right bar click the down arrow and choose "import workspace"
 4. Import files in folder "WorkSpace-JS" or "WorkSpace-XQuery" depending on your language preference: Javascript or XQuery
-5. Doanload and install node.js : https://nodejs.org/download/
+5. Download and install node.js : https://nodejs.org/download/
 6. Go to command line/terminal, cd under this repo directory, do "npm install"
 7. Check to see that there is no ERR
 8. Configure connection in env.js if needed.
