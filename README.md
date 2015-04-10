@@ -22,12 +22,18 @@ INSTALL INSTRUCTIONS
 
 Guide to Workspaces:
 
-MLW1-configure&basics.xml - set up temporal axis/collection, basic intro to MarkLogic
-MLW2-Ingestion&Query.xml - temporal insert/update/delete examples and exercises, work together with node app on port 3000
-MLW3-BitemporalTradeStore.xml - more complex data set (a trade store) exercises
-MLW4-Semantics.xml - intro to how bitemporal and semantics work together
-MLW5-BitemporalLSQT.xml - special use case, proceed when done with 1 to 3
-MLW6-IngestYourOwn - some helper code to ingest your own data
+1.MLW1-configure&basics.xml - set up temporal axis/collection, basic intro to MarkLogic
+
+2.MLW2-Ingestion&Query.xml - temporal insert/update/delete examples and exercises, work together with node app on port 3000
+
+3.MLW3-BitemporalTradeStore.xml - more complex data set (a trade store) exercises
+
+4. MLW4-Semantics.xml - intro to how bitemporal and semantics work together
+
+5. MLW5-BitemporalLSQT.xml - special use case, proceed when done with 1 to 3
+
+6. MLW6-IngestYourOwn - some helper code to ingest your own data
+
 
 Documentation - Temporal Developer's Guide http://pubs.marklogic.com:8011/guide/temporal
 
