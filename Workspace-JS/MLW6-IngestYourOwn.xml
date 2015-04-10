@@ -1,0 +1,16 @@
+<export><workspace name="MLW6-IngestYourOwn"><query name="transform&amp;loadJson" focus="true" active="true" content-source="as:16504733963136178685:" mode="javascript">declareUpdate()
+var path = "/space/fxue/bitemporal-demo/data/json"
+for (var d of xdmp.filesystemDirectory(path)) {
+  var content = JSON.parse(xdmp.filesystemFile(d.pathname))
+  var doc = {
+    "data" : content,
+    "timestamps":
+    {
+      "sysStart": null,
+      "sysEnd": null,
+      "valStart" : content.releasedate + "T00:00:00Z",
+      "valEnd"   : "9999-12-31T23:59:59Z"
+    }
+  }
+  temporal.documentInsert("myTemporal",d.filename,doc,null,path)
+}</query><query name="nex steps" focus="false" active="true" content-source="as:16504733963136178685:" mode="javascript">// write your correction logic here</query></workspace></export>

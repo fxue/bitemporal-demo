@@ -1,0 +1,15 @@
+<export><workspace name="MLW6-IngestYourOwn"><query name="transform&amp;loadXML" focus="true" active="true" content-source="as:16504733963136178685:" mode="xquery">let $path := "/space/fxue/bitemporal-demo/data/xml"
+for $d in xdmp:filesystem-directory($path)//dir:entry
+let $content := xdmp:unquote(xdmp:filesystem-file($d//dir:pathname))
+let $doc := &lt;root&gt;
+    &lt;data&gt;{$content}&lt;/data&gt;
+    &lt;timestamps&gt;
+      &lt;sysStart/&gt;
+      &lt;sysEnd/&gt;
+      &lt;valStart&gt;{fn:concat($content//releasedate,"T00:00:00Z")}&lt;/valStart&gt;
+      &lt;valEnd&gt;9999-12-31T23:59:59Z&lt;/valEnd&gt;
+   &lt;/timestamps&gt;
+   &lt;/root&gt;
+ return temporal:document-insert("myTemporal",$d//dir:filename,$doc,(),$path)
+ 
+</query><query name="nex steps" focus="false" active="true" content-source="as:16504733963136178685:" mode="javascript">// write your correction logic here</query></workspace></export>
