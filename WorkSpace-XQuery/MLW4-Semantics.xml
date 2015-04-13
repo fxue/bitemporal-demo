@@ -1,11 +1,17 @@
-<export><workspace name="MLW4-Semantics"><query name="Enable Triple Index" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">xquery version "1.0-ml";
+<export><workspace name="MLW4-Semantics"><query name="Enable Triple Index" focus="true" active="true" content-source="as:11162580126874597628:" mode="xquery">xquery version "1.0-ml";
 import module namespace admin = "http://marklogic.com/xdmp/admin" at "/MarkLogic/admin.xqy";
 (: Get the configuration :)
+(: Output: your query returned an empty sequence :)
+
 let $config := admin:get-configuration()
 let $Sample-Database := xdmp:database()
 let $c := admin:database-set-triple-index($config, $Sample-Database, fn:true())
-return admin:save-configuration($c)</query><query name="Luna in SFO" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(:Luna lived in San Francisco between 2001 and 2005. 
- We recorded this on 2006-01-01T00:00:00Z:)
+return (
+  temporal:set-use-lsqt("myTemporal",fn:true()),
+  admin:save-configuration($c)
+)</query><query name="Luna in SFO" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">(: Luna lived in San Francisco between 2001 and 2005. We recorded this on 2006-01-01T00:00:00Z 
+   Output: your query returned an empty sequence :)
+
 let $root := &lt;root&gt;
   &lt;sysStart/&gt;&lt;sysEnd/&gt;
   &lt;valStart&gt;2001-01-01T00:00:00Z&lt;/valStart&gt;
@@ -25,8 +31,9 @@ let $root := &lt;root&gt;
     
 return (
 temporal:document-insert("myTemporal","triple.xml",$root),
-temporal:statement-set-system-time(xs:dateTime("2006-01-01T00:00:00Z")))</query><query name="Luna Moved to Denver" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(:Luna moved in Denver on 2004-01-01T00:00:00Z and lived there until 2007-01-01T00:00:00Z. 
- We knew about this on 2008-01-01T00:00:00Z:)
+temporal:statement-set-system-time(xs:dateTime("2006-01-01T00:00:00Z")))</query><query name="Luna Moved to Denver" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">(: Luna moved in Denver on 2004-01-01T00:00:00Z and lived there until 2007-01-01T00:00:00Z. We knew about this on 2008-01-01T00:00:00Z :)
+(: your query returned an empty sequence :)
+
 let $root := &lt;root&gt;
   &lt;sysStart/&gt;&lt;sysEnd/&gt;
   &lt;valStart&gt;2004-01-01T00:00:00Z&lt;/valStart&gt;
@@ -35,10 +42,10 @@ let $root := &lt;root&gt;
   &lt;sem:triple&gt;
     &lt;sem:subject&gt;Luna&lt;/sem:subject&gt;
     &lt;sem:predicate&gt;city&lt;/sem:predicate&gt;
-    &lt;sem:object&gt;Denvor&lt;/sem:object&gt;
+    &lt;sem:object&gt;Denver&lt;/sem:object&gt;
   &lt;/sem:triple&gt;
   &lt;sem:triple&gt;
-    &lt;sem:subject&gt;Denvor&lt;/sem:subject&gt;
+    &lt;sem:subject&gt;Denver&lt;/sem:subject&gt;
     &lt;sem:predicate&gt;state&lt;/sem:predicate&gt;
     &lt;sem:object&gt;CO&lt;/sem:object&gt;
   &lt;/sem:triple&gt;
@@ -46,17 +53,25 @@ let $root := &lt;root&gt;
     
 return (
 temporal:document-insert("myTemporal","triple.xml",$root),
-temporal:statement-set-system-time(xs:dateTime("2008-01-01T00:00:00Z")))</query><query name="Luna Stay at LA" focus="false" active="true" content-source="15207296243617144201:0:Apps" mode="xquery">(: TODO Correction: Eva lived in San Francisco between 2001 and 2003. She moved to LA on 2004-01-01T00:00:00Z
-This is recorded as 2 events - one to 'correct' her stay at SFO and another to indicate her stay at LA
-This document records her move to LA. 
- We recorded this on 2007-01-01T00:00:00Z :)
-</query><query name="BiTemporal Query" focus="false" active="true" content-source="7900001892146779296:0:Apps" mode="xquery">(: Query bi-temporally :)
+temporal:statement-set-system-time(xs:dateTime("2008-01-01T00:00:00Z")))</query><query name="BiTemporal Query" focus="false" active="true" content-source="7900001892146779296:0:Apps" mode="xquery">(: Query bi-temporally :)
+(: Output: Should return 3 documents.  
+   1. What we know since 2008-01-01T00:00:00Z. That Luna lived in Denver between 2004-01-01T00:00:00Z and 2007-01-01T00:00:00Z
+   2. What we knew between 2006-01-01T00:00:00Z and 2008-01-01T00:00:00Z. That Luna lived in San Francisco between 2001-01-01T00:00:00Z and 2006-01-01T00:00:00Z
+   3. What we know between 2008-01-01T00:00:00Z and now. That Luna lived in San Francisco between 2001-01-01T00:00:00Z and 2004-01-01T00:00:00Z
+:)
 
-cts:search(fn:doc(),cts:period-range-query(
-    "myValid",
-    "ISO_OVERLAPS",
-    cts:period(xs:dateTime("2001-04-03T16:10:00"),
-               xs:dateTime("2014-04-03T16:12:00")) ))</query><query name="Where Luna Lived in 2002" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: Which city, state did Luna live in 2002. City and state info comes from triples :)
+cts:search(fn:doc(),
+  cts:and-query((
+    cts:period-range-query(
+      "myValid",
+      "ISO_OVERLAPS",
+      cts:period(xs:dateTime("2001-04-03T16:10:00"),
+                 xs:dateTime("2014-04-03T16:12:00")) ),
+    cts:collection-query("myTemporal")
+  ))
+)</query><query name="Where Luna Lived in 2002" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">(: Which city, state did Luna live in 2002-01-01T00:00:00Z. City and state info comes from triples
+   Should return San Francisco as the city and CA as the state
+:)
 
 let $q := '
   SELECT 
@@ -73,13 +88,19 @@ return
     (),
     sem:store(
       (),
-      cts:period-range-query(
-        "myValid",
-        "ALN_CONTAINS",
-        cts:period(
-          xs:dateTime("2002-01-01T00:00:00Z") ))
-      )
-    )</query><query name="Where Luna lived  between 2000 &amp; 2007" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: Which cities and states did Luna live in between 2000 and 2006. City, state info comes from triples :)
+      cts:and-query((
+        cts:period-range-query(
+          "myValid",
+          "ALN_CONTAINS",
+          cts:period(
+            xs:dateTime("2002-01-01T00:00:00Z") )),
+        cts:collection-query("myTemporal")
+     ))
+   )
+ )</query><query name="Where Luna lived  between 2000 &amp; 2007" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">(: Which cities and states did Luna live in between 2000-01-01T00:00:00Z and 2007-01-01T00:00:00Z. City, state info comes from triples 
+   Should return San Francisco as the city and California as the state AND
+   Should return Denver as the city and Colorado as the state 
+:)
 
 let $q := '
 SELECT 
@@ -95,14 +116,17 @@ return
     (),
     sem:store(
       (),
-      cts:period-range-query(
-        "myValid",
-        "ISO_OVERLAPS",
-        cts:period(
-          xs:dateTime("2000-01-01T00:00:00Z"),
-          xs:dateTime("2007-01-01T00:00:00Z")) )
-      )
-    )</query><query name="In 2006, what did we know about where Eva lived" focus="false" active="false" content-source="13199000469121224597:0:Apps" mode="xquery">(: What did I know between during the year 2006 about where Luna lived. We search on system time. City, state info comes from triples :)
+      cts:and-query((
+        cts:period-range-query(
+          "myValid",
+          "ISO_OVERLAPS",
+          cts:period(
+            xs:dateTime("2000-01-01T00:00:00Z"),
+            xs:dateTime("2007-01-01T00:00:00Z")) ),
+        cts:collection-query("myTemporal")
+      ))
+    )
+  )</query><query name="In 2006, what did we know about where Eva lived" focus="false" active="false" content-source="13199000469121224597:0:Apps" mode="xquery">(: What did I know between during the year 2006 about where Luna lived. We search on system time. City, state info comes from triples :)
 
 import module namespace sem = "http://marklogic.com/semantics" at "MarkLogic/semantics.xqy";
 
@@ -127,7 +151,7 @@ return
         cts:period(
           xs:dateTime("2006-01-01T00:00:00Z")) )
       )
-    )</query><query name="In 2007, what we did know about where Eva lived" focus="false" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: TODO What did I know during the year 2007 about where Luna lived. We search on system time 
+    )</query><query name="In 2007, what we did know about where Eva lived" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">(: TODO What did I know during the year 2007 about where Luna lived. We search on system time 
    At this time, we know that Luna lived in SFO and Denver. City, state info comes from triples :)
 
 import module namespace sem = "http://marklogic.com/semantics" at "MarkLogic/semantics.xqy";
@@ -148,16 +172,19 @@ return
     (),
     sem:store(
       (),
-      cts:period-range-query(
-        "????",
-        "ISO_CONTAINS",
-        cts:period(
-          xs:dateTime("????-01-01T00:00:00Z")) )
-      )
-    )</query><query name="In 2007, what we did know between 2004 and 2005" focus="true" active="true" content-source="13199000469121224597:0:Apps" mode="xquery">(: TODO What did I know  during the year 2007 about where Luna lived between 2004 and 2005. We search on 
+      cts:and-query((
+        cts:period-range-query(
+          "????",
+          "ISO_CONTAINS",
+          cts:period(
+            xs:dateTime("????-01-01T00:00:00Z")) ),
+          cts:collection-query("myTemporal")
+      ))
+    )
+  )</query><query name="In 2007, what we did know between 2004 and 2005" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">(: TODO What did I know  during the year 2007-01-01T00:00:00Z about where Luna lived between 2004-01-01T00:00:00Z and 2005-01-01T00:00:00Z. We search on 
    system time and valid time :)
    
-let $q := '???
+let $q := '????
 '
 
 return
@@ -178,9 +205,12 @@ return
           "ISO_CONTAINS",
           cts:period(
             xs:dateTime("2004-01-01T00:00:00Z"),            
-            xs:dateTime("2005-01-01T00:00:00Z")) )
-        ))            
-      )
+            xs:dateTime("2005-01-01T00:00:00Z")) ),
+        cts:collection-query("myTemporal")
+      ))     
     )
+  )
 
- </query></workspace></export>
+ </query><query name="cleanData" focus="false" active="true" content-source="as:11162580126874597628:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+xdmp:collection-delete("triple.xml")</query></workspace></export>
