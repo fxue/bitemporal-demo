@@ -123,9 +123,10 @@ temporal.documentInsert("myTemporal","bar.json",root)</query><query name="8.Exer
 // Fiona actually bought house 2000 recorded 2007 - correction
 // Finn actually bought house 2003 recorded 2008 - correction
 // QUIZ : Finn then sold house to Jake 2007 recorded 2009?  -  check visualization
-// QUIZ : Finn actually bought house 2005 recorded 2010?  -  check visualization
+// HINT : this is similar to tab 5
 
-// PUT YOUR CODE HERE</query><query name="9.Exercise" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// who did we think owned the house mid-2000 as of 2005 / 2010 ?
+// PUT YOUR CODE HERE
+</query><query name="9.Exercise" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// who did we think owned the house mid-2000 as of 2005 / 2010 ?
 // who did we think owned the house 2002 / 2007 as of 2010 ?
 // what is the difference when you change ISO to ALN ?
 
@@ -161,12 +162,12 @@ temporal.collectionGetOptions("myTemporal")</query><query name="13.versionManipu
 // For regulated industries, absolutely NO non-temporal APIs can be used on temporal versions
 // To disable this, change option with the next tab, then admin users can modify temporal versions
 
-xdmp.documentInsert("addr.json",{foo:"bar"})</query><query name="14.collectionSetOptions" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+xdmp.documentInsert("addr.json",{foo:"bar"})</query><query name="14.collectionSetOptions" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
  
 // "updates-safe" or "updates-admin-override"
 // updates-safe : can only manipulate temporal documents with temporal API
 // updates-admin-override : admin user can manipulate documents with normal API such as xdmp.documentInsert
 
-temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
+temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
 xdmp.collectionDelete("addr.json"),xdmp.collectionDelete("bar.json")</query></workspace></export>
