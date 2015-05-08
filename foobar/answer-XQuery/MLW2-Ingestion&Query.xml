@@ -1,0 +1,183 @@
+<export><workspace name="MLW2-Ingestion&amp;Query"><query name="1.setLSQT" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(:LSQT - Last Stable Query Time - more later in workspace #4
+Used in conjunction with temporal.setStatementSystemTime()
+
+DO NOT need this if no need to set your own system time!
+
+expect: empty sequence
+:)
+
+temporal:set-use-lsqt("myTemporal",fn:true())</query><query name="2.FionaBuy" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: Fiona buys house 2001 recorded 2002 :)
+
+(: system time will be populated by the system
+ valid time in content will be kept intact
+
+observe "addr.json" content:)
+
+let $root := 
+object-node{
+"sysStart": null-node{},
+"sysEnd": null-node{},
+"valStart": "2001-01-01T00:00:00Z",
+"valEnd": "9999-12-31T23:59:59Z",
+"data": "Fiona"}
+    
+return     
+temporal:document-insert("myTemporal","addr.json",$root),  
+(: provide system time as if were ingested in the past:)
+temporal:statement-set-system-time(xs:dateTime("2002-01-01T00:00:00Z"))</query><query name="3.FinnBuy" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(:navigate to localhost:3000 to see what versions we have
+Fiona buys house 2001 recorded 2002
+Finn buys house 2004 recorded 2005
+
+after the query, explore in Query Console and find out which collections the documents belong to? :)
+
+let $root := 
+object-node{
+"sysStart": null-node{},
+"sysEnd": null-node{},
+"valStart": "2004-01-01T00:00:00Z",
+"valEnd": "9999-12-31T23:59:59Z",
+"data": "Finn"}
+    
+return     
+temporal:document-insert("myTemporal","addr.json",$root),  
+(: provide system time as if were ingested in the past :)
+temporal:statement-set-system-time(xs:dateTime("2005-01-01T00:00:00Z"))</query><query name="4.QueryStudy" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: cts:period(t) =&gt; [t,t+dt) dt is the smallest time unit
+ cts:period(t1,t2)  =&gt; [t1,t2)
+ study difference between ISO_CONTAINS &amp; ALN_CONTAINS, ISO_OVERLAPS &amp; ALN_OVERLAPS
+ experiment with different axis/operator/period
+ for operator defs : http://docs.marklogic.com/guide/temporal/searching#id_78584 :)
+
+cts:search(
+    fn:doc(),
+    cts:period-range-query(
+      "myValid",          (: axis name :)
+      "ISO_CONTAINS",   (: operator name :)
+      cts:period(xs:dateTime("2002-01-01T00:00:00Z"),xs:dateTime("2003-01-01T00:00:00Z")))
+      (:cts:period(xs:dateTime("9999-12-31T23:59:59Z")):)
+  )
+  
+  </query><query name="5.Fiona2" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(:first find on the visualization which version we want to change
+ write query to get that version :)
+let $result := 
+cts:search(
+  fn:doc(),
+  cts:and-query((
+    cts:json-property-value-query("data","Fiona"),
+    cts:period-range-query(
+      "mySystem","ALN_MEETS",
+      cts:period(xs:dateTime("9999-12-31T23:59:59Z")))))
+  )
+
+(: Fiona buys house 2001 recorded 2002 - lag
+ Finn buys house 2004 recorded 2005
+ Fiona actually bought house 2000 recorded 2007 - correction :)
+
+let $doc := 
+object-node{
+"sysStart": null-node{},
+"sysEnd": null-node{},
+"valStart": "2000-01-01T00:00:00Z",
+"valEnd": $result//valEnd,
+"data": "Fiona"}
+
+return  
+  temporal:document-insert(
+    "myTemporal","addr.json",$doc),
+  temporal:statement-set-system-time(xs:dateTime("2007-01-01T00:00:00Z"))  
+</query><query name="6.QuizAnswer:Finn2" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: Fiona buys house 2001 recorded 2002 - lag
+ Finn buys house 2004 recorded 2005
+ Fiona actually bought house 2000 recorded 2007 - correction
+ QUIZ Finn actually bought house 2003 recorded 2008 - correction :)
+
+let $result := 
+cts:search(
+  fn:doc(),
+  cts:and-query((
+    cts:json-property-value-query("data","Finn"),
+    cts:period-range-query(
+      "mySystem","ALN_MEETS",
+      cts:period(xs:dateTime("9999-12-31T23:59:59Z")))))
+  )
+
+
+let $doc := 
+object-node{
+"sysStart": null-node{},
+"sysEnd": null-node{},
+"valStart": "2003-01-01T00:00:00Z",
+"valEnd": $result//valEnd,
+"data": "Finn"}
+
+return  
+  temporal:document-insert(
+    "myTemporal","addr.json",$doc),
+  temporal:statement-set-system-time(xs:dateTime("2008-01-01T00:00:00Z"))  
+</query><query name="7.Exercise" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: what happens when system time is not provided?
+ look at the content of this document, what happens when you run this tab multiple times? :)
+
+let $root := object-node {
+"sysStart": null-node{},
+"sysEnd": null-node{},
+"valStart": "2002-01-01T00:00:00Z",
+"valEnd": "2010-01-01T00:00:00Z",
+"data": "bar"
+}
+    
+return temporal:document-insert("myTemporal","bar.json",$root)</query><query name="8.ExerciseAnswer" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(:Fiona buys house 2001 recorded 2002 - lag
+Finn buys house 2004 recorded 2005
+Fiona actually bought house 2000 recorded 2007 - correction
+Finn actually bought house 2003 recorded 2008 - correction
+QUIZ : Finn then sold house to Jake 2007 recorded 2009?:)
+
+(: PUT YOUR CODE HERE :)
+
+
+let $root := 
+object-node{
+"sysStart": null-node{},
+"sysEnd": null-node{},
+"valStart": "2007-01-01T00:00:00Z",
+"valEnd": "9999-12-31T23:59:59Z",
+"data": "Jake"}
+    
+return     
+temporal:document-insert("myTemporal","addr.json",$root),  
+(: provide system time as if were ingested in the past:)
+temporal:statement-set-system-time(xs:dateTime("2009-01-01T00:00:00Z"))</query><query name="9.Exercise" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: who did we think owned the house mid-2000 as of 2005 ?
+   who did we think owned the house mid-2000 as of 2010 ?
+ who did we think owned the house 2002 as of 2010 ?
+ who did we think owned the house 2007 as of 2010 ?
+ what is the difference when you change ISO to ALN ? :)
+cts:search(
+  fn:doc(),
+  cts:and-query((
+    cts:period-range-query(
+      "mySystem","ISO_CONTAINS",
+      cts:period(xs:dateTime("2000-06-01T00:00:00Z"))),
+    cts:period-range-query(
+      "myValid","ISO_CONTAINS",
+      cts:period(xs:dateTime("2005-01-01T00:00:00Z")))
+)))</query><query name="10.ExerciseAnswer" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: this exercise is about collections and bitemporal
+ Write query to find all documents not in temporal collection and latest temporal documents
+ use case: query database without historical versions :)
+cts:search(fn:doc(),cts:or-query((
+  cts:collection-query("latest"),   
+  cts:not-query(cts:collection-query("myTemporal"))
+)))</query><query name="11.temporalDelete" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: in 2015, you found out everything you knew was wrong :)
+
+  (: check the content of "addr.json", what changed? what does it mean?
+   which collections does "addr.json" belong to? Is it still latest? :)
+
+  temporal:document-delete("myTemporal","addr.json")</query><query name="12.collectionOptions" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
+    at "/MarkLogic/temporal.xqy";
+(: "updates-safe" or "updates-admin-override"? :)
+temporal:collection-get-options("myTemporal")</query><query name="13.versionManipulation" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">(: you should get an error if "updates-safe"
+ For regulated industries, absolutely NO non-temporal APIs can be used on temporal versions
+ To disable this, change option with the next tab, then admin users can modify temporal versions:)
+
+xdmp:document-insert("addr.json",object-node{"foo":"bar"})</query><query name="14.collectionSetOptions" focus="false" active="true" content-source="as:13134076190478922058:" mode="xquery">import module namespace temporal = "http://marklogic.com/xdmp/temporal" 
+    at "/MarkLogic/temporal.xqy";
+(: "updates-safe" or "updates-admin-override" :)
+temporal:collection-set-options("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="true" active="true" content-source="as:13134076190478922058:" mode="xquery">
+xdmp:collection-delete("addr.json"),
+xdmp:collection-delete("bar.json")</query></workspace></export>
