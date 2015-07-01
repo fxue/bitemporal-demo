@@ -1,3 +1,5 @@
+/*global d3, moment */
+
 var barChart = function() {
 
   // default values for configurable input parameters
@@ -12,22 +14,13 @@ var barChart = function() {
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
 
-  var color = 
+  var color =
     d3.scale.category10();
 
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
   var chart = function(container) {
-
-    setDimensions();
-    setupXAxis();
-    setupYAxis();
-    setupBarChartLayout();
-    addBackground();
-    addXAxisLabel();
-    addYAxisLabel();
-    addBarChartData();
 
     function setDimensions() {
 
@@ -37,21 +30,21 @@ var barChart = function() {
 
     function setupXAxis() {
 
-      var mindate = 
+      var mindate =
       moment.min(data.map(function(d){
         return moment(d.content.sysStart);
       })).toDate();
       //var maxdate = new Date();
       var maxdate =
-      moment.max(data.map(function(d){
-        return moment(d.content.sysStart);
-      })).add(10, 'y').toDate();
+        moment.max(data.map(function(d){
+          return moment(d.content.sysStart);
+        })).add(10, 'y').toDate();
 
-      console.log("xmin="+mindate," xmax="+maxdate);
+      console.log('xmin='+mindate,' xmax='+maxdate);
 
       xScale = d3.time.scale()
-      .domain([mindate, maxdate])
-      .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
+        .domain([mindate, maxdate])
+        .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
 
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
@@ -60,31 +53,31 @@ var barChart = function() {
       }
 
       xAxis = d3.svg.axis()
-      .scale(xScale)
-      .ticks(10)
-      .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-      .outerTickSize(0)
-      .orient('bottom')
-      .tickFormat(d3.time.format("%Y-%m-%d"));
+        .scale(xScale)
+        .ticks(10)
+        .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
+        .outerTickSize(0)
+        .orient('bottom')
+        .tickFormat(d3.time.format('%Y-%m-%d'));
     }
 
     function setupYAxis() {
 
-      var mindate = 
+      var mindate =
       moment.min(data.map(function(d){
         return moment(d.content.valStart);
       })).toDate();
 
-      var maxdate = 
+      var maxdate =
       moment.max(data.map(function(d){
         return moment(d.content.valStart);
       })).add(5, 'y').toDate();
-      
-      console.log("ymin="+mindate," ymax="+maxdate);
+
+      console.log('ymin='+mindate,' ymax='+maxdate);
 
       yScale = d3.time.scale()
-      .domain([mindate, maxdate])
-      .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
+        .domain([mindate, maxdate])
+        .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
 
       if (data.length > 12 && width < 500) {
         yAxisCssClass = 'axis-font-small';
@@ -93,23 +86,23 @@ var barChart = function() {
       }
 
       yAxis = d3.svg.axis()
-      .scale(yScale)
-      .ticks(15)
-      .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-      .outerTickSize(0)
-      .orient('left')
-      .tickFormat(d3.time.format("%Y-%m-%d"));
+        .scale(yScale)
+        .ticks(15)
+        .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
+        .outerTickSize(0)
+        .orient('left')
+        .tickFormat(d3.time.format('%Y-%m-%d'));
 
     }
 
     function setupBarChartLayout() {
 
       g = container.append('svg')
-      .attr('class', 'svg-chart')
-      .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('class', 'svg-chart')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       var colorDomain = [];
       data.map(function(d){
@@ -123,123 +116,139 @@ var barChart = function() {
     function addXAxisLabel() {
 
       g.append('g')
-      .attr('class', 'xaxis ' + xAxisCssClass)
-      .attr('transform', 'translate(' + axisLabelMargin + ',' +
-        (height - axisLabelMargin - margin.top - margin.bottom) + ')')
-      .call(xAxis)
-      .append('text')
-      .attr('class', 'axis-label')
-      .attr('y', margin.bottom)
-      .attr('x', (width-margin.left)/2)
-      .text(xAxisLabel);
+        .attr('class', 'xaxis ' + xAxisCssClass)
+        .attr('transform', 'translate(' + axisLabelMargin + ',' +
+          (height - axisLabelMargin - margin.top - margin.bottom) + ')')
+        .call(xAxis)
+        .append('text')
+        .attr('class', 'axis-label')
+        .attr('y', margin.bottom)
+        .attr('x', (width-margin.left)/2)
+        .text(xAxisLabel);
     }
 
     function addYAxisLabel() {
 
       g.append('g')
-      .attr('class', 'yaxis ')
-      .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
-      .call(yAxis)
-      .append('text')
-      .attr('class', 'axis-label')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', -margin.left)
-      .attr('x', -(height - margin.top - margin.bottom - axisLabelMargin) / 2)
-      .style('text-anchor', 'middle')
-      .text(yAxisLabel);
+        .attr('class', 'yaxis ')
+        .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
+        .call(yAxis)
+        .append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', -margin.left)
+        .attr('x', -(height - margin.top - margin.bottom - axisLabelMargin) / 2)
+        .style('text-anchor', 'middle')
+        .text(yAxisLabel);
 
     }
 
     function addBackground() {
 
       g.append('rect')
-      .attr('class', 'background')
-      .attr('x', axisLabelMargin)
-      .attr('y', -axisLabelMargin)
-      .attr('width', width - axisLabelMargin - margin.left - margin.right)
-      .attr('height', height - margin.top - margin.bottom);
+        .attr('class', 'background')
+        .attr('x', axisLabelMargin)
+        .attr('y', -axisLabelMargin)
+        .attr('width', width - axisLabelMargin - margin.left - margin.right)
+        .attr('height', height - margin.top - margin.bottom);
 
     }
-
-    var bar;
 
     function addBarChartData() {
       var c=0;
       split = g.selectAll('.split')
-      .data(data)
-      .enter()
-      .append('g')
-      .attr('class','split');
+        .data(data)
+        .enter()
+        .append('g')
+        .attr('class','split');
 
       r = split
-      .append('rect')
-      .attr('class', 'split')
-      .attr('stroke','black')
-      .attr('stroke-width','2')
-      .attr('fill',function(d) {
-        //var colorNum = Math.floor(c%20); c++;
-        //return color(colorNum);
-        return color(d.content.data);
-      })
-      .attr('x', function(d) {
-        var barx = xScale(moment(d.content.sysStart).toDate());
-        return barx;
-      })
-      .attr('y', function(d) {
-        var bary = yScale(moment(d.content.valEnd).toDate());
-        return bary;
-      })
-      .attr('height', 0)
-      .attr('width', 0)
-      .style('opacity', 0)
-      .transition()
-      .duration(1000)
-      .style('opacity', 1)
-      .attr('height', function(d) {
-        var bValStart = yScale(moment(d.content.valStart).toDate());
-        var bValEnd = yScale(moment(d.content.valEnd).toDate());
-        var h=-bValEnd+bValStart;
-        return h;
-      })
-      .attr('width', function(d) {
-        var bSysStart = xScale(moment(d.content.sysStart).toDate());
-        var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
-        if (bSysEnd>width) bSysEnd=width-axisLabelMargin;
-        var w=bSysEnd-bSysStart;
-        return w;
-      });
+        .append('rect')
+        .attr('class', 'split')
+        .attr('stroke','black')
+        .attr('stroke-width','2')
+        .attr('fill',function(d) {
+          //var colorNum = Math.floor(c%20); c++;
+          //return color(colorNum);
+          return color(d.content.data);
+        })
+        .attr('x', function(d) {
+          var barx = xScale(moment(d.content.sysStart).toDate());
+          return barx;
+        })
+        .attr('y', function(d) {
+          var bary = yScale(moment(d.content.valEnd).toDate());
+          return bary;
+        })
+        .attr('height', 0)
+        .attr('width', 0)
+        .style('opacity', 0)
+        .transition()
+        .duration(1000)
+        .style('opacity', 1)
+        .attr('height', function(d) {
+          var bValStart = yScale(moment(d.content.valStart).toDate());
+          var bValEnd = yScale(moment(d.content.valEnd).toDate());
+          var h=-bValEnd+bValStart;
+          return h;
+        })
+        .attr('width', function(d) {
+          var bSysStart = xScale(moment(d.content.sysStart).toDate());
+          var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
+          if (bSysEnd>width) {
+            bSysEnd=width-axisLabelMargin;
+          }
+          var w=bSysEnd-bSysStart;
+          return w;
+        });
 
 
-      split.append("text")
-      .attr('class','tooltip-txt')
-      .style("text-anchor", "middle")
-      .attr('x', function(d) {
-        var barx1 = xScale(moment(d.content.sysStart).toDate());
-        if (!d.content.sysEnd) return 0;
-        if (d.content.sysEnd.indexOf("9999")==0) {
-          var barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-          return (barx1+barx2)/2;
-        }
-        else {
-          var barx2 = xScale(moment(d.content.sysEnd).toDate());
-          return (barx1+barx2)/2;
-        }
-      })
-      .attr('y', function(d) {
-        if (!d.content.valEnd) return 0;
-        var bary1 = yScale(moment(d.content.valStart).toDate());
-        if (d.content.valEnd.indexOf("9999")==0) {
-          var bary2 = yScale(moment(d.content.valStart).add(5, 'y').toDate());
-          return (bary1+bary2)/2;
-        }
-        else {
- 	  var bary2 = yScale(moment(d.content.valEnd).toDate());
-          return (bary1+bary2)/2;
-	}
-      })
-      .text(function(d) { return d.content.data;});
+      split.append('text')
+        .attr('class','tooltip-txt')
+        .style('text-anchor', 'middle')
+        .attr('x', function(d) {
+          var barx1 = xScale(moment(d.content.sysStart).toDate());
+          var barx2;
+          if (!d.content.sysEnd) {
+            return 0;
+          }
+          if (d.content.sysEnd.indexOf('9999') === 0) {
+            barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
+            return (barx1+barx2)/2;
+          }
+          else {
+            barx2 = xScale(moment(d.content.sysEnd).toDate());
+            return (barx1+barx2)/2;
+          }
+        })
+        .attr('y', function(d) {
+          if (!d.content.valEnd) {
+            return 0;
+          }
+          var bary1 = yScale(moment(d.content.valStart).toDate());
+          var bary2;
+          if (d.content.valEnd.indexOf('9999') === 0) {
+            bary2 = yScale(moment(d.content.valStart).add(5, 'y').toDate());
+            return (bary1+bary2)/2;
+          }
+          else {
+            bary2 = yScale(moment(d.content.valEnd).toDate());
+            return (bary1+bary2)/2;
+          }
+        })
+        .text(function(d) { return d.content.data;});
 
-    };
+    }
+
+    setDimensions();
+    setupXAxis();
+    setupYAxis();
+    setupBarChartLayout();
+    addBackground();
+    addXAxisLabel();
+    addYAxisLabel();
+    addBarChartData();
+
   };
 
   d3.selection.prototype.size = function() {
@@ -249,37 +258,49 @@ var barChart = function() {
   };
 
   chart.data = function(value) {
-    if (!arguments.length) return data;
+    if (!arguments.length) {
+      return data;
+    }
     data = value;
     return chart;
   };
 
   chart.width = function(value) {
-    if (!arguments.length) return width;
+    if (!arguments.length) {
+      return width;
+    }
     width = value;
     return chart;
   };
 
   chart.height = function(value) {
-    if (!arguments.length) return height;
+    if (!arguments.length) {
+      return height;
+    }
     height = value;
     return chart;
   };
 
   chart.margin = function(value) {
-    if (!arguments.length) return margin;
+    if (!arguments.length) {
+      return margin;
+    }
     margin = value;
     return chart;
   };
 
   chart.xAxisLabel = function(value) {
-    if (!arguments.length) return xAxisLabel;
+    if (!arguments.length) {
+      return xAxisLabel;
+    }
     xAxisLabel = value;
     return chart;
   };
 
   chart.yAxisLabel = function(value) {
-    if (!arguments.length) return yAxisLabel;
+    if (!arguments.length) {
+      return yAxisLabel;
+    }
     yAxisLabel = value;
     return chart;
   };

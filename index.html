@@ -22,15 +22,15 @@
       .svg-chart .g { fill: #4682B4; }
 
       .tooltip-txt {
-              margin: 0;
-              font-family: Helvetica;
-              font-size: 25px;
-              line-height: 18px;
+        margin: 0;
+        font-family: Helvetica;
+        font-size: 25px;
+        line-height: 18px;
       }
 
       .axis-label {
-              font-family: Helvetica;
-              font-size: 15px;
+        font-family: Helvetica;
+        font-size: 15px;
       }
 
       .svg-chart .xaxis .tick text {
@@ -44,7 +44,7 @@
   <body>
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
     <div id="tooltip" class="hidden">
-        <p><span id="value"></span></p>
+      <p><span id="value"></span></p>
     </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -54,29 +54,29 @@
 
     <div id="bar-chart-large"></div>
     <script type="text/javascript">
-    $.get( "/data", function( data ) {
-      getBarChart({
-        data: data,
-        width: 800,
-        height: 600,
-        xAxisLabel: 'System',
-        yAxisLabel: 'Valid',
-        containerId: 'bar-chart-large'
-      })
-    });
-    $("input[name='insert']").click(function(){ 
-      var col = $("input[name='tempcol']").val();
-      var uri = $("input[name='uri']").val();
-      var vs = $("input[name='validstart']").val();
-      var ve = $("input[name='validend']").val();
-      var sys = $("input[name='systemtart']").val();
-      var d = $("input[name='content']").val();
+      $.get( "/data", function( data ) {
+        getBarChart({
+          data: data,
+          width: 800,
+          height: 600,
+          xAxisLabel: 'System',
+          yAxisLabel: 'Valid',
+          containerId: 'bar-chart-large'
+        })
+      });
+      $("input[name='insert']").click(function(){
+        var col = $("input[name='tempcol']").val();
+        var uri = $("input[name='uri']").val();
+        var vs = $("input[name='validstart']").val();
+        var ve = $("input[name='validend']").val();
+        var sys = $("input[name='systemtart']").val();
+        var d = $("input[name='content']").val();
 
-      $.get(
-        "/update?collection"+col+"&uri="+uri+
-        "&validstart="+vs+"&validend="+ve+
-        "&system="+sys+"&content="+d);
-    });
+        $.get(
+          "/update?collection"+col+"&uri="+uri+
+          "&validstart="+vs+"&validend="+ve+
+          "&system="+sys+"&content="+d);
+      });
     </script>
    </body>
 </html>

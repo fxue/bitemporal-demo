@@ -1,22 +1,22 @@
 var dev =  {
-  host: "localhost",    // The database app server host
+  host: 'localhost',    // The database app server host
   port: 8000,           // By default port 8000 is enabled
-  //database : "Documents",
-  user: "admin",       // A user with at least the rest-writer role
-  password: "admin",   // Probably not your password
-  authType: "DIGEST"    // The default auth
-}
+  //database : 'Documents',
+  user: 'admin',       // A user with at least the rest-writer role
+  password: 'admin',   // Probably not your password
+  authType: 'DIGEST'    // The default auth
+};
 
-// Another connection. Change the module.exports below to 
+// Another connection. Change the module.exports below to
 // use it without having to change consuming code.
 var test =  {
-  host: "acceptance.example.com",
+  host: 'acceptance.example.com',
   port: 9116,
-  user: "app-writer",
-  password: "********",
-  authType: "DIGEST"
-}
+  user: 'app-writer',
+  password: '********',
+  authType: 'DIGEST'
+};
 
 module.exports = {
   connection: dev       // Export the development connection
-}
+};

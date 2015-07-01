@@ -7,10 +7,11 @@
   "indent": 2,
   "latedef": true,
   "newcap": true,
+  "node": true,
   "quotmark": "single",
   "undef": true,
   "unused": "vars",
-  "strict": true,
+  "strict": false,
   "trailing": true,
   "globals": {
     "angular": false,
