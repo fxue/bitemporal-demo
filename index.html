@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+
+
+
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
-	</script>
+      
     <style>
       body {
         background-color: #f5f5f5;
@@ -48,6 +52,15 @@
 
   </head>
   <body>
+    <p>Change the logical document display to the specified URI of a logical document.</p>
+
+      <form window.location = '/?collection=input'>
+         URI Enter:<br>
+         <input type="text" name="collection" value="">
+         <br><br>
+         <input type="submit" value="Submit">
+         <script type="text/javascript" src="public/uri_enter.js"></script>
+      </form> 
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
     <a href="search">Click</a>
     <div id="tooltip" class="hidden">
