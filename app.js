@@ -12,17 +12,14 @@ var conn = require('./env.js').connection;
 var db = marklogic.createDatabaseClient(conn);
 var q = marklogic.queryBuilder;
 
-/* use Express as http server */
-app.use('/public', express.static(__dirname+'/public'));
-app.get('/data', function(req, res) {
+function getData(collection, res) {
   // query database for documents to be shown
   // use localhost:3000/data?collection=***
-  var name = req.param('collection') || 'addr.json';
-  var query = db.documents.query(q.where(q.collection(name)));
+  var query = db.documents.query(q.where(q.collection(collection)));
   query.result(function(r){
     var i;
     // get result and log all uris
-    console.log('GET DOCS from collection =',name);
+    console.log('GET DOCS from collection =' + collection);
     console.log('result =');
     for (i=0; i<r.length; i++) {
       console.log(r[i].uri);
@@ -34,6 +31,15 @@ app.get('/data', function(req, res) {
     console.log('rendering....');
     res.json(r);
   });
+}
+
+/* use Express as http server */
+app.use('/public', express.static(__dirname+'/public'));
+app.get('/data', function(req, res) {
+  getData('addr.json', res);
+});
+app.get('/data/:collection', function(req, res) {
+  getData(req.param('collection'), res);
 });
 app.get('/delete', function(req, res) {
   // delete temporal document
