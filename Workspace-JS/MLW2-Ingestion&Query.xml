@@ -14,11 +14,12 @@ temporal.setUseLsqt("myTemporal",true)</query><query name="2.FionaBuy" focus="fa
 // goto http://localhost:3000/
 
 var root = {
-"sysStart": null,    
-"sysEnd": null,
-"valStart": "2001-01-01T00:00:00Z",
-"valEnd": "9999-12-31T23:59:59Z",
-"data": "Fiona"}
+  "sysStart": null,    
+  "sysEnd": null,
+  "valStart": "2001-01-01T00:00:00Z",
+  "valEnd": "9999-12-31T23:59:59Z",
+  "data": "Fiona"
+}
     
 temporal.documentInsert("myTemporal","addr.json",root)
   
@@ -35,11 +36,12 @@ temporal.statementSetSystemTime("2002-01-01T00:00:00Z")    </query><query name="
 // go to http://localhost:3000/ see visualization
 
 var root = {
-"sysStart": null,
-"sysEnd": null,
-"valStart": "2004-01-01T00:00:00Z",
-"valEnd": "9999-12-31T23:59:59Z",
-"data": "Finn"}
+  "sysStart": null,
+  "sysEnd": null,
+  "valStart": "2004-01-01T00:00:00Z",
+  "valEnd": "9999-12-31T23:59:59Z",
+  "data": "Finn"
+}
     
 temporal.documentInsert("myTemporal","addr.json",root)
 temporal.statementSetSystemTime("2005-01-01T00:00:00Z")</query><query name="4.QueryStudy" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// cts.period(t) =&gt; [t,t+dt) dt is the smallest time unit
@@ -50,12 +52,12 @@ temporal.statementSetSystemTime("2005-01-01T00:00:00Z")</query><query name="4.Qu
 // for operator defs : http://docs.marklogic.com/guide/temporal/searching#id_78584
 
 cts.search(
-    cts.periodRangeQuery(
-      "myValid",          // axis name
-      "ISO_CONTAINS",   // operator name 
-      cts.period("2002-01-01T00:00:00Z","2003-01-01T00:00:00Z"))
-      //cts.period("9999-12-31T23:59:59Z")
-  )
+  cts.periodRangeQuery(
+    "myValid",          // axis name
+    "ISO_CONTAINS",   // operator name 
+    cts.period("2002-01-01T00:00:00Z","2003-01-01T00:00:00Z"))
+    //cts.period("9999-12-31T23:59:59Z")
+)
   
   </query><query name="5.FionaBuy2" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 
@@ -109,11 +111,11 @@ temporal.statementSetSystemTime("????-01-01T00:00:00Z")
 // look at the content of this document, what happens when you run this tab multiple times?
 
 var root = {
-"sysStart": null,
-"sysEnd": null,
-"valStart": "2002-01-01T00:00:00Z",
-"valEnd": "2010-01-01T00:00:00Z",
-"foo": "bar"
+  "sysStart": null,
+  "sysEnd": null,
+  "valStart": "2002-01-01T00:00:00Z",
+  "valEnd": "2010-01-01T00:00:00Z",
+  "foo": "bar"
 }
     
 temporal.documentInsert("myTemporal","bar.json",root)</query><query name="8.Exercise" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
@@ -142,9 +144,10 @@ cts.search(
 // Write query to find all non-temporal documents and latest temporal documents
 // use case: query database without historical versions
 cts.search(
-  cts.orQuery((
+  cts.orQuery([
     cts.notQuery(cts.collectionQuery("myTemporal")),   // not in temporal collection
-    cts.collectionQuery("latest")))                     // in latest collection
+    cts.collectionQuery("latest")                      // in latest collection
+  ])
 )</query><query name="11.temporalDelete" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">// in 2015, you found out everything you knew was wrong
 
 // check the content of "addr.json", what changed? what does it mean?
@@ -162,12 +165,12 @@ temporal.collectionGetOptions("myTemporal")</query><query name="13.versionManipu
 // For regulated industries, absolutely NO non-temporal APIs can be used on temporal versions
 // To disable this, change option with the next tab, then admin users can modify temporal versions
 
-xdmp.documentInsert("addr.json",{foo:"bar"})</query><query name="14.collectionSetOptions" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
+xdmp.documentInsert("addr.json",{foo:"bar"})</query><query name="14.collectionSetOptions" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate();
 var temporal=require("/MarkLogic/temporal.xqy");
  
 // "updates-safe" or "updates-admin-override"
 // updates-safe : can only manipulate temporal documents with temporal API
 // updates-admin-override : admin user can manipulate documents with normal API such as xdmp.documentInsert
 
-temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="false" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
+temporal.collectionSetOptions("myTemporal","updates-admin-override")</query><query name="15.cleanupTemporalDocs" focus="true" active="true" content-source="as:13134076190478922058:" mode="javascript">declareUpdate()
 xdmp.collectionDelete("addr.json"),xdmp.collectionDelete("bar.json")</query></workspace></export>
