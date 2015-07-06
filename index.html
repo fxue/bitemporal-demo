@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 
-
-
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -53,14 +50,14 @@
   </head>
   <body>
     <p>Change the logical document display to the specified URI of a logical document.</p>
+<!--    <!form window.location='/data/inputText'> -->
+    <div>
+       Enter URI:<br>
+       <input type="text" name="collection" value="">
+       <br><br>
+       <input type="button" id="pick-doc" value="Submit">
+    </div> 
 
-      <form window.location = '/?collection=input'>
-         URI Enter:<br>
-         <input type="text" name="collection" value="">
-         <br><br>
-         <input type="submit" value="Submit">
-         <script type="text/javascript" src="public/uri_enter.js"></script>
-      </form> 
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
@@ -73,6 +70,48 @@
 
     <div id="bar-chart-large"></div>
 	
+    <script type="text/javascript">
+      var inputText = $("input[name='collection']").val();
+      console.log(inputText);
+      window.alert(inputText);
+      function loadData(collection) {
+        var url = '/data';
+        if (collection !== undefined) {
+          url += '/' + collection;
+        }
+        $.get( url, function( data ) {
+          getBarChart({
+            data: data,
+            width: 800,
+            height: 600,
+            xAxisLabel: 'System',
+            yAxisLabel: 'Valid',
+            containerId: 'bar-chart-large'
+          })
+        });
+      }
+
+      loadData();
+
+      $('#pick-doc').click( function() {
+        var uriCol = $('input[name = collection]').val();
+        loadData(uriCol);
+
+      })
+      $("input[name='insert']").click(function(){
+        var col = $("input[name='tempcol']").val();
+        var uri = $("input[name='uri']").val();
+        var vs = $("input[name='validstart']").val();
+        var ve = $("input[name='validend']").val();
+        var sys = $("input[name='systemtart']").val();
+        var d = $("input[name='content']").val();
+
+        $.get(
+          "/update?collection"+col+"&uri="+uri+
+          "&validstart="+vs+"&validend="+ve+
+          "&system="+sys+"&content="+d);
+      });
+    </script>
     <script type="text/javascript">
       $.get( "/data", function( data ) {
         getBarChart({
