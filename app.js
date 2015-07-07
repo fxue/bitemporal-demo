@@ -14,31 +14,36 @@ var conn = require('./env.js').connection;
 var db = marklogic.createDatabaseClient(conn);
 var q = marklogic.queryBuilder;
 
-function proxy(req, res) {
+function proxy(req, port, res) {
+
   var queryString = req.originalUrl.split('?')[1];
-  console.log(req.method + ' ' + req.path + ' proxied to ' + conn.host + ':' + conn.port + req.path + (queryString ? '?' + queryString : ''));
+  console.log(req.method + ' ' + req.path + ' proxied to ' + conn.host + ':' + port + req.path + (queryString ? '?' + queryString : ''));
+
+  var headers = req.headers;
+  if (port === 8002) {
+    // The /manage/v2/databases/Documents/temporal/collections has been giving an HTML
+    // useless response to this when queried from jQuery. After switching user-agent
+    // to pretend to be curl, it's fine. Not clear why.
+    headers['user-agent'] = 'curl/7.37.1';
+  }
+
   var mlReq = request({
-    uri: 'http://' + conn.host + ':' + conn.port + req.originalUrl,
+    uri: 'http://' + conn.host + ':' + port + req.originalUrl,
     method: req.method,
     path: req.path + (queryString ? '?' + queryString : ''),
-    headers: req.headers,
+    headers: headers,
     auth: {
       user: conn.user,
       password: conn.password,
       sendImmediately: false
     }
-  }, function(error, message, response) {
-    if (message.statusCode >= 300) {
-      console.log('Error!\n' + response);
-    }
-  }).on('data', function(chunk) {
-    res.write(chunk);
   });
 
-  if (req.body !== undefined) {
-    mlReq.write(JSON.stringify(req.body));
-    mlReq.end();
-  }
+  req.pipe(mlReq).pipe(res);
+
+  mlReq.on('error', function(error) {
+    console.log('error: ' + error);
+  });
 }
 
 function getData(collection, res) {
@@ -73,11 +78,11 @@ app.get('/data/:collection', function(req, res) {
 });
 
 app.all('/v1*', function(req, res){
-  proxy(req, res);
+  proxy(req, conn.port, res);
 });
 
 app.all('/manage/*', function(req, res){
-  proxy(req, res);
+  proxy(req, 8002, res);
 });
 
 app.get('/delete', function(req, res) {
