@@ -55,9 +55,9 @@
 
       #bulletList {
         position: absolute;
-        left: 840px;
+        left: 820px;
         top: 360px;
-        font-size: 1.55em;
+        font-size: 1.5em;
       }
 
       button {
@@ -68,6 +68,7 @@
         width: 80px;
         font-size: 1.2em;
       }
+
     </style>
 
   </head>
@@ -81,8 +82,7 @@
     <select id="dropdown"></select>
     <ul id="bulletList"></ul>
     <button type="button" id="search">Search</button>
-
-
+    
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
 
@@ -100,7 +100,7 @@
       }
 
       //possible JSON response of each individual collection containing the physical and logical documents (ex: 'addr.json') and each document's system and valid start/end times
-      var docs = JSON.parse('{"snippet-format":"snippet", "total":4,"start":1,"page-length":10, "results":[{"index":1,"uri":"addr.json", "date":"2020-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}, {"index":2, "uri": "addr.18302194850282759876.json", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z finn"}, {"index": 3, "uri": "myTemporal.lsqt", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}]}');
+      var docs = JSON.parse('{"snippet-format":"snippet", "total":4,"start":1,"page-length":10, "results":[{"index":1,"uri":"addr.json", "date":"2020-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}, {"index":2, "uri": "addr.18302194850282759876.json", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z finn"}, {"index": 3, "uri": "myTemporal.lsqt", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T02:00:00Z 9999-12-31T23:59:59Z Fiona"}]}');
 
 
       //variable name for the bullet tag
@@ -126,11 +126,34 @@
               var newDate = new Date(array[j]);
               var strDate = newDate.toString().replace( "GMT-0800 (PST)", "");
 
-              bullet.append($("<ul>").text("-" + times[j] + ": " + strDate ));
+              var arrayTimes = strDate.split(" ");
+              var strHour = parseInt(arrayTimes[ arrayTimes.length - 2 ]) ;
+
+              strDate = convertDate(strHour, strDate);
+
+              bullet.append($("<ul>").text("-" + times[j] + ": "  + strDate));
            }
         }
 
       });
+      
+      function convertDate(strHour, strDate)
+      {
+        var am_pm = "";
+        var strTime = strDate;
+          if( strHour > 11)
+          {
+            am_pm = "pm";
+            replace = strHour - parseInt(12);
+            strTime = strDate.replace( strHour, replace);
+          }
+          else if( strHour < 12)
+          {
+            am_pm = "am";
+          }
+          
+          return "" + strTime + am_pm;
+      }
 
     </script>
    </body>
