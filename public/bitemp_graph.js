@@ -174,7 +174,9 @@ var barChart = function() {
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          updateURI(datum, index);
+          if (!curr_doc_uri) {
+            updateURI(datum, index);
+          }
         })
         .attr('class', 'split')
         .attr('stroke','black')

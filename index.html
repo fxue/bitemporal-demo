@@ -92,11 +92,7 @@
     
     
     <script type="text/javascript"> function displayEditBox() {
-      console.log("Displaying edit box");
-      console.log(curr_doc_uri);
-    
-      
-      if (curr_doc_uri !== "undefined") {
+      if (curr_doc_uri) {
         $("#Edit_Button").hide();
         $("#Cancel_Button").show();
         $("#Contents").show();
@@ -110,31 +106,46 @@
     } </script>
     <button id="Edit_Button" onclick="displayEditBox()"> Edit </button>
     <script type="text/javascript"> function fillText(data) {
-      console.log("Logging data: " + data);
-      document.getElementById("Contents").value = ""; /* Clear out current contents */
+      clearTextarea();
+      var textBox = document.getElementById("Contents");
+      textBox.value += "{\n";
       for (var property in data) {
         if (data.hasOwnProperty(property)) {
-          console.log(property + ": " + data[property]);
-          document.getElementById("Contents").value += property + ": " + data[property] +"\n";
+          textBox.value += "\"" + property + "\": " + "\""+data[property] +"\"\n";
         }
       }
+      textBox.value += "}";
     } </script>
     <button id="Save_Button" onclick="save()" hidden="true"> Save </button>
     <script type="text/javascript"> function save() {
       console.log("Saving");
+      var modified = isChanged();
+      if (isChanged()) {
+        //Make a new document with the provided contents in the text area.
+      }
       <!-- How should the browser appearance behave here? ex. close edit box?-->
     } </script>
-    
+    <script type="text/javascript"> function isChanged() {
+      
+    } </script>
     <button id="Cancel_Button" onclick="cancel()" hidden="true"> Cancel </button>
     <script type="text/javascript"> function cancel() {
       console.log("Canceling");
+      clearTextarea();
+      clearDocURI();
       $("#Edit_Button").show();
       $("#Cancel_Button").hide();
       $("#Contents").hide();
       $("#Save_Button").hide();
     } </script>
+    <script type="text/javascript"> function clearDocURI() {
+      curr_doc_uri = undefined;
+    } </script>
+    <script type="text/javascript"> function clearTextarea() {
+       document.getElementById("Contents").value = "";
+    } </script>
     
-    <textarea rows="20" cols="60" id="Contents" hidden = "true"> </textarea> 
+    <textarea rows="12" cols="50" id="Contents" hidden = "true"> </textarea> 
     
   </body>
 </html>
