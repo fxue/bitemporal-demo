@@ -11,7 +11,13 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-      
+	  
+	    #Edit {
+	     position: relative;
+		   top: 620px; /*Relative to height of 'bar-chart-large'*/	
+		   left: 20px;
+	    }
+
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -41,8 +47,6 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
-	  
-	  
 
     </style>
   </head>
@@ -116,10 +120,6 @@
       $("#Cancel_Button").hide();
       $("#Contents").hide();
       $("#Save_Button").hide();
-    } </script>
-    
-    <script type="text/javascript"> function loadContent(URI) {
-    
     } </script>
     
     <textarea rows="20" cols="60" id="Contents" hidden = "true"> </textarea> 
