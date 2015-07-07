@@ -23,9 +23,7 @@ var barChart = function() {
   var chart = function(container) {
 
     function setDimensions() {
-
       axisLabelMargin = 10;
-
     }
 
     function setupXAxis() {
@@ -154,6 +152,17 @@ var barChart = function() {
 
     }
 
+    function updateURI(datum, index) {
+      curr_doc_uri = datum.uri;
+      console.log(datum.uri);
+    }
+    
+    function getURI() {
+      if (g.currURI)
+        return g.currURI;
+      return undefined;
+    }
+    
     function addBarChartData() {
       var c=0;
       split = g.selectAll('.split')
@@ -164,6 +173,9 @@ var barChart = function() {
 
       r = split
         .append('rect')
+        .on('click', function(datum, index) {
+          updateURI(datum, index);
+        })
         .attr('class', 'split')
         .attr('stroke','black')
         .attr('stroke-width','2')

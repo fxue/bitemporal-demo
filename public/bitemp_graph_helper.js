@@ -8,11 +8,7 @@ var getBarChart = function (params) {
     .width(params.width)
     .height(params.height);
 
-  d3.select('body').append('div').attr('id', params.containerId).call(chart);
-
   var selector = '#' + params.containerId;
-  var svg = d3.select(selector).node().outerHTML;
-  d3.select(selector).remove();
+  d3.select(selector).call(chart);
 
-  return svg;
 };

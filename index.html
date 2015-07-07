@@ -11,18 +11,16 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-	  
-	  #Edit {
-	    position: relative;
-		top: 620px; /*Relative to height of 'bar-chart-large'*/	
-		left: 20px;
-	  }
-
+      
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
         fill: #fdfdfd;
         stroke-width: 1px;
+      }
+      
+      #Contents {
+        
       }
 
       .svg-chart .g { fill: #4682B4; }
@@ -43,15 +41,18 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
+	  
+	  
 
     </style>
-
   </head>
   <body>
+    
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
+    <script type="text/javascript"> var curr_doc_uri; </script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
@@ -78,18 +79,50 @@
         var ve = $("input[name='validend']").val();
         var sys = $("input[name='systemtart']").val();
         var d = $("input[name='content']").val();
-
+        
         $.get(
           "/update?collection"+col+"&uri="+uri+
           "&validstart="+vs+"&validend="+ve+
           "&system="+sys+"&content="+d);
-      });
+        });
+        
     </script>
-	<div id="Edit-Button"> </div>
-	<button id="Edit" onclick="displaySearchBox()">Edit</button>
-	<script> function displaySearchBox() {	
-	  
-	}
-	</script>
-   </body>
+    
+    <button id="Edit_Button" onclick="displayEditBox()"> Edit </button>
+    <script type="text/javascript"> function displayEditBox() {
+      console.log("Displaying edit box");
+      console.log(curr_doc_uri);
+    
+      
+      if (curr_doc_uri !== "undefined") {
+         $("#Edit_Button").hide();
+         $("#Cancel_Button").show();
+         $("#Contents").show();
+         $("#Save_Button").show();
+         var doc = fn.doc(curr_doc_uri); <!-- how is a document retrieved? -->
+      }           
+    } </script>
+    
+    <button id="Save_Button" onclick="save()" hidden="true"> Save </button>
+    <script type="text/javascript"> function save() {
+      console.log("Saving");
+      <!-- How should the browser appearance behave here? ex. close edit box?-->
+    } </script>
+    
+    <button id="Cancel_Button" onclick="cancel()" hidden="true"> Cancel </button>
+    <script type="text/javascript"> function cancel() {
+      console.log("Canceling");
+      $("#Edit_Button").show();
+      $("#Cancel_Button").hide();
+      $("#Contents").hide();
+      $("#Save_Button").hide();
+    } </script>
+    
+    <script type="text/javascript"> function loadContent(URI) {
+    
+    } </script>
+    
+    <textarea rows="20" cols="60" id="Contents" hidden = "true"> </textarea> 
+    
+  </body>
 </html>
