@@ -73,30 +73,69 @@
 	
     <script type="text/javascript">
       var inputText = $("input[name='collection']").val();
-      console.log(inputText);
+      console.log("\nInput text is " + inputText);
       window.alert(inputText);
       function loadData(collection) {
-        var url = '/data';
+        var url = '';
         if (collection !== undefined) {
           url += '/' + collection;
         }
-        $.get( url, function( data ) {
-          getBarChart({
-            data: data,
-            width: 800,
-            height: 600,
-            xAxisLabel: 'System',
-            yAxisLabel: 'Valid',
-            containerId: 'bar-chart-large'
-          })
-        });
+        else {
+          collection = 'addr.json'
+        }
+       /* $(document).ajaxError(function(e, jqxhr, settings, exception) {  
+           if (jqxhr.readyState === 0 || jqxhr.status === 0) {  
+             return; //Skip this error  
+           }  
+           else if(jqxhr.status === 404) {
+             window.alert('404 unauthorized... Doc not found!');
+           }
+        }); */
+        $.ajax({
+          url: 'http://localhost:3000/v1/documents',
+          data: {
+            format: 'json',
+            uri: collection
+          },
+          type: "GET",
+          dataType: 'json',
+          success: function ( data ) { 
+            getBarChart({
+              data: data,
+              width: 800,
+              height: 600,
+              xAxisLabel: 'System',
+              yAxisLabel: 'Valid',
+              containerId: 'bar-chart-large'
+            })
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            // something went wrong. Take a look in jqXHR and find the status code
+            window.alert('Document Not Found!');
+            if(textStatus === 'error') {
+              // window.alert(textStatus, errorThrown);
+              // window.alert('status text is ' + jqXHR.statusText);
+               window.alert('status text is ' + jqXHR.statusText + ' and status is ' + jqXHR.status + ' and statusCode is ' + jqXHR.statusCode() + ' and the errorThrown is ' + errorThrown);
+               //clears bar chart
+               getBarChart({
+                 data: data,
+                 width: 800,
+                 height: 600,
+                 xAxisLabel: 'System',
+                 yAxisLabel: 'Valid',
+                 containerId: 'bar-chart-large'
+            })
+               return false;
+            }
+          }
+        }); 
       }
 
       loadData();
 
       $('#pick-doc').click( function() {
-        var uriCol = $('input[name = collection]').val();
-        loadData(uriCol);
+        var uriCollection = $('input[name = collection]').val();
+        loadData(uriCollection);
 
       })
       $("input[name='insert']").click(function(){
