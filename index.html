@@ -37,7 +37,6 @@
         font-size: 25px;
         line-height: 18px;
       }
-
       .axis-label {
         font-family: Helvetica;
         font-size: 15px;
@@ -89,24 +88,37 @@
           "&validstart="+vs+"&validend="+ve+
           "&system="+sys+"&content="+d);
         });
-        
     </script>
     
-    <button id="Edit_Button" onclick="displayEditBox()"> Edit </button>
+    
     <script type="text/javascript"> function displayEditBox() {
       console.log("Displaying edit box");
       console.log(curr_doc_uri);
     
       
       if (curr_doc_uri !== "undefined") {
-         $("#Edit_Button").hide();
-         $("#Cancel_Button").show();
-         $("#Contents").show();
-         $("#Save_Button").show();
-         var doc = fn.doc(curr_doc_uri); <!-- how is a document retrieved? -->
+        $("#Edit_Button").hide();
+        $("#Cancel_Button").show();
+        $("#Contents").show();
+        $("#Save_Button").show();
+        $.ajax({
+          url: "http://localhost:3000/v1/documents/?uri=" + curr_doc_uri,
+          success: fillText,
+          format: "json"
+        });     
       }           
     } </script>
-    
+    <button id="Edit_Button" onclick="displayEditBox()"> Edit </button>
+    <script type="text/javascript"> function fillText(data) {
+      console.log("Logging data: " + data);
+      document.getElementById("Contents").value = ""; /* Clear out current contents */
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) {
+          console.log(property + ": " + data[property]);
+          document.getElementById("Contents").value += property + ": " + data[property] +"\n";
+        }
+      }
+    } </script>
     <button id="Save_Button" onclick="save()" hidden="true"> Save </button>
     <script type="text/javascript"> function save() {
       console.log("Saving");
