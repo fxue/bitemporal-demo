@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Bitemporal Document Insert/Update Demo</title>
+
+    <style>
+      body {
+        background-color: #f5f5f5;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 12px;
+      }
+
+      #dropdown { 
+        height: 52px;
+        position: relative;
+        left: 850px;
+        top: 150px;
+        display: block;
+        padding: 13px 16px;
+        width: 266px;
+        position: relative;
+        cursor: pointer;
+        border-left: 4px solid #739cda;
+        background: #fff;
+        font-size: 1.55em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+        -moz-transition: all 0.15s linear;
+        -ms-transition: all 0.15s linear;
+        -o-transition: all 0.15s linear;
+        transition: all 0.15s linear;
+    }
+
+      #dropdown:hover { color: #000000; }
+
+      #dropdown.open {
+        background: #5a90e0;
+        color: #fff;
+        border-left-color: #6c6d70;
+      }
+
+      #instructSelect {
+        position: relative;
+        left: 850px;
+        top: 140px;
+        font-weight: bold;
+        font-size: 1.55em;
+      }
+
+      #bulletList {
+        position: absolute;
+        left: 840px;
+        top: 360px;
+        font-size: 1.55em;
+      }
+
+      button {
+        position: absolute;
+        left: 860px;
+        top: 340px;
+        height: 30px;
+        width: 80px;
+        font-size: 1.2em;
+      }
+
+    /*  #link {
+        position: absolute;
+        left: 840px;
+        top: 360px;
+        font-size: 1.55em;
+      }*/
+
+    </style>
+
+  </head>
+  <body>
+    <h1>MarkLogic Search Page</h1>
+    <a href="index">Graphs</a>
+    <div id="tooltip" class="hidden">
+        <p><span id="value"></span></p>
+    </div>
+    <p id="instructSelect">Select a Temporal Collection</p>
+    <select id="dropdown"></select>
+    <div id ="bullets">
+    <ul id="bulletList"></ul>
+    <a href="index" id="link">
+      <ul id="timeList"></ul>
+    </a>
+  </div>
+    <button type="button" id="search">Search</button>
+
+    <div id = "scrollbox"></div>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+  
+
+      // getting a list of the bitemp collections
+      //var response = JSON.parse();
+
+      // var response = $.getJSON('http://localhost:8002/manage/v2/databases/Documents/temporal/collections?format=json',
+      //   function( data, textStatus, jqXHR) {
+      //     console.log( response );
+
+      //   });
+
+      var response = JSON.parse('{"temporal-collection-default-list":{"meta":{"uri":"/manage/v2/databases/Documents/temporal/collections", "current-time":"2015-07-02T16:31:21.690237-07:00", "elapsed-time":{"units":"sec", "value":0.030292}}, "list-items":{"list-count":{"units":"quantity", "value":6}, "list-item":[{"uriref":"?collection=okay", "nameref":"okay"}, {"uriref":"?collection=AshleysCollection", "nameref":"AshleysCollection"}, {"uriref":"?collection=anotherCollection", "nameref":"anotherCollection"}, {"uriref":"?collection=HilarysCollection", "nameref":"HilarysCollection"}, {"uriref":"?collection=myTemporal", "nameref":"myTemporal"}, {"uriref":"?collection=secondCollection", "nameref":"secondCollection"}]}, "related-views":{"related-view":[{"view-type":"root", "view-name":"default", "view-uri":"/manage/v2"}]}}}');
+
+      var addToDrop = $("#dropdown");
+      var endpoint = response["temporal-collection-default-list"]["list-items"]["list-count"]["value"];
+      for (var i = 0; i < endpoint; i++)
+      {
+        addToDrop.append($("<option>").text(response["temporal-collection-default-list"]["list-items"]["list-item"][i]["nameref"])) ;
+
+      }
+
+
+      var docs = JSON.parse('{"snippet-format":"snippet", "total":4,"start":1,"page-length":10, "results":[{"index":1,"uri":"addr.json", "date":"2020-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}, {"index":2, "uri": "addr.18302194850282759876.json", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z finn"}, {"index": 3, "uri": "myTemporal.lsqt", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}]}');
+
+      //var docs = JSON.parse('{"snippet-format":"snippet", "total":4,"start":1,"page-length":10, "results":[{"index":1,"uri":"addr.json"}, {"index":2, "uri": "addr.18302194850282759876.json"}, {"index": 3, "uri": "myTemporal.lsqt"} ] }');
+    
+     
+      var bullet = $("#bulletList");
+      //var scroll = $("#scrollbox");
+      $("#search").click(function(){
+        //var e = document.getElementById("dropdown");
+        //var strUser = e.options[e.selectedIndex].value;
+        //var bullet = $("#bulletList");
+
+        $("#bulletList").empty();
+
+        var times = ["Sys Start", "Sys End", "Valid Start", "Valid End"];
+
+        
+        for (var i=0; i < docs["results"].length; i++)
+        {
+           var strLink = docs['results'][i]['uri'];
+           $("#link").append($("<li>").text(strLink));
+           bullet.append($("<li>").text(strLink));
+           //document.getElementById("link") = ans;
+
+           var array = docs["results"][i]["date"].split(" ");
+           for( var j = 0; j < array.length - 1; j++ )
+           {  
+              var newDate = new Date(array[j]);
+              var strDate = newDate.toString().replace( "GMT-0800 (Pacific Standard Time)", "");              
+
+              bullet.append($("<ul>").text("-" + times[j] + ": " + strDate ));
+
+           }
+        }
+
+      });
+
+    </script>
+   </body>
+</html>
+
