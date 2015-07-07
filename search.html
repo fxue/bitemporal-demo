@@ -15,8 +15,13 @@
       #dropdown { 
         height: 40px;
         position: relative;
+<<<<<<< HEAD
         left: 0px;
         top: 20px;
+=======
+        left: 850px;
+        top: 150px;
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
         display: block;
         padding: 13px 16px;
         width: 266px;
@@ -37,10 +42,13 @@
         transition: all 0.15s linear;
     }
 
+<<<<<<< HEAD
       #hi {
         font-weight: bold;
       }
 
+=======
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
       #dropdown:hover { color: #000000; }
 
       #dropdown.open {
@@ -50,28 +58,46 @@
       }
 
       #instructSelect {
+<<<<<<< HEAD
         position: absolute;
         left: 0px;
         top: -40px;
+=======
+        position: relative;
+        left: 850px;
+        top: 140px;
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
         font-weight: bold;
         font-size: 1.55em;
       }
 
       #bulletList {
         position: absolute;
+<<<<<<< HEAD
         left: -40px;
         top: 110px;
         font-size: 1.2em;
+=======
+        left: 840px;
+        top: 360px;
+        font-size: 1.55em;
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
       }
 
       button {
         position: absolute;
+<<<<<<< HEAD
         left: 0px;
         top: 80px;
+=======
+        left: 860px;
+        top: 340px;
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
         height: 30px;
         width: 80px;
         font-size: 1.2em;
       }
+<<<<<<< HEAD
 
       #links {
         font-size: 1.25em;
@@ -85,24 +111,39 @@
 
       }
 
+=======
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
     </style>
 
   </head>
   <body>
     <h1>MarkLogic Search Page</h1>
+<<<<<<< HEAD
     <div id="tooltip" class="hidden">
         <p><span id="value"></span></p>
     </div>
     <div id= "page">
+=======
+    <a href="index">Graphs</a>
+    <div id="tooltip" class="hidden">
+        <p><span id="value"></span></p>
+    </div>
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
     <p id="instructSelect">Select a Temporal Collection</p>
     <select id="dropdown"></select>
     <ul id="bulletList"></ul>
     <button type="button" id="search">Search</button>
+<<<<<<< HEAD
     </div>
+=======
+
+
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
 
       //possible JSON response from a GET query of Documents (giving you all the collections)
+<<<<<<< HEAD
     // var response = JSON.parse('{"temporal-collection-default-list":{"meta":{"uri":"/manage/v2/databases/Documents/temporal/collections", "current-time":"2015-07-02T16:31:21.690237-07:00", "elapsed-time":{"units":"sec", "value":0.030292}}, "list-items":{"list-count":{"units":"quantity", "value":6}, "list-item":[{"uriref":"?collection=okay", "nameref":"okay"}, {"uriref":"?collection=AshleysCollection", "nameref":"AshleysCollection"}, {"uriref":"?collection=anotherCollection", "nameref":"anotherCollection"}, {"uriref":"?collection=HilarysCollection", "nameref":"HilarysCollection"}, {"uriref":"?collection=myTemporal", "nameref":"myTemporal"}, {"uriref":"?collection=secondCollection", "nameref":"secondCollection"}]}, "related-views":{"related-view":[{"view-type":"root", "view-name":"default", "view-uri":"/manage/v2"}]}}}');
 
       var response = $.ajax(
@@ -118,11 +159,18 @@
         });
 
       response = JSON.parse( response.responseText );
+=======
+      var response = JSON.parse('{"temporal-collection-default-list":{"meta":{"uri":"/manage/v2/databases/Documents/temporal/collections", "current-time":"2015-07-02T16:31:21.690237-07:00", "elapsed-time":{"units":"sec", "value":0.030292}}, "list-items":{"list-count":{"units":"quantity", "value":6}, "list-item":[{"uriref":"?collection=okay", "nameref":"okay"}, {"uriref":"?collection=AshleysCollection", "nameref":"AshleysCollection"}, {"uriref":"?collection=anotherCollection", "nameref":"anotherCollection"}, {"uriref":"?collection=HilarysCollection", "nameref":"HilarysCollection"}, {"uriref":"?collection=myTemporal", "nameref":"myTemporal"}, {"uriref":"?collection=secondCollection", "nameref":"secondCollection"}]}, "related-views":{"related-view":[{"view-type":"root", "view-name":"default", "view-uri":"/manage/v2"}]}}}');
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
 
       //adds names of the collections to the drop down list
       var addToDrop = $("#dropdown");
       //endpoint is the number of collections
+<<<<<<< HEAD
       var endpoint = parseInt(response["temporal-collection-default-list"]["list-items"]["list-count"]["value"]);
+=======
+      var endpoint = response["temporal-collection-default-list"]["list-items"]["list-count"]["value"];
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
       //this for loop appends the collection names to the drop down list
       for (var i = 0; i < endpoint; i++)
       {
@@ -130,13 +178,18 @@
       }
 
       //possible JSON response of each individual collection containing the physical and logical documents (ex: 'addr.json') and each document's system and valid start/end times
+<<<<<<< HEAD
       //var docs = JSON.parse('{"snippet-format":"snippet", "total":4,"start":1,"page-length":10, "results":[{"index":1,"uri":"addr.json", "date":"2020-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}, {"index":2, "uri": "addr.18302194850282759876.json", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z finn"}, {"index": 3, "uri": "myTemporal.lsqt", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T02:00:00Z 9999-12-31T23:59:59Z Fiona"}]}');
+=======
+      var docs = JSON.parse('{"snippet-format":"snippet", "total":4,"start":1,"page-length":10, "results":[{"index":1,"uri":"addr.json", "date":"2020-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}, {"index":2, "uri": "addr.18302194850282759876.json", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z finn"}, {"index": 3, "uri": "myTemporal.lsqt", "date": "2002-01-01T00:00:00Z 2005-01-01T00:00:00Z 2001-01-01T00:00:00Z 9999-12-31T23:59:59Z Fiona"}]}');
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
 
 
       //variable name for the bullet tag
       var bullet = $("#bulletList");
       //function when search button is clicked
       $("#search").click(function(){
+<<<<<<< HEAD
         $("#bulletList").empty();
         var e = document.getElementById("dropdown");
         var strUser = e.options[e.selectedIndex].value;
@@ -167,21 +220,42 @@
 
            var array = docs["results"][i]["matches"][0]["match-text"][0].split(" ");
 
+=======
+        //var e = document.getElementById("dropdown");
+        //var strUser = e.options[e.selectedIndex].value;
+
+        $("#bulletList").empty();
+
+        var times = ["Sys Start", "Sys End", "Valid Start", "Valid End"];
+        //nested for loop to loop through the different URI's in the JSON file, and add the URI to the bullet list.
+        //then under each uri the system start, system end, valid start, valid end times will be displayed
+        for (var i=0; i < docs["results"].length; i++)
+        {
+           var strLink = docs['results'][i]['uri'];
+           bullet.append($("<a href = 'index'>").text(strLink));
+
+           var array = docs["results"][i]["date"].split(" ");
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
            for( var j = 0; j < array.length - 1; j++ )
            {  
               var newDate = new Date(array[j]);
               var strDate = newDate.toString().replace( "GMT-0800 (PST)", "");
 
+<<<<<<< HEAD
               var arrayTimes = strDate.split(" ");
               var strHour = parseInt(arrayTimes[ arrayTimes.length - 2 ]) ;
 
               strDate = convertDate(strHour, strDate);
 
               bullet.append($("<ul id='hi'>").text(times[j]), $("<ul>").text("- " + strDate));
+=======
+              bullet.append($("<ul>").text("-" + times[j] + ": " + strDate ));
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
            }
         }
 
       });
+<<<<<<< HEAD
       
       function convertDate(strHour, strDate)
       {
@@ -200,6 +274,8 @@
           
           return "" + strTime + am_pm;
       }
+=======
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
 
     </script>
    </body>

@@ -103,6 +103,11 @@ app.get('/search', function(req, res) {
   res.sendfile(__dirname + '/search.html');
 });
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> eb7b51619d6d26f47d992c49200a50494d4d058e
 /* start listening */
 app.listen(3000);
 console.log('listening on port 3000');
