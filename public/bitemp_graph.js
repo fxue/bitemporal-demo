@@ -5,6 +5,10 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
+  var uri;
+  var isEditing;
+  var isViewing;
+  
   var margin = {
     top: 10,
     right: 0,
@@ -20,9 +24,15 @@ var barChart = function() {
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
+  
   var chart = function(container) {
-
-    function setDimensions() {
+    var uri = undefined;
+    var isEditing = false;
+    var isViewing = false;
+    
+    
+   
+   function setDimensions() {
       axisLabelMargin = 10;
     }
 
@@ -151,17 +161,6 @@ var barChart = function() {
         .attr('height', height - margin.top - margin.bottom);
 
     }
-
-    function updateURI(datum, index) {
-      curr_doc_uri = datum.uri;
-      console.log(datum.uri);
-    }
-    
-    function getURI() {
-      if (g.currURI)
-        return g.currURI;
-      return undefined;
-    }
     
     function addBarChartData() {
       var c=0;
@@ -174,8 +173,8 @@ var barChart = function() {
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          if (!curr_doc_uri) {
-            updateURI(datum, index);
+          if (!chart.getCurrentURI()) {
+            chart.setCurrentURI(datum.uri);
           }
         })
         .attr('class', 'split')
@@ -301,6 +300,31 @@ var barChart = function() {
     }
     margin = value;
     return chart;
+  };
+  
+  chart.getEditing = function() {
+    return isEditing;
+  };
+    
+  chart.setEditing = function(bool) {
+    isEditing = bool;
+  };
+    
+  chart.getViewing = function() {
+    return isViewing;
+  };
+    
+  chart.setViewing = function(bool) {
+    isViewing = bool;
+  };
+    
+  chart.getCurrentURI = function() {
+    console.log('Getting uri: ' + uri);
+    return uri;
+  };
+    
+  chart.setCurrentURI = function(u) {
+    uri = u;
   };
 
   chart.xAxisLabel = function(value) {

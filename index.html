@@ -55,17 +55,16 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <script type="text/javascript"> var curr_doc_uri; </script>
+    
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
-
     <div id="bar-chart-large"></div>
 	
     <script type="text/javascript">
-      $.get( "/data", function( data ) {
+      $.get( "/data", function(data) {
         getBarChart({
           data: data,
           width: 800,
@@ -80,7 +79,7 @@
         var uri = $("input[name='uri']").val();
         var vs = $("input[name='validstart']").val();
         var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemtart']").val();
+        var sys = $("input[name='systemstart']").val();
         var d = $("input[name='content']").val();
         
         $.get(
@@ -90,62 +89,11 @@
         });
     </script>
     
-    
-    <script type="text/javascript"> function displayEditBox() {
-      if (curr_doc_uri) {
-        $("#Edit_Button").hide();
-        $("#Cancel_Button").show();
-        $("#Contents").show();
-        $("#Save_Button").show();
-        $.ajax({
-          url: "http://localhost:3000/v1/documents/?uri=" + curr_doc_uri,
-          success: fillText,
-          format: "json"
-        });     
-      }           
-    } </script>
-    <button id="Edit_Button" onclick="displayEditBox()"> Edit </button>
-    <script type="text/javascript"> function fillText(data) {
-      clearTextarea();
-      var textBox = document.getElementById("Contents");
-      textBox.value += "{\n";
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) {
-          textBox.value += "\"" + property + "\": " + "\""+data[property] +"\"\n";
-        }
-      }
-      textBox.value += "}";
-    } </script>
-    <button id="Save_Button" onclick="save()" hidden="true"> Save </button>
-    <script type="text/javascript"> function save() {
-      console.log("Saving");
-      var modified = isChanged();
-      if (isChanged()) {
-        //Make a new document with the provided contents in the text area.
-      }
-      <!-- How should the browser appearance behave here? ex. close edit box?-->
-    } </script>
-    <script type="text/javascript"> function isChanged() {
-      
-    } </script>
-    <button id="Cancel_Button" onclick="cancel()" hidden="true"> Cancel </button>
-    <script type="text/javascript"> function cancel() {
-      console.log("Canceling");
-      clearTextarea();
-      clearDocURI();
-      $("#Edit_Button").show();
-      $("#Cancel_Button").hide();
-      $("#Contents").hide();
-      $("#Save_Button").hide();
-    } </script>
-    <script type="text/javascript"> function clearDocURI() {
-      curr_doc_uri = undefined;
-    } </script>
-    <script type="text/javascript"> function clearTextarea() {
-       document.getElementById("Contents").value = "";
-    } </script>
-    
-    <textarea rows="12" cols="50" id="Contents" hidden = "true"> </textarea> 
+    <button id="editButton" > <!--src="public/bitemp_graph_helper.js"--> Edit </button>
+    <button id="viewButton"> View </button>
+    <button id="saveButton" hidden="true"> Save </button>
+    <button id='cancelButton' hidden='true'> Cancel </button>
+    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea> 
     
   </body>
 </html>
