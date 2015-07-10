@@ -50,6 +50,7 @@
   </head>
   <body>
     <p>Change the logical document display to the specified URI of a logical document.</p>
+    <p>Don't forget to include the "dot extension" ie .json.</p>
 <!--    <!form window.location='/data/inputText'> -->
     <div>
        Enter URI:<br>
@@ -73,8 +74,8 @@
   
     <script type="text/javascript">
       var inputText = $("input[name='collection']").val();
-      console.log("\nInput text is " + inputText);
-      window.alert(inputText);
+     // console.log("\nInput text is " + inputText);
+     // window.alert(inputText);
 
       /*takes a string of data returns an array of that data*/
       function parseData(data, collection) {
@@ -116,7 +117,7 @@
           }
 
           if(item.content !== null)
-            if (collection && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
+            if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
               items.push(item);
             }
         }
@@ -130,10 +131,10 @@
           url += '/' + collection;
         }
         else {
-         // collection = 'addr.json'
+          collection = 'addr.json';
         }
         $.ajax({
-          url: 'http://localhost:3000/v1/search?pageLength=1000',
+          url: 'http://localhost:3000/v1/search?pageLength=1000&format=json&collection='+collection,
           data: {
             format: 'json',
             collection: collection
@@ -143,25 +144,23 @@
             Accept: 'multipart/mixed'
           },
           success: function ( data ) { 
-           /* clearBarChart({
-              xAxisLabel: 'System',
-              yAxisLabel: 'Valid',
-            });*/
-            data = parseData(data, collection);
+            var arrData = parseData(data, collection);
             getBarChart({
-              data: data,
+              data: arrData,
               width: 800,
               height: 600,
               xAxisLabel: 'System',
               yAxisLabel: 'Valid',
               containerId: 'bar-chart-large'
             });
+            if(arrData.length === 0 && url !== '') {
+              window.alert('Attention!\nNo data found in doc ' + collection); 
+            }
           },
           error: function(jqXHR, textStatus, errorThrown) {
             // something went wrong. Take a look in jqXHR and find the status code
-            window.alert('Document Not Found!');
             if(textStatus === 'error') {
-              window.alert('status text is ' + jqXHR.statusText + ' and status is ' + jqXHR.status + ' and statusCode is ' + jqXHR.statusCode() + ' and the errorThrown is ' + errorThrown);
+              window.alert('ERROR!\nThe status code is ' + jqXHR.statusCode() + '. The error thrown is ' + errorThrown);
               return false;
             }
           }
@@ -172,8 +171,12 @@
 
       $('#pick-doc').click( function() {
         var uriCollection = $('input[name = collection]').val();
-        loadData(uriCollection);
-
+        if(uriCollection === '') {
+          window.alert('Please enter a uri.');
+        }
+        else {
+          loadData(uriCollection);
+        }
       })
       $("input[name='insert']").click(function(){
         var col = $("input[name='tempcol']").val();
