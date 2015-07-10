@@ -18,6 +18,7 @@ function proxy(req, port, res) {
 
   var queryString = req.originalUrl.split('?')[1];
   console.log(req.method + ' ' + req.path + ' proxied to ' + conn.host + ':' + port + req.path + (queryString ? '?' + queryString : ''));
+ // console.log("req=",JSON.stringify(req));
 
   var headers = req.headers;
   if (port === 8002) {
@@ -53,7 +54,7 @@ function getData(collection, res) {
   query.result(function(r){
     var i;
     // get result and log all uris
-    console.log('GET DOCS from collection =' + collection);
+    console.log('GET DOCS from collection = ' + collection);
     console.log('result =');
     for (i=0; i<r.length; i++) {
       console.log(r[i].uri);
