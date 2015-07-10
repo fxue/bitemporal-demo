@@ -1,4 +1,3 @@
-
 var request = require('request');
 
 /* express set up */
@@ -101,7 +100,6 @@ app.get('/index', function(req, res) {
 app.get('/search', function(req, res) {
   res.sendfile(__dirname + '/search.html');
 });
-
 
 /* start listening */
 app.listen(3000);
