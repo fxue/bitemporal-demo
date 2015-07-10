@@ -120,7 +120,12 @@
     }
 
     var docLen = docs.total;
-    document.getElementById('numDocs').innerHTML = start.toString() + ' to ' + end.toString() + ' of ' + docLen;
+    if (docLen === 0) {
+      document.getElementById('numDocs').innerHTML = start.toString() + ' to ' + end.toString() + ' of ' + docLen;
+    }
+    else {
+      document.getElementById('numDocs').innerHTML = start + 1 + ' to ' + end.toString() + ' of ' + docLen;
+    }
 
     //adds all document URI's into an array, in order to display the results alphabetically sorted
     var uriArray = [];
