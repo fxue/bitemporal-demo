@@ -12,12 +12,12 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-	  
-	  #Edit {
-	    position: relative;
-		top: 620px; /*Relative to height of 'bar-chart-large'*/	
-		left: 20px;
-	  }
+    
+    #Edit {
+      position: relative;
+    top: 620px; /*Relative to height of 'bar-chart-large'*/ 
+    left: 20px;
+    }
 
       .svg-chart .background {
         shape-rendering: crispEdges;
@@ -69,36 +69,84 @@
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
 
     <div id="bar-chart-large"></div>
-	
+  
     <script type="text/javascript">
       var inputText = $("input[name='collection']").val();
       console.log("\nInput text is " + inputText);
       window.alert(inputText);
+
+      /*takes a string of data returns an array of that data*/
+      function parseData(data, collection) {
+        var split = data.split('--ML_BOUNDARY');
+        var items = [];
+
+        for (var i=0; i < split.length; i++) {
+          var item = {
+            category: null,
+            content: null,
+            contentLength: null,
+            contentType: null,
+            format: null,
+            uri: null
+          };
+
+          var matches = split[i].match(/Content-Type: ([\w\/]+)/);
+          if(matches && matches[1]) {
+            item.contentType = matches[1];
+          }
+
+          var matches2 = split[i].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
+          if(matches2 && matches2[2]) {
+            item.uri = matches2[2];
+            if(matches2[3])
+              item.category = matches2[3];
+            if(matches2[4])
+              item.format = matches2[4];
+          }
+
+          var matches3 = split[i].match(/Content-Length: ([\d]+)/);
+          if(matches3 && matches3[1]) {
+            item.contentLength = matches3[1];
+          }
+
+          var matches4 = split[i].match(/({[^$]*})/);
+          if(matches4 && matches4[1]) {
+            item.content = JSON.parse(matches4[1]);
+          }
+
+          if(item.content !== null)
+            if (collection && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
+              items.push(item);
+            }
+        }
+
+        return items;
+      }
+
       function loadData(collection) {
         var url = '';
         if (collection !== undefined) {
           url += '/' + collection;
         }
         else {
-          collection = 'addr.json'
+         // collection = 'addr.json'
         }
-       /* $(document).ajaxError(function(e, jqxhr, settings, exception) {  
-           if (jqxhr.readyState === 0 || jqxhr.status === 0) {  
-             return; //Skip this error  
-           }  
-           else if(jqxhr.status === 404) {
-             window.alert('404 unauthorized... Doc not found!');
-           }
-        }); */
         $.ajax({
-          url: 'http://localhost:3000/v1/documents',
+          url: 'http://localhost:3000/v1/search?pageLength=1000',
           data: {
             format: 'json',
-            uri: collection
+            collection: collection
           },
-          type: "GET",
-          dataType: 'json',
+          type: "POST",
+          headers: {
+            Accept: 'multipart/mixed'
+          },
           success: function ( data ) { 
+           /* clearBarChart({
+              xAxisLabel: 'System',
+              yAxisLabel: 'Valid',
+            });*/
+            data = parseData(data, collection);
             getBarChart({
               data: data,
               width: 800,
@@ -106,25 +154,14 @@
               xAxisLabel: 'System',
               yAxisLabel: 'Valid',
               containerId: 'bar-chart-large'
-            })
+            });
           },
           error: function(jqXHR, textStatus, errorThrown) {
             // something went wrong. Take a look in jqXHR and find the status code
             window.alert('Document Not Found!');
             if(textStatus === 'error') {
-              // window.alert(textStatus, errorThrown);
-              // window.alert('status text is ' + jqXHR.statusText);
-               window.alert('status text is ' + jqXHR.statusText + ' and status is ' + jqXHR.status + ' and statusCode is ' + jqXHR.statusCode() + ' and the errorThrown is ' + errorThrown);
-               //clears bar chart
-               getBarChart({
-                 data: data,
-                 width: 800,
-                 height: 600,
-                 xAxisLabel: 'System',
-                 yAxisLabel: 'Valid',
-                 containerId: 'bar-chart-large'
-            })
-               return false;
+              window.alert('status text is ' + jqXHR.statusText + ' and status is ' + jqXHR.status + ' and statusCode is ' + jqXHR.statusCode() + ' and the errorThrown is ' + errorThrown);
+              return false;
             }
           }
         }); 
@@ -176,11 +213,11 @@
           "&system="+sys+"&content="+d);
       });
     </script>
-	<div id="Edit-Button"> </div>
-	<button id="Edit" onclick="displaySearchBox()">Edit</button>
-	<script> function displaySearchBox() {	
-	  
-	}
-	</script>
+  <div id="Edit-Button"> </div>
+  <button id="Edit" onclick="displaySearchBox()">Edit</button>
+  <script> function displaySearchBox() {  
+   
+  }
+  </script>
    </body>
 </html>
