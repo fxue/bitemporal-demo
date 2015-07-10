@@ -94,6 +94,14 @@ app.get('/', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
+app.get('/index', function(req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
+
+app.get('/search', function(req, res) {
+  res.sendfile(__dirname + '/search.html');
+});
+
 /* start listening */
 app.listen(3000);
 console.log('listening on port 3000');
