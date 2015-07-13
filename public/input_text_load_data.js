@@ -78,13 +78,13 @@ function parseData(data, collection) {
         containerId: 'bar-chart-large'
       });
       if(arrData.length === 0 && url !== '') {
-        window.alert('Attention!\nNo data found in doc ' + collection); 
+        window.alert('Attention!\n\nNo data found in document ' + collection);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
     // something went wrong. Take a look in jqXHR and find the status code
       if(textStatus === 'error') {
-        window.alert('ERROR!\nThe status code is ' + jqXHR.statusCode() + '. The error thrown is ' + errorThrown);
+        window.alert('ERROR!\n\nThe error status is ' + jqXHR.status + '. The error thrown is ' + errorThrown + '.');
         return false;
       }
     }
