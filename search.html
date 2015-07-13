@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
- 
+
     <style>
       body {
         background-color: #f5f5f5;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
- 
+
       #dropdown {
         height: 50px;
         position: relative;
@@ -36,22 +36,22 @@
         -o-transition: all 0.15s linear;
         transition: all 0.15s linear;
       }
- 
+
       #bold {
         font-weight: bold;
-        
+
       }
- 
+
       #dropdown:hover {
         color: #000000;
       }
- 
+
       #dropdown.open {
         background: #5a90e0;
         color: #fff;
         border-left-color: #6c6d70;
       }
- 
+
       #instructSelect {
         position: absolute;
         left: 0px;
@@ -59,14 +59,14 @@
         font-weight: bold;
         font-size: 1.55em;
       }
- 
+
       #bulletList {
         position: relative;
         left: -40px;
         top: 105px;
         font-size: 1.0em;
       }
- 
+
       #search {
         position: absolute;
         left: 0px;
@@ -75,7 +75,7 @@
         width: 80px;
         font-size: 1.2em;
       }
- 
+
       #prev {
         position: absolute;
         left: 0px;
@@ -87,21 +87,21 @@
         line-height: 9px;
         text-align: center;
       }
- 
+
       #break {
         position: absolute;
         width: 30%;
         left: 37px;
         margin-top: -0.13em;
       }
- 
+
       #numDocs {
         position: absolute;
         left: 50px;
         top: 110px;
         font-size: 1.2em;
       }
- 
+
       #next {
         position: absolute;
         left: 225px;
@@ -120,17 +120,22 @@
       }
 
       #physicalDoc {
-        font-size: 1.35em;      
+        font-size: 1.35em;
       }
+
+     /* div.date {
+        margin-bottom: 10px;
+      }*/
+
 
       #page {
         position: relative;
         left: 840px;
         top: 100px;
       }
- 
+
     </style>
- 
+
   </head>
   <body>
     <h1>MarkLogic Bitemporal Search Page</h1>
@@ -146,11 +151,12 @@
       <p id="numDocs"></p>
         <ul id="bulletList"></ul>
       </div>
-     
+
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
-      
+    <script src="/public/split.js"></script>
+
    </body>
 </html>
