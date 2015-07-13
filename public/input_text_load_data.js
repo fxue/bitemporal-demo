@@ -40,7 +40,7 @@ function parseData(data, collection) {
     }
 
     if(item.content) {
-      if (collection && (collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || collection === item.uri) {
+      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || collection === item.uri)) {
         items.push(item);
       }
     }
