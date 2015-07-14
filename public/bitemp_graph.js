@@ -24,7 +24,7 @@ var barChart = function() {
 
     function setDimensions() {
 
-      axisLabelMargin = 10;
+      axisLabelMargin = 15;
 
     }
 

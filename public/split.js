@@ -34,7 +34,7 @@ function parseData(data, collection, numParts) {
     var matches3 = split[i].match(/Content-Length: ([\d]+)/);
     if(matches3 && matches3[1]) {
       item.contentLength = matches3[1];
-   }
+    }
 
     var matches4 = split[i+numParts-1].match(/({[^$]*})/);
     if(matches4 && matches4[1]) {
@@ -42,7 +42,15 @@ function parseData(data, collection, numParts) {
     }
 
     if (parseInt(numParts) === 1 && item.content) {
-      if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
+      /* conditional checks that
+      1.) item's content is not null
+      and either
+        2.) collection specified is not null AND the collection's substring up until the first '.'' is the same string as the item's filename's substring up to the first '.'. Thus 'addr.json' has the same substring as 'addr.48324723423.json' since 'addr' === 'addr'.
+      OR
+        3.) collection specified is not null AND the collection string equals the item's filename. If a collection and a item's uri are both 'intern'.
+      If 1 and 2 are met OR 1 and 3 are met, then push the object item to the array items.
+*/
+      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || (collection === item.uri)))  {
         items.push(item);
       }
     }
