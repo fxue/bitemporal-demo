@@ -1,27 +1,25 @@
 
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
-function parseData(data, collection) {
+function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
   var items = [];
-
-  for (var i=0; i < split.length; i++) {
+  for (var i=numParts-1; i < split.length - 1; i=i+numParts) {
     var item = {
       category: null,
       content: null,
       contentLength: null,
       contentType: null,
       format: null,
-      uri: null
+      uri: null,
+      collections: null
     };
 
     var matches = split[i].match(/Content-Type: ([\w\/]+)/);
-    var matches2 = split[i].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
-    var matches3 = split[i].match(/Content-Length: ([\d]+)/);
-    var matches4 = split[i].match(/({[^$]*})/);
-
     if(matches && matches[1]) {
       item.contentType = matches[1];
     }
+
+    var matches2 = split[i].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
     if(matches2) {
       if(matches2[2]) {
         item.uri = matches2[2];
@@ -33,31 +31,34 @@ function parseData(data, collection) {
         item.format = matches2[4];
       }
     }
+
+    var matches3 = split[i].match(/Content-Length: ([\d]+)/);
     if(matches3 && matches3[1]) {
       item.contentLength = matches3[1];
-    }  
+    }
+
+    var matches4 = split[i+numParts-1].match(/({[^$]*})/);
     if(matches4 && matches4[1]) {
       item.content = JSON.parse(matches4[1]);
     }
-/*
-Before pushing an item to the array items, the conditional checks to see that 
-1.) the physical document has some content/data (not null)
-and either 
-   2.) collection is not null AND the collection's substring up to the '.' matches the substring of the physical doc's uri up to the '.'. So 'addr.json' would match 'addr.48329578923.json', since 'addr' matches 'addr'.
-   OR
-   3.) collection is not null AND matches the file name of the physical doc. so 'addr.json' matches 'addr.json'
 
-If the condition is met, then push to the array. 
-*/
-    if(item.content) {
-      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || collection === item.uri)) {
+    if (parseInt(numParts) === 1 && item.content) {
+      if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
         items.push(item);
       }
     }
-  }
 
+    else if (parseInt(numParts) === 2) {
+      var collArr = split[i].match(/({[^$]*})/);
+      if(collArr && collArr[1]) {
+        item.collections = JSON.parse(collArr[0]);
+      }
+      items.push(item);
+    }
+  }
   return items;
 }
+
 
 function loadData(collection) {
   var url = '';
@@ -78,7 +79,7 @@ function loadData(collection) {
       Accept: 'multipart/mixed'
     },
     success: function ( data ) { 
-      var arrData = parseData(data, collection);
+      var arrData = parseData(data, collection, 1);
       getBarChart({
         data: arrData,
         width: 800,
@@ -100,8 +101,6 @@ function loadData(collection) {
     }
   }); 
 }
-
-loadData();
 
 $('#pick-doc').click( function() {
   var uriCollection = $('input[name = collection]').val();

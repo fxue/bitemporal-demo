@@ -5,6 +5,7 @@ var request = require('request');
 var express = require('express');
 var app = express();
 app.engine('.html', require('ejs').__express);
+
 app.set('views', __dirname);
 app.set('view engine', 'html');
 
@@ -14,21 +15,21 @@ var conn = require('./env.js').connection;
 var db = marklogic.createDatabaseClient(conn);
 var q = marklogic.queryBuilder;
 
+// Proxy requests to the MarkLogic REST API
 function proxy(req, port, res) {
 
   var queryString = req.originalUrl.split('?')[1];
   console.log(req.method + ' ' + req.path + ' proxied to ' + conn.host + ':' + port + req.path + (queryString ? '?' + queryString : ''));
- // console.log("req=",JSON.stringify(req));
 
   var headers = req.headers;
   if (port === 8002) {
-    // The /manage/v2/databases/Documents/temporal/collections has been giving an HTML
-    // useless response to this when queried from jQuery. After switching user-agent
-    // to pretend to be curl, it's fine. Not clear why.
+    // TODO: The /manage/v2/databases/Documents/temporal/collections has been
+    // giving an HTML useless response to this when queried from jQuery. After
+    // switching user-agent to pretend to be curl, it's fine. Not clear why.
     headers['user-agent'] = 'curl/7.37.1';
   }
 
-  var mlReq = request({
+  var mlReqOptions = {
     uri: 'http://' + conn.host + ':' + port + req.originalUrl,
     method: req.method,
     path: req.path + (queryString ? '?' + queryString : ''),
@@ -38,7 +39,13 @@ function proxy(req, port, res) {
       password: conn.password,
       sendImmediately: false
     }
-  });
+  };
+
+  if (req.headers['content-type'] === 'application/json') {
+    mlReqOptions.json = true;
+  }
+
+  var mlReq = request(mlReqOptions);
 
   req.pipe(mlReq).pipe(res);
 

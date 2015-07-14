@@ -13,12 +13,11 @@
         font-size: 12px;
       }
     
-    #Edit {
-      position: relative;
-      top: 620px; /*Relative to height of 'bar-chart-large'*/ 
-      left: 20px;
-    }
-
+      #Edit {
+        position: relative;
+        top: 620px; /*Relative to height of 'bar-chart-large'*/ 
+        left: 20px;
+      }
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -34,7 +33,6 @@
         font-size: 25px;
         line-height: 18px;
       }
-
       .axis-label {
         font-family: Helvetica;
         font-size: 15px;
@@ -44,14 +42,36 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
-
+      
+      #dropdown {
+        height: 30px;
+        position: relative;
+        left: 0px;
+        top: 30px;
+        display: block;
+        padding: 13px 16px;
+        width: 100px;
+        cursor: pointer;
+        border-left: 4px solid #739cda;
+        font-weight: normal;
+      }
+ 
+      #dropdown:hover {
+        color: #000000;
+      }
+ 
+      #dropdown.open {
+        background: #5a90e0;
+        color: #fff;
+        border-left-color: #6c6d70;
+      }
+ 
     </style>
-
   </head>
+  
   <body>
     <p>Change the logical document display to the specified URI of a logical document.</p>
     <p>Don't forget to include the "dot extension" ie .json.</p>
-
     <div>
        Enter URI:<br>
        <input type="text" name="collection" value="">
@@ -64,6 +84,7 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
+    
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
@@ -72,24 +93,8 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
     <div id="bar-chart-large"></div>
-  
     <script type="text/javascript">
-      $("input[name='insert']").click(function(){
-        var col = $("input[name='tempcol']").val();
-        var uri = $("input[name='uri']").val();
-        var vs = $("input[name='validstart']").val();
-        var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemtart']").val();
-        var d = $("input[name='content']").val();
-
-        $.get(
-          "/update?collection"+col+"&uri="+uri+
-          "&validstart="+vs+"&validend="+ve+
-          "&system="+sys+"&content="+d);
-      });
-    </script>
-    <script type="text/javascript">
-      $.get( "/data", function( data ) {
+      $.get( "/data", function(data) {
         getBarChart({
           data: data,
           width: 800,
@@ -104,20 +109,20 @@
         var uri = $("input[name='uri']").val();
         var vs = $("input[name='validstart']").val();
         var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemtart']").val();
+        var sys = $("input[name='systemstart']").val();
         var d = $("input[name='content']").val();
-
+        
         $.get(
           "/update?collection"+col+"&uri="+uri+
           "&validstart="+vs+"&validend="+ve+
           "&system="+sys+"&content="+d);
-      });
-    </script>
-  <div id="Edit-Button"> </div>
-  <button id="Edit" onclick="displaySearchBox()">Edit</button>
-  <script> function displaySearchBox() {  
-   
-  }
+        });
+    </script>  
   </script>
-   </body>
+    <button id="editButton" > Edit </button>
+    <button id="viewButton"> View </button>
+    <button id="saveButton" hidden="true"> Save </button>
+    <button id='cancelButton' hidden='true'> Cancel </button>
+    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea> 
+  </body>
 </html>
