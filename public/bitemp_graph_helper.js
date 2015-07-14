@@ -68,6 +68,7 @@ function setupTextArea(uri, isEditing) {
     success: successFunc,
     format: 'json'
   });
+
 }
 
 function cancel(chart) {
