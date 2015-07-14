@@ -112,7 +112,7 @@ var getBarChart = function (params) {
   d3.select('body').append('div').attr('id', params.containerId).call(chart);
 
   var selector = '#' + params.containerId;
-  var svg = d3.select(selector).node().outerHTML;
+  //var svg = d3.select(selector).node().outerHTML;
   d3.select(selector).remove();     
   
   $('#editButton').click(function() {
@@ -130,6 +130,6 @@ var getBarChart = function (params) {
   });
 
 
-  return svg;
+  //return svg;
 };
 
