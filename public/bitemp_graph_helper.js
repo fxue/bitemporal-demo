@@ -1,9 +1,9 @@
 /*global d3 */
 
-var chart;
+//var chart;
 var getBarChart = function (params) {
 
-  chart = barChart()
+ var chart = barChart()
     .data(params.data)
     .width(params.width)
     .height(params.height);
@@ -16,3 +16,4 @@ var getBarChart = function (params) {
 
   return svg;
 };
+

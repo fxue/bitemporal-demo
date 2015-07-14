@@ -1,7 +1,6 @@
 /*global d3, moment */
 
 var barChart = function() {
-
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
@@ -92,7 +91,6 @@ var barChart = function() {
         .outerTickSize(0)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'));
-
     }
 
     function setupBarChartLayout() {
@@ -156,6 +154,7 @@ var barChart = function() {
 
     function addBarChartData() {
       var c=0;
+      
       split = g.selectAll('.split')
         .data(data)
         .enter()
@@ -235,9 +234,9 @@ var barChart = function() {
             bary2 = yScale(moment(d.content.valEnd).toDate());
             return (bary1+bary2)/2;
           }
-        })
-        .text(function(d) { return d.content.data;});
-
+        }) 
+        .text(function(d) {
+          return d.content.data;});
     }
 
     setDimensions();
@@ -249,13 +248,31 @@ var barChart = function() {
     addYAxisLabel();
     addBarChartData();
 
+   
+
   };
+
+ // var addText = function(d) { 
+    /*var data = d.content.data;
+    console.log('prop = ' + prop);
+    if (!prop) {
+      console.log('prop is null');
+      prop = 'data';
+    }
+    else {
+      console.log('prop: ' + prop);
+    }
+    console.log(d.content[prop]); */
+//    return 'lukas';//d.content.data;
+//  };
+
 
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
     return n;
   };
+
 
   chart.data = function(value) {
     if (!arguments.length) {
