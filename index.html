@@ -10,13 +10,37 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-
-      #Edit {
+	    
+      #editButton {
         position: relative;
-        top: 620px; /*Relative to height of 'bar-chart-large'*/
+		    top: 620px; <!--Relative to height of 'bar-chart-large' -->
+		    left: 20px;
+	    }
+      
+      #viewButton {
+        position: relative;
+        top: 620px;
+        left: 35px
+      }
+      
+      #saveButton {
+        position: relative;
+        top: 750px;
         left: 20px;
       }
-
+      
+      #cancelButton {
+        position: relative;
+        top: 770px;
+        left: 60px;
+      }
+      
+      #contents {
+        position: relative;
+        top: 620px;
+        left: 40px;
+      }
+     
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -38,6 +62,10 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> Starting to work with the code Fei originally had in bitemp_graph_helper
     </style>
   </head>
 
@@ -81,7 +109,12 @@
           "&system="+sys+"&content="+d);
         });
     </script>
+<<<<<<< HEAD
 
+=======
+   
+    
+>>>>>>> Starting to work with the code Fei originally had in bitemp_graph_helper
     <button id="editButton" > Edit </button>
     <button id="viewButton"> View </button>
     <button id="saveButton" hidden="true"> Save </button>

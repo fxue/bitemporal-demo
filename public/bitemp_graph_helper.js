@@ -95,14 +95,19 @@ function edit(uri) {
 }
 
 var getBarChart = function (params) {
-
   var chart = barChart() 
     .data(params.data)
     .width(params.width)
     .height(params.height);
   
+  d3.select('body').append('div').attr('id', params.containerId).call(chart);
+
   var selector = '#' + params.containerId;
-  d3.select(selector).call(chart);      
+  var svg = d3.select(selector).node().outerHTML;
+  d3.select(selector).remove();
+  
+  /*var selector = '#' + params.containerId;
+  d3.select(selector).call(chart);    */  
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
@@ -118,5 +123,7 @@ var getBarChart = function (params) {
     save(chart);
   });
 
+  return svg;
+  
 };
 

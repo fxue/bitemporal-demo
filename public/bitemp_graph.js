@@ -28,11 +28,9 @@ var barChart = function() {
   var chart = function(container) {
     var uri = undefined;
     var isEditing = false;
-    var isViewing = false;
-    
-    
+    var isViewing = false;   
    
-   function setDimensions() {
+    function setDimensions() {
       axisLabelMargin = 10;
     } 
 
@@ -118,7 +116,6 @@ var barChart = function() {
       });
 
       color.domain(colorDomain);
-
     }
 
     function addXAxisLabel() {
@@ -163,7 +160,7 @@ var barChart = function() {
     }
     
     function addBarChartData() {
-      var c=0;
+      var c = 0;
       split = g.selectAll('.split')
         .data(data)
         .enter()
