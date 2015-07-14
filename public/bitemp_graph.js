@@ -196,7 +196,7 @@ var barChart = function() {
         .attr('width', 0)
         .style('opacity', 0)
         .transition()
-        .duration(10000)
+        .duration(1500)
         .style('opacity', 1)
         .attr('height', function(d) {
           var bValStart = yScale(moment(d.content.valStart).toDate());

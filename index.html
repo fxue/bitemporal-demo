@@ -5,28 +5,27 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
-      
+
     <style>
       body {
         background-color: #f5f5f5;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-    
+
       #Edit {
         position: relative;
-        top: 620px; /*Relative to height of 'bar-chart-large'*/ 
+        top: 620px; /*Relative to height of 'bar-chart-large'*/
         left: 20px;
       }
+
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
         fill: #fdfdfd;
         stroke-width: 1px;
       }
-
       .svg-chart .g { fill: #4682B4; }
-
       .tooltip-txt {
         margin: 0;
         font-family: Helvetica;
@@ -37,38 +36,13 @@
         font-family: Helvetica;
         font-size: 15px;
       }
-
       .svg-chart .xaxis .tick text {
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
-      
-      #dropdown {
-        height: 30px;
-        position: relative;
-        left: 0px;
-        top: 30px;
-        display: block;
-        padding: 13px 16px;
-        width: 100px;
-        cursor: pointer;
-        border-left: 4px solid #739cda;
-        font-weight: normal;
-      }
- 
-      #dropdown:hover {
-        color: #000000;
-      }
- 
-      #dropdown.open {
-        background: #5a90e0;
-        color: #fff;
-        border-left-color: #6c6d70;
-      }
- 
     </style>
   </head>
-  
+
   <body>
     <p>Change the logical document display to the specified URI of a logical document.</p>
     <p>Don't forget to include the "dot extension" ie .json.</p>
@@ -80,11 +54,11 @@
     </div>  
 
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
-    <a href="search">Click</a>
+    <a href="search">Search</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
@@ -93,6 +67,7 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
     <div id="bar-chart-large"></div>
+
     <script type="text/javascript">
       $.get( "/data", function(data) {
         getBarChart({
@@ -111,18 +86,20 @@
         var ve = $("input[name='validend']").val();
         var sys = $("input[name='systemstart']").val();
         var d = $("input[name='content']").val();
-        
+
         $.get(
           "/update?collection"+col+"&uri="+uri+
           "&validstart="+vs+"&validend="+ve+
           "&system="+sys+"&content="+d);
         });
     </script>  
-  </script>
+
     <button id="editButton" > Edit </button>
     <button id="viewButton"> View </button>
     <button id="saveButton" hidden="true"> Save </button>
     <button id='cancelButton' hidden='true'> Cancel </button>
     <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea> 
+    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>
+
   </body>
 </html>
