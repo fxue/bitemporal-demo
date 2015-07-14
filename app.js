@@ -3,16 +3,11 @@ var request = require('request');
 
 /* express set up */
 var express = require('express');
-var bodyParser = require('body-parser');
 var app = express();
 app.engine('.html', require('ejs').__express);
 
 app.set('views', __dirname);
 app.set('view engine', 'html');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 /* MarkLogic set up */
 var marklogic = require('marklogic');
@@ -46,10 +41,6 @@ function proxy(req, port, res) {
     }
   };
 
-  // Include the body, if one is provided
-  if (req.body !== undefined) {
-    mlReqOptions.body = req.body;
-  }
   if (req.headers['content-type'] === 'application/json') {
     mlReqOptions.json = true;
   }
