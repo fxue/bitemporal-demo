@@ -252,21 +252,6 @@ var barChart = function() {
 
   };
 
- // var addText = function(d) { 
-    /*var data = d.content.data;
-    console.log('prop = ' + prop);
-    if (!prop) {
-      console.log('prop is null');
-      prop = 'data';
-    }
-    else {
-      console.log('prop: ' + prop);
-    }
-    console.log(d.content[prop]); */
-//    return 'lukas';//d.content.data;
-//  };
-
-
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
