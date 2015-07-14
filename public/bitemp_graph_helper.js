@@ -105,7 +105,6 @@ var getBarChart = function (params) {
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
   var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());

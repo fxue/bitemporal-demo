@@ -158,7 +158,7 @@ var barChart = function() {
     }
     
     function addBarChartData() {
-      var c=0;
+      var c = 0;
       split = g.selectAll('.split')
         .data(data)
         .enter()
