@@ -121,7 +121,8 @@ var getBarChart = function (params) {
   $('#saveButton').click(function() {
     save(chart);
   });
-
+  
   //return svg;
+
 };
 
