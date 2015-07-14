@@ -95,6 +95,7 @@ function edit(uri) {
 }
 
 var getBarChart = function (params) {
+
   var chart = barChart()
     .data(params.data)
     .width(params.width)
@@ -104,6 +105,7 @@ var getBarChart = function (params) {
   d3.select(selector + ' .chart').remove();
   var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
 
+  
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
@@ -117,7 +119,6 @@ var getBarChart = function (params) {
   $('#saveButton').click(function() {
     save(chart);
   });
-
 
   //return svg;
 };
