@@ -102,7 +102,7 @@ function displayDocs( start, end)
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if( totalDocLen > 0 )
     {
-      docs = parseData(data, null);
+      docs = parseData(data, null, 2);
     }
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
