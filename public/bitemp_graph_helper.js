@@ -26,7 +26,7 @@ function fillText(data, isEditing) {
 } 
 
 function save(chart) {
-  data = document.getElementById('contents').value.replace(/\n/g, '');
+  var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
   console.log('Here\'s the parsed data object: ');
   console.log(data);
