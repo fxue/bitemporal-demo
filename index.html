@@ -11,6 +11,7 @@
         font-size: 12px;
       }
 	    
+<<<<<<< HEAD
       #bar-chart-large {
         position: absolute;
         top: 60px;
@@ -23,6 +24,38 @@
         left: 40px;
       }
      
+=======
+      #editButton {
+        position: relative;
+		    top: 620px; <!--Relative to height of 'bar-chart-large' -->
+		    left: 20px;
+	    }
+      
+      #viewButton {
+        position: relative;
+        top: 620px;
+        left: 35px
+      }
+      
+      #saveButton {
+        position: relative;
+        top: 750px;
+        left: 20px;
+      }
+      
+      #cancelButton {
+        position: relative;
+        top: 770px;
+        left: 60px;
+      }
+      
+      #contents {
+        position: relative;
+        top: 620px;
+        left: 40px;
+      }
+      
+>>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -44,7 +77,11 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
+<<<<<<< HEAD
       
+=======
+ 
+>>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
     </style>
   </head>
 
@@ -88,6 +125,7 @@
           "&system="+sys+"&content="+d);
         });
     </script>
+<<<<<<< HEAD
 
     <div id='editDocDiv'>
       <button id="editButton" > Edit </button>
@@ -97,5 +135,15 @@
       <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>  
     </div>
 
+=======
+   
+    
+    <button id="editButton" > Edit </button>
+    <button id="viewButton"> View </button>
+    <button id="saveButton" hidden="true"> Save </button>
+    <button id='cancelButton' hidden='true'> Cancel </button>
+    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea> 
+    
+>>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
   </body>
 </html>

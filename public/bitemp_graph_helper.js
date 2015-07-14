@@ -99,16 +99,27 @@ var getBarChart = function (params) {
     .data(params.data)
     .width(params.width)
     .height(params.height);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
   d3.select('body').append('div').attr('id', params.containerId).call(chart);
 
   var selector = '#' + params.containerId;
   var svg = d3.select(selector).node().outerHTML;
   d3.select(selector).remove();
+<<<<<<< HEAD
 
   /*var selector = '#' + params.containerId;
   d3.select(selector).call(chart);
   */
+=======
+  
+  /*var selector = '#' + params.containerId;
+  d3.select(selector).call(chart);    */  
+  
+>>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
     window.scrollTo(0,document.body.scrollHeight)
@@ -125,6 +136,11 @@ var getBarChart = function (params) {
     save(chart);
   });
 
+<<<<<<< HEAD
   //return svg;
+=======
+  return svg;
+  
+>>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
 };
 
