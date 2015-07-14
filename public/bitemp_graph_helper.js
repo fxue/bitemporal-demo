@@ -99,18 +99,19 @@ var getBarChart = function (params) {
     .data(params.data)
     .width(params.width)
     .height(params.height);
-  
+
   d3.select('body').append('div').attr('id', params.containerId).call(chart);
 
   var selector = '#' + params.containerId;
   var svg = d3.select(selector).node().outerHTML;
   d3.select(selector).remove();
-  
+
   /*var selector = '#' + params.containerId;
-  d3.select(selector).call(chart);    */  
-  
+  d3.select(selector).call(chart);
+  */
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
+    window.scrollTo(0,document.body.scrollHeight)
   });
   
   $('#cancelButton').click(function() {
@@ -118,12 +119,12 @@ var getBarChart = function (params) {
   });
   $('#viewButton').click(function() {
     view(chart.getCurrentURI());
+    window.scrollTo(0,document.body.scrollHeight)
   });
   $('#saveButton').click(function() {
     save(chart);
   });
 
-  return svg;
-  
+  //return svg;
 };
 

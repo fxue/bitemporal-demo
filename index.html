@@ -11,33 +11,15 @@
         font-size: 12px;
       }
 	    
-      #editButton {
-        position: relative;
-		    top: 620px; <!--Relative to height of 'bar-chart-large' -->
-		    left: 20px;
-	    }
-      
-      #viewButton {
-        position: relative;
-        top: 620px;
-        left: 35px
-      }
-      
-      #saveButton {
-        position: relative;
-        top: 750px;
-        left: 20px;
-      }
-      
-      #cancelButton {
-        position: relative;
-        top: 770px;
+      #bar-chart-large {
+        position: absolute;
+        top: 60px;
         left: 60px;
       }
-      
-      #contents {
-        position: relative;
-        top: 620px;
+     
+      #editDocDiv {
+        position: absolute;
+        top: 665px;
         left: 40px;
       }
      
@@ -62,10 +44,7 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
-<<<<<<< HEAD
-=======
- 
->>>>>>> Starting to work with the code Fei originally had in bitemp_graph_helper
+      
     </style>
   </head>
 
@@ -109,17 +88,14 @@
           "&system="+sys+"&content="+d);
         });
     </script>
-<<<<<<< HEAD
 
-=======
-   
-    
->>>>>>> Starting to work with the code Fei originally had in bitemp_graph_helper
-    <button id="editButton" > Edit </button>
-    <button id="viewButton"> View </button>
-    <button id="saveButton" hidden="true"> Save </button>
-    <button id='cancelButton' hidden='true'> Cancel </button>
-    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>
+    <div id='editDocDiv'>
+      <button id="editButton" > Edit </button>
+      <button id="viewButton"> View </button>
+      <button id="saveButton" hidden="true"> Save </button>
+      <button id='cancelButton' hidden='true'> Cancel </button>
+      <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>  
+    </div>
 
   </body>
 </html>
