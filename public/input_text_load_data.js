@@ -18,12 +18,14 @@ function parseData(data, collection) {
     var matches2 = split[i].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
     var matches3 = split[i].match(/Content-Length: ([\d]+)/);
     var matches4 = split[i].match(/({[^$]*})/);
-    
+
     if(matches && matches[1]) {
       item.contentType = matches[1];
     }
-    if(matches2 && matches2[2]) {
-      item.uri = matches2[2];
+    if(matches2) {
+      if(matches2[2]) {
+        item.uri = matches2[2];
+      }
       if(matches2[3]) {
         item.category = matches2[3];
       }
