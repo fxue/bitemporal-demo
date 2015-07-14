@@ -6,7 +6,7 @@
     return +new Date();
   };
   var d3_arraySlice = [].slice, d3_array = function(list) {
-    return d3_arraySlice.call(list);
+      return d3_arraySlice.call(list);
   };
   var d3_document = document, d3_documentElement = d3_document.documentElement, d3_window = window;
   try {

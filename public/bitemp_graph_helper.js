@@ -108,6 +108,7 @@ var getBarChart = function (params) {
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
+    window.scrollTo(0,document.body.scrollHeight)
   });
 
   $('#cancelButton').click(function() {
@@ -115,6 +116,7 @@ var getBarChart = function (params) {
   });
   $('#viewButton').click(function() {
     view(chart.getCurrentURI());
+    window.scrollTo(0,document.body.scrollHeight)
   });
   $('#saveButton').click(function() {
     save(chart);
