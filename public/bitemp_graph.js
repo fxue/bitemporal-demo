@@ -34,7 +34,7 @@ var barChart = function() {
    
    function setDimensions() {
       axisLabelMargin = 10;
-    }
+    } 
 
     function setupXAxis() {
 
