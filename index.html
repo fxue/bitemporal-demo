@@ -4,21 +4,24 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
-  
+
     <style>
-      body {
+      body
+      {
         background-color: #f5f5f5;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-    
-    #Edit {
+
+    #Edit
+    {
       position: relative;
-    top: 620px; /*Relative to height of 'bar-chart-large'*/ 
-    left: 20px;
+      top: 620px; /*Relative to height of 'bar-chart-large'*/
+      left: 20px;
     }
 
-      .svg-chart .background {
+      .svg-chart .background
+      {
         shape-rendering: crispEdges;
         stroke: #ccc;
         fill: #fdfdfd;
@@ -27,19 +30,22 @@
 
       .svg-chart .g { fill: #4682B4; }
 
-      .tooltip-txt {
+      .tooltip-txt
+      {
         margin: 0;
         font-family: Helvetica;
         font-size: 25px;
         line-height: 18px;
       }
 
-      .axis-label {
+      .axis-label
+      {
         font-family: Helvetica;
         font-size: 15px;
       }
 
-      .svg-chart .xaxis .tick text {
+      .svg-chart .xaxis .tick text
+      {
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
@@ -60,7 +66,7 @@
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
 
     <div id="bar-chart-large"></div>
-  
+
     <script type="text/javascript">
       $.get( "/data", function( data ) {
         getBarChart({
@@ -88,8 +94,8 @@
     </script>
   <div id="Edit-Button"> </div>
   <button id="Edit" onclick="displaySearchBox()">Edit</button>
-  <script> function displaySearchBox() {  
-    
+  <script> function displaySearchBox() {
+
   }
   </script>
    </body>

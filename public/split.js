@@ -2,7 +2,7 @@ function parseData(data, collections)
 {
   var split = data.split('--ML_BOUNDARY');
 
-  console.log("split " + split[1]);
+  console.log('split ' + split[1]);
 
   var items = [];
 
@@ -29,10 +29,12 @@ function parseData(data, collections)
     if(matches2 && matches2[2])
     {
       item.uri = matches2[2];
-      if(matches2[3])
+      if(matches2[3]) {
         item.category = matches2[3];
-      if(matches2[4])
+      }
+      if(matches2[4]) {
         item.format = matches2[4];
+      }
     }
 
     var matches3 = split[i].match(/Content-Length: ([\d]+)/);
