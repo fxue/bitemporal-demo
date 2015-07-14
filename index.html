@@ -12,12 +12,36 @@
         font-size: 12px;
       }
 	    
-      #Edit {
+      #editButton {
         position: relative;
-		    top: 620px; /*Relative to height of 'bar-chart-large'*/	
+		    top: 620px; <!--Relative to height of 'bar-chart-large' -->
 		    left: 20px;
 	    }
-
+      
+      #viewButton {
+        position: relative;
+        top: 620px;
+        left: 35px
+      }
+      
+      #saveButton {
+        position: relative;
+        top: 750px;
+        left: 20px;
+      }
+      
+      #cancelButton {
+        position: relative;
+        top: 770px;
+        left: 60px;
+      }
+      
+      #contents {
+        position: relative;
+        top: 620px;
+        left: 40px;
+      }
+      
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -41,29 +65,6 @@
       .svg-chart .xaxis .tick text {
         transform: rotate(-45deg);
         text-anchor: end !important;
-      }
-      
-      #dropdown {
-        height: 30px;
-        position: relative;
-        left: 0px;
-        top: 30px;
-        display: block;
-        padding: 13px 16px;
-        width: 100px;
-        cursor: pointer;
-        border-left: 4px solid #739cda;
-        font-weight: normal;
-      }
- 
-      #dropdown:hover {
-        color: #000000;
-      }
- 
-      #dropdown.open {
-        background: #5a90e0;
-        color: #fff;
-        border-left-color: #6c6d70;
       }
  
     </style>
@@ -110,6 +111,7 @@
           "&system="+sys+"&content="+d);
         });
     </script>
+   
     
     <button id="editButton" > Edit </button>
     <button id="viewButton"> View </button>
