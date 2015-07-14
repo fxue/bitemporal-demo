@@ -30,30 +30,25 @@ function save(chart) {
   data = jQuery.parseJSON(data);
   console.log('Here\'s the parsed data object: ');
   console.log(data);
-  
- /* declareUpdate();
-  var temporal=require("/MarkLogic/temporal.xqy");
-  temporal.documentInsert("myTemporal","addr.json",data);
-  temporal.statementSetSystemTime(data.sysStart);*/
  
   var success = function() {
-    alert('PUT call worked, closing textbox.');
     cancel(chart);
   };
   var fail = function(data) {
     alert('PUT didn\'t work: ' + data);
   };
-  console.log('Saving');   // Almost close to working
-  $.ajax({
+  
+  console.log('Trying to save');   
+  
+  $.ajax({ //Almost working
     type: 'PUT',
-    contentType: "application/json",
+    contentType: 'application/json',
     url: 'http://localhost:3000/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
     processData: false,
     data: JSON.stringify(data),
     success: success,
     error: fail
   }); 
- //How should the browser appearance behave here? ex. close edit box?
 }
 
 function setupTextArea(uri, isEditing) {
@@ -72,11 +67,8 @@ function setupTextArea(uri, isEditing) {
     url: 'http://localhost:3000/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
-  });   
-
-  
+  });     
 }
-
 
 function cancel(chart) {
   clearTextArea();
@@ -97,7 +89,6 @@ function view(uri) {
 }
 
 function edit(uri) {
-  console.log('Editing ' + uri);
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
   }
