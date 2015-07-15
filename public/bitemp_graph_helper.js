@@ -127,7 +127,4 @@ var getBarChart = function (params) {
     save(chart);
   });
 
-
-  //return svg;
 };
-
