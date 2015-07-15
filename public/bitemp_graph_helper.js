@@ -170,7 +170,12 @@ var getBarChart = function (params) {
   $('#saveButton').click(function() {
     save(chart);
   });
+<<<<<<< HEAD
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
 }
+=======
+
+};
+>>>>>>> merge
