@@ -78,8 +78,8 @@ $('#prev').click(function()
 function displayDocs( start, end)
 {
   $('#bulletList').empty();
-  var e = document.getElementById('dropdown');
-  var selectedColl = e.options[e.selectedIndex].value;
+  var dropDownList = document.getElementById('dropdown');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
  
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   var docs = $.ajax(
@@ -107,14 +107,7 @@ function displayDocs( start, end)
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
     // and disables or enables the next/previous buttons based on those indexes.
-    if( start <= 1 )
-    {
-      document.getElementById('prev').disabled = true;
-    }
-    else
-    {
-      document.getElementById('prev').disabled = false;
-    }
+    document.getElementById('prev').disabled = start <= 1; 
  
     if( end >= totalDocLen)
     {
@@ -151,8 +144,8 @@ function displayDocs( start, end)
       }
       bullet.append($("<hr id='break'>"));
       bullet.append($("<em id= 'physicalDoc'>").text(uri + '   '));
-      bullet.append($("<a href = '/?collection="+uriLogical+"' id='links'>").text('('+uriLogical+')'));
- 
+      bullet.append($("<a href = '/?collection="+uriLogical+"' id='links' name="+i+">").text('('+uriLogical+')'));
+
       var sysStart = docs[i].content.sysStart;
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
