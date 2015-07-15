@@ -26,29 +26,29 @@ function fillText(data, isEditing) {
 }
 
 function save(chart) {
-  var data = document.getElementById('contents').value.replace(/\n/g, '');
+  data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
   console.log('Here\'s the parsed data object: ');
   console.log(data);
 
   var success = function() {
+    alert('PUT call worked, closing textbox.');
     cancel(chart);
   };
   var fail = function(data) {
     alert('PUT didn\'t work: ' + data);
   };
-  
-  console.log('Trying to save');   
-  
-  $.ajax({ //Almost working
+  console.log('Saving');   // Almost close to working
+  $.ajax({
     type: 'PUT',
-    contentType: 'application/json',
+    contentType: "application/json",
     url: 'http://localhost:3000/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
     processData: false,
     data: JSON.stringify(data),
     success: success,
     error: fail
-  }); 
+  });
+ //How should the browser appearance behave here? ex. close edit box?
 }
 
 function setupTextArea(uri, isEditing) {
@@ -71,6 +71,7 @@ function setupTextArea(uri, isEditing) {
 
 }
 
+
 function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
@@ -90,6 +91,7 @@ function view(uri) {
 }
 
 function edit(uri) {
+  console.log('Editing ' + uri);
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
   }
@@ -105,10 +107,14 @@ var getBarChart = function (params) {
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
   var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+
+
+  var selector = '#' + params.containerId;
+  d3.select(selector + ' .chart').remove();
+  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
-    window.scrollTo(0,document.body.scrollHeight)
   });
 
   $('#cancelButton').click(function() {
@@ -116,13 +122,10 @@ var getBarChart = function (params) {
   });
   $('#viewButton').click(function() {
     view(chart.getCurrentURI());
-    window.scrollTo(0,document.body.scrollHeight)
   });
   $('#saveButton').click(function() {
     save(chart);
   });
-  
+
   //return svg;
-
 };
-

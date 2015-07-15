@@ -63,7 +63,7 @@ var barChart = function() {
         .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
         .outerTickSize(0)
         .orient('bottom')
-        .tickFormat(d3.time.format('%Y-%m-%d'));
+        .tickFormat(d3.time.format('%Y-%m-%d'));  
     }
 
     function setupYAxis() {
