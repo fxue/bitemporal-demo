@@ -42,11 +42,11 @@ function parseData(data, collection, numParts) {
     }
  
     if (parseInt(numParts) === 1 && item.content) {
-      if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
+      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || (collection === item.uri)))  
+      {
         items.push(item);
       }
     }
- 
     else if (parseInt(numParts) === 2) {
       var collArr = split[i].match(/({[^$]*})/);
       if(collArr && collArr[1]) {
