@@ -158,12 +158,9 @@ var barChart = function() {
     }
     
     function addBarChartData() {
-<<<<<<< HEAD
-      var c = 0;
-=======
+
       var c=0;
 
->>>>>>> #5 fixed condtional in parseData. #13 added textBox and button functionality
       split = g.selectAll('.split')
         .data(data)
         .enter()
@@ -249,12 +246,14 @@ var barChart = function() {
           }
         }) 
         .text(function(d) {
-          if(/*displayProperty === undefined || displayProperty === null || displayProperty === ''*/ !displayProperty) {
+          if(!displayProperty) {
             displayProperty = 'data';
           }
           
           return d.content[displayProperty];
         });
+
+        window.alert('Here is the property that was passed in!!!' + displayProperty);
       
     }
 
