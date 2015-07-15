@@ -32,7 +32,6 @@ function save(chart) {
   console.log(data);
 
   var success = function() {
-    alert('PUT call worked, closing textbox.');
     cancel(chart);
   };
   var fail = function(data) {
@@ -108,7 +107,7 @@ function deleteDoc(uri) {
       console.log('Delete worked');
     },
     error: function() {
-      console.log('Delete failed');
+      alert('Delete failed');
     },
     format: 'json'
   });
