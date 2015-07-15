@@ -57,6 +57,7 @@
     <a href="search">Search</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
+    </div>  
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -66,8 +67,9 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
     <div id="bar-chart-large"></div>
-
     <script type="text/javascript">
+
+    //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name){
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
         if (results==null){
