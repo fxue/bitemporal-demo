@@ -109,20 +109,16 @@ function changeTextInGraph(chart, params) {
     window.alert('Please enter a document property.');
   }
   else {
-  	for(int i = 0; i < ; i++) {
+    var chart = barChart()
+    .data(params.data)
+    .width(params.width)
+    .height(params.height)
+    .setDisplayProperty(docProp);
 
-  	}
-	    window.alert('Adding barChart Data!!!   (' + docProp + ')');
-	    var chart = barChart()
-		  .data(params.data)
-		  .width(params.width)
-		  .height(params.height)
-		  .setDisplayProperty(docProp);
+    var selector = '#' + params.containerId;
+    d3.select(selector + ' .chart').remove();
+    var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
 
-		  var selector = '#' + params.containerId;
-		  d3.select(selector + ' .chart').remove();
-		  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-	
 
   }
 }

@@ -248,15 +248,12 @@ var barChart = function() {
           }
         }) 
         .text(function(d) {
-          if(displayProperty === undefined || displayProperty === null || displayProperty === '') {
+          if(/*displayProperty === undefined || displayProperty === null || displayProperty === ''*/ !displayProperty) {
             displayProperty = 'data';
-            //setDisplayProperty('data');
           }
           
           return d.content[displayProperty];
         });
-
-        window.alert('Here is the property that was passed in!!!' + displayProperty);
       
     }
 
