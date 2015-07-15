@@ -54,6 +54,7 @@ function save(chart) {
 function setupTextArea(uri, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
+  $('deleteButton').hide();
   $('#cancelButton').show();
   $('#contents').show();
   if (isEditing) {
@@ -76,6 +77,7 @@ function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
   $('#viewButton').show();
+  $('deleteButton').show();
   $('#cancelButton').hide();
   $('#contents').hide();
   $('#saveButton').hide();
@@ -97,6 +99,21 @@ function edit(uri) {
   }
 }
 
+function deleteDoc(uri) {
+  console.log('deleting a doc');
+  $.ajax({
+    url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
+    type: 'DELETE',
+    success: function() {
+      console.log('Delete worked');
+    },
+    error: function() {
+      console.log('Delete failed');
+    },
+    format: 'json'
+  });
+}
+
 var getBarChart = function (params) {
 
   var chart = barChart()
@@ -107,22 +124,23 @@ var getBarChart = function (params) {
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
   var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
+  });
+  
+  $('#deleteButton').click(function() {
+    deleteDoc(chart.getCurrentURI());
   });
 
   $('#cancelButton').click(function() {
     cancel(chart);
   });
+  
   $('#viewButton').click(function() {
     view(chart.getCurrentURI());
   });
+  
   $('#saveButton').click(function() {
     save(chart);
   });

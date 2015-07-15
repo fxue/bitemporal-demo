@@ -315,7 +315,6 @@ var barChart = function() {
   };
     
   chart.getCurrentURI = function() {
-    console.log('Getting uri: ' + uri);
     return uri;
   };
     
