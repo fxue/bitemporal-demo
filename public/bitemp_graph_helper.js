@@ -114,7 +114,7 @@ function deleteDoc(uri) {
 }
 
 var getBarChart = function (params) {
-
+  
   var chart = barChart()
     .data(params.data)
     .width(params.width)
