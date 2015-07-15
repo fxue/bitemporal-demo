@@ -113,6 +113,32 @@ function deleteDoc(uri) {
   });
 }
 
+function changeTextInGraph(chart, params) {
+  var docProp = $('input[name = documentProperty]').val();
+  if(docProp === '') {
+    window.alert('Please enter a document property.');
+  }
+  else {
+  	for(int i = 0; i < ; i++) {
+
+  	}
+	    window.alert('Adding barChart Data!!!   (' + docProp + ')');
+	    var chart = barChart()
+		  .data(params.data)
+		  .width(params.width)
+		  .height(params.height)
+		  .setDisplayProperty(docProp);
+
+		  var selector = '#' + params.containerId;
+		  d3.select(selector + ' .chart').remove();
+		  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+	
+
+  }
+}
+
+
+>>>>>>> #5 fixed condtional in parseData. #13 added textBox and button functionality
 var getBarChart = function (params) {
 
   var chart = barChart()
@@ -127,11 +153,14 @@ var getBarChart = function (params) {
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
+<<<<<<< HEAD
   
   $('#deleteButton').click(function() {
     deleteDoc(chart.getCurrentURI());
   });
 
+=======
+>>>>>>> #5 fixed condtional in parseData. #13 added textBox and button functionality
   $('#cancelButton').click(function() {
     cancel(chart);
   });
@@ -143,5 +172,7 @@ var getBarChart = function (params) {
   $('#saveButton').click(function() {
     save(chart);
   });
-
-};
+  $('#change-prop').click(function() {
+    changeTextInGraph(chart, params);
+  });
+}
