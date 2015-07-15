@@ -1,9 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
+
     <style>
       body {
         background-color: #f5f5f5;
@@ -42,6 +44,14 @@
   </head>
 
   <body>
+    <p>Change the logical document display to the specified URI of a logical document.</p>
+    <p>Don't forget to include the "dot extension" ie .json.</p>
+    <div>
+       Enter URI:<br>
+       <input type="text" name="collection" value="">
+       <br><br>
+       <input type="button" id="pick-doc" value="Submit">
+    </div>  
 
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
     <a href="search">Search</a>
@@ -54,6 +64,8 @@
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
+    <script type="text/javascript" src="public/input_text_load_data.js"></script>
+
     <div id="bar-chart-large"></div>
 
     <script type="text/javascript">
@@ -80,12 +92,13 @@
           "&validstart="+vs+"&validend="+ve+
           "&system="+sys+"&content="+d);
         });
-    </script>
+    </script>  
 
     <button id="editButton" > Edit </button>
     <button id="viewButton"> View </button>
     <button id="saveButton" hidden="true"> Save </button>
     <button id='cancelButton' hidden='true'> Cancel </button>
+    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea> 
     <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>
 
   </body>

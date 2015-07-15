@@ -1,7 +1,6 @@
 /*global d3, moment */
 
 var barChart = function() {
-
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
@@ -32,7 +31,7 @@ var barChart = function() {
     
     
    
-   function setDimensions() {
+    function setDimensions() {
       axisLabelMargin = 10;
     } 
 
@@ -100,7 +99,6 @@ var barChart = function() {
         .outerTickSize(0)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'));
-
     }
 
     function setupBarChartLayout() {
@@ -164,6 +162,7 @@ var barChart = function() {
     
     function addBarChartData() {
       var c=0;
+      
       split = g.selectAll('.split')
         .data(data)
         .enter()
@@ -197,7 +196,7 @@ var barChart = function() {
         .attr('width', 0)
         .style('opacity', 0)
         .transition()
-        .duration(1000)
+        .duration(1500)
         .style('opacity', 1)
         .attr('height', function(d) {
           var bValStart = yScale(moment(d.content.valStart).toDate());
@@ -248,9 +247,10 @@ var barChart = function() {
             bary2 = yScale(moment(d.content.valEnd).toDate());
             return (bary1+bary2)/2;
           }
-        })
-        .text(function(d) { return d.content.data;});
-
+        }) 
+        .text(function(d) {
+          return d.content.data;
+        });
     }
 
     setDimensions();
@@ -262,13 +262,13 @@ var barChart = function() {
     addYAxisLabel();
     addBarChartData();
 
-  };
-
+};
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
     return n;
   };
+
 
   chart.data = function(value) {
     if (!arguments.length) {

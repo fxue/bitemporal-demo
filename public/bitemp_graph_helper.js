@@ -7,7 +7,7 @@ function clearTextArea() {
 function fillText(data, isEditing) {
   clearTextArea();
   var textArea = document.getElementById('contents');
-  textArea.value += '{'; 
+  textArea.value += '{';
   for (var property in data) {
     if (data.hasOwnProperty(property)) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
@@ -23,19 +23,19 @@ function fillText(data, isEditing) {
   }
   textArea.value += '\n}';
   textArea.readOnly = !isEditing;
-} 
+}
 
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
   console.log('Here\'s the parsed data object: ');
   console.log(data);
-  
+
  /* declareUpdate();
   var temporal=require("/MarkLogic/temporal.xqy");
   temporal.documentInsert("myTemporal","addr.json",data);
   temporal.statementSetSystemTime(data.sysStart);*/
- 
+
   var success = function() {
     alert('PUT call worked, closing textbox.');
     cancel(chart);
@@ -52,7 +52,7 @@ function save(chart) {
     data: JSON.stringify(data),
     success: success,
     error: fail
-  }); 
+  });
  //How should the browser appearance behave here? ex. close edit box?
 }
 
@@ -72,9 +72,9 @@ function setupTextArea(uri, isEditing) {
     url: 'http://localhost:3000/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
-  });   
+  });
 
-  
+
 }
 
 
@@ -104,19 +104,19 @@ function edit(uri) {
 }
 
 var getBarChart = function (params) {
-
-  var chart = barChart() 
+  var chart = barChart()
     .data(params.data)
     .width(params.width)
     .height(params.height);
-  
+
   var selector = '#' + params.containerId;
-  d3.select(selector).call(chart);      
-  
+  d3.select(selector + ' .chart').remove();
+  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
-  
+
   $('#cancelButton').click(function() {
     cancel(chart);
   });
@@ -127,5 +127,7 @@ var getBarChart = function (params) {
     save(chart);
   });
 
+
+  //return svg;
 };
 

@@ -61,7 +61,7 @@ function getData(collection, res) {
   query.result(function(r){
     var i;
     // get result and log all uris
-    console.log('GET DOCS from collection =' + collection);
+    console.log('GET DOCS from collection = ' + collection);
     console.log('result =');
     for (i=0; i<r.length; i++) {
       console.log(r[i].uri);
