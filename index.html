@@ -57,7 +57,6 @@
     <a href="search">Search</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
-    </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -69,16 +68,26 @@
     <div id="bar-chart-large"></div>
 
     <script type="text/javascript">
-      $.get( "/data", function(data) {
-        getBarChart({
-          data: data,
-          width: 800,
-          height: 600,
-          xAxisLabel: 'System',
-          yAxisLabel: 'Valid',
-          containerId: 'bar-chart-large'
-        })
-      });
+      $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+           return null;
+        }
+        else{
+           return results[1] || 0;
+        }
+      }
+
+      var url = $.urlParam('collection');
+      if( url.length > 0)
+      {
+        loadData(url);
+      }
+      else
+      {
+       loadData('addr.json');
+      }
+      
       $("input[name='insert']").click(function(){
         var col = $("input[name='tempcol']").val();
         var uri = $("input[name='uri']").val();

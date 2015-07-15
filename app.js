@@ -79,8 +79,9 @@ function getData(collection, res) {
 app.use('/public', express.static(__dirname+'/public'));
 
 app.get('/data', function(req, res) {
-  getData('addr.json', res);
+  getData( 'addr.json' , res);
 });
+
 app.get('/data/:collection', function(req, res) {
   getData(req.param('collection'), res);
 });

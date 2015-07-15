@@ -107,14 +107,7 @@ function displayDocs( start, end)
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
     // and disables or enables the next/previous buttons based on those indexes.
-    if( start <= 1 )
-    {
-      document.getElementById('prev').disabled = true;
-    }
-    else
-    {
-      document.getElementById('prev').disabled = false;
-    }
+    document.getElementById('prev').disabled = start <= 1; 
  
     if( end >= totalDocLen)
     {
@@ -151,8 +144,12 @@ function displayDocs( start, end)
       }
       bullet.append($("<hr id='break'>"));
       bullet.append($("<em id= 'physicalDoc'>").text(uri + '   '));
-      bullet.append($("<a href = '/?collection="+uriLogical+"' id='links'>").text('('+uriLogical+')'));
- 
+      bullet.append($("<a href = '/?collection="+uriLogical+"' id='links' name="+i+">").text('('+uriLogical+')'));
+      
+      var e = document.getElementsByTagName('UL')[0].getElementsByTagName('a')[0].getAttribute('name');
+      var url = document.getElementsByTagName('UL')[0].getElementsByTagName('a')[e].getAttribute('href');//.innerHTML;
+      console.log(url);
+
       var sysStart = docs[i].content.sysStart;
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
@@ -195,3 +192,17 @@ function shortenDate( date )
   date = date.toString().split(' ');
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
 }
+
+
+
+//var e = document.getElementsByTagName('UL')[0].getElementsByTagName('a')[0].innerHTML;
+
+$( '#links' ).click(function()
+  {
+    alert("hello");
+  }
+);
+
+
+
+
