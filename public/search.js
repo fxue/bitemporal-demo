@@ -107,14 +107,8 @@ function displayDocs( start, end)
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
     // and disables or enables the next/previous buttons based on those indexes.
-    if( start <= 1 )
-    {
-      document.getElementById('prev').disabled = true;
-    }
-    else
-    {
-      document.getElementById('prev').disabled = false;
-    }
+
+    document.getElementById('prev').disabled = start <= 1;
 
     if( end >= totalDocLen)
     {
