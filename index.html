@@ -10,52 +10,18 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-	    
-<<<<<<< HEAD
-      #bar-chart-large {
-        position: absolute;
-        top: 60px;
-        left: 60px;
-      }
      
       #editDocDiv {
         position: absolute;
-        top: 665px;
+        top: 805px;
         left: 40px;
-      }
-     
-=======
-      #editButton {
-        position: relative;
-		    top: 620px; <!--Relative to height of 'bar-chart-large' -->
-		    left: 20px;
-	    }
-      
-      #viewButton {
-        position: relative;
-        top: 620px;
-        left: 35px
-      }
-      
-      #saveButton {
-        position: relative;
-        top: 750px;
-        left: 20px;
-      }
-      
-      #cancelButton {
-        position: relative;
-        top: 770px;
-        left: 60px;
       }
       
       #contents {
         position: relative;
-        top: 620px;
-        left: 40px;
+        top: 35px;
       }
-      
->>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
+     
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -77,15 +43,19 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
-<<<<<<< HEAD
       
-=======
- 
->>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
     </style>
   </head>
 
-  <body>
+  <body> 
+    <p>Change the logical document display to the specified URI of a logical document.</p>
+    <p>Don't forget to include the "dot extension" ie .json.</p>
+    <div>
+       Enter URI:<br>
+       <input type="text" name="collection" value="">
+       <br><br>
+       <input type="button" id="pick-doc" value="Submit">
+    </div>  
 
     <h1>MarkLogic Bitemporal Visualization Demo</h1>
     <a href="search">Search</a>
@@ -99,34 +69,31 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <div id="bar-chart-large"></div>
-
-    <script type="text/javascript">
-      $.get( "/data", function(data) {
-        getBarChart({
-          data: data,
-          width: 800,
-          height: 600,
-          xAxisLabel: 'System',
-          yAxisLabel: 'Valid',
-          containerId: 'bar-chart-large'
-        })
-      });
-      $("input[name='insert']").click(function(){
-        var col = $("input[name='tempcol']").val();
-        var uri = $("input[name='uri']").val();
-        var vs = $("input[name='validstart']").val();
-        var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemstart']").val();
-        var d = $("input[name='content']").val();
-
+      <script type="text/javascript">
+        $.get( "/data", function(data) {
+          getBarChart({
+            data: data,
+            width: 800,
+            height: 600,
+            xAxisLabel: 'System',
+            yAxisLabel: 'Valid',
+            containerId: 'bar-chart-large'
+          })
+        });
+        $("input[name='insert']").click(function(){
+          var col = $("input[name='tempcol']").val();
+          var uri = $("input[name='uri']").val();
+          var vs = $("input[name='validstart']").val();
+          var ve = $("input[name='validend']").val();
+          var sys = $("input[name='systemstart']").val();
+          var d = $("input[name='content']").val();
+  
         $.get(
           "/update?collection"+col+"&uri="+uri+
           "&validstart="+vs+"&validend="+ve+
           "&system="+sys+"&content="+d);
         });
-    </script>
-<<<<<<< HEAD
-
+      </script>
     <div id='editDocDiv'>
       <button id="editButton" > Edit </button>
       <button id="viewButton"> View </button>
@@ -134,16 +101,5 @@
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>  
     </div>
-
-=======
-   
-    
-    <button id="editButton" > Edit </button>
-    <button id="viewButton"> View </button>
-    <button id="saveButton" hidden="true"> Save </button>
-    <button id='cancelButton' hidden='true'> Cancel </button>
-    <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea> 
-    
->>>>>>> 15a4c56239c810fcbe847b9ed5d43d0b05162ccd
   </body>
 </html>

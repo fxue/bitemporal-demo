@@ -101,7 +101,6 @@ var getBarChart = function (params) {
     .height(params.height);
   
   d3.select('body').append('div').attr('id', params.containerId).call(chart);
-
   var selector = '#' + params.containerId;
   d3.select(selector).remove();
 
