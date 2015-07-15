@@ -79,13 +79,15 @@
       }
 
       var url = $.urlParam('collection');
-      if( url.length > 0)
+      if( url != null )
       {
         loadData(url);
+        console.log( "using url");
       }
       else
       {
        loadData('addr.json');
+       console.log( "using addr.json");
       }
       
       $("input[name='insert']").click(function(){

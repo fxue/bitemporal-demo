@@ -11,8 +11,8 @@ var barChart = function() {
   var margin = {
     top: 10,
     right: 0,
-    bottom: 80,
-    left: 80
+    bottom: 100,
+    left: 100
   };
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
@@ -32,7 +32,7 @@ var barChart = function() {
     
    
     function setDimensions() {
-      axisLabelMargin = 10;
+      axisLabelMargin = 15;
     } 
 
     function setupXAxis() {

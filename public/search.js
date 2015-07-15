@@ -41,6 +41,9 @@ var bullet = $('#bulletList');
 //function when search button is clicked
 $('#search').click(function()
   {
+    var e = document.getElementById('dropdown');
+    var selectedColl = e.options[e.selectedIndex].value;
+    loadData(selectedColl);
     firstDoc = 1;
     lastDoc = 10;
     $('#next').css({'visibility': 'visible'});

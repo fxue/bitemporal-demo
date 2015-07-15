@@ -7,9 +7,18 @@
 
     <style>
       body {
-        background-color: #f5f5f5;
+        background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
+        background-size: 100px 100px;
+        background-position: right top;
+        background-repeat: no-repeat;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
+     
+      }
+
+      h1 { 
+        text-align: center;
+        font-style: italic;
       }
 
       #dropdown {
@@ -125,19 +134,63 @@
 
       #page {
         position: relative;
-        left: 840px;
-        top: 100px;
+        left: 890px;
+        top: 50px;
       }
 
-      div.date {
-        margin-bottom: 10px;
+      #bar-chart-large {
+        position: absolute;
+        left: 40px;
+        top: 90px;
+        
+      }
+ 
+      .svg-chart .background
+      {
+        shape-rendering: crispEdges;
+        stroke: #ccc;
+        fill: #fdfdfd;
+        stroke-width: 1px;
+ 
+      }
+ 
+      .svg-chart .g
+      {
+        fill: #4682B4;
+      }
+ 
+      .tooltip-txt
+      {
+        margin: 0;
+        font-family: Helvetica;
+        font-size: 25px;
+        line-height: 18px;
+ 
+      }
+ 
+      .axis-label
+      {
+        font-family: Helvetica;
+        font-size: 20px;
+      }
+ 
+      .yaxis {
+        font-size: 13px;
+      }
+ 
+      .svg-chart .xaxis .tick text
+      {
+        transform: rotate(-45deg);
+        text-anchor: end !important;
+        font-size: 13px;
+ 
       }
 
     </style>
 
   </head>
   <body>
-    <h1>MarkLogic Bitemporal Search Page</h1>
+    <h1><u>MarkLogic Bitemporal Search Page</u></h1>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
@@ -157,5 +210,37 @@
     <script src="/public/search.js"></script>
     <script src="/public/split.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
+    <script type="text/javascript" src="public/moment.js"></script>
+    <script type="text/javascript" src="public/d3.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
+
+    <div id="bar-chart-large"></div>
+ 
+    <script type="text/javascript">
+      $.get( "/data", function( data ) {
+        getBarChart({
+          data: data,
+          width: 800,
+          height: 600,
+          xAxisLabel: 'System',
+          yAxisLabel: 'Valid',
+          containerId: 'bar-chart-large'
+        })
+      });
+      $("input[name='insert']").click(function(){
+        var col = $("input[name='tempcol']").val();
+        var uri = $("input[name='uri']").val();
+        var vs = $("input[name='validstart']").val();
+        var ve = $("input[name='validend']").val();
+        var sys = $("input[name='systemtart']").val();
+        var d = $("input[name='content']").val();
+ 
+        $.get(
+          "/update?collection"+col+"&uri="+uri+
+          "&validstart="+vs+"&validend="+ve+
+          "&system="+sys+"&content="+d);
+      });
+    </script>
   </body>
 </html>
