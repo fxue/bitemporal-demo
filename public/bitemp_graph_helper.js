@@ -97,6 +97,7 @@ function edit(uri) {
   }
 }
 
+<<<<<<< HEAD
 function deleteDoc(uri) {
   console.log('deleting a doc');
   uri = 'addr.json';
@@ -133,8 +134,6 @@ function changeTextInGraph(chart, params) {
   }
 }
 
-
->>>>>>> #5 fixed condtional in parseData. #13 added textBox and button functionality
 var getBarChart = function (params) {
 
   var chart = barChart()
@@ -149,14 +148,11 @@ var getBarChart = function (params) {
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
-<<<<<<< HEAD
   
   $('#deleteButton').click(function() {
     deleteDoc(chart.getCurrentURI());
   });
 
-=======
->>>>>>> #5 fixed condtional in parseData. #13 added textBox and button functionality
   $('#cancelButton').click(function() {
     cancel(chart);
   });
