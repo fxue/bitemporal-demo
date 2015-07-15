@@ -54,7 +54,7 @@ function save(chart) {
 function setupTextArea(uri, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
-  $('deleteButton').hide();
+  $('#deleteButton').hide();
   $('#cancelButton').show();
   $('#contents').show();
   if (isEditing) {
@@ -77,7 +77,7 @@ function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
   $('#viewButton').show();
-  $('deleteButton').show();
+  $('#deleteButton').show();
   $('#cancelButton').hide();
   $('#contents').hide();
   $('#saveButton').hide();
@@ -93,7 +93,6 @@ function view(uri) {
 }
 
 function edit(uri) {
-  console.log('Editing ' + uri);
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
   }
@@ -101,6 +100,7 @@ function edit(uri) {
 
 function deleteDoc(uri) {
   console.log('deleting a doc');
+  uri = 'addr.json';
   $.ajax({
     url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
     type: 'DELETE',
