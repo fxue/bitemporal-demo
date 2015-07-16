@@ -30,11 +30,7 @@ var barChart = function() {
     var isViewing = false;   
    
     function setDimensions() {
-<<<<<<< HEAD
       axisLabelMargin = 15;
-=======
-      axisLabelMargin = 10;
->>>>>>> Starting to work with the code Fei originally had in bitemp_graph_helper
     } 
 
     function setupXAxis() {
