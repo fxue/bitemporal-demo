@@ -73,7 +73,8 @@
            return results[1] || 0;
         }
       }
-      if(url = $.urlParam('collection')) {
+      var url = $.urlParam('collection');
+      if(url) {
         console.log('Using url');
         loadData(url);
       }
