@@ -15,10 +15,10 @@ INSTALL INSTRUCTIONS
 5. Download and install node.js : https://nodejs.org/download/
 6. Go to command line/terminal, cd under this repo directory, do "npm install"
 7. Check to see that there is no ERR
-8. Configure connection in env.js if needed.
-10. Run app with "node app.js"
-11. go to http://localhost:3000/ to see a blank graph with title
-12. go back to Query console and go from workspace 1 to 5, start from tab 1.
+8. Configure connection in env.js or create a local-env.js, if needed. local-env.js takes the same form as env.js, but does not get committed. 
+9. Run app with "node app.js"
+10. go to http://localhost:3000/ to see a blank graph with title
+11. go back to Query console and go from workspace 1 to 5, start from tab 1.
 
 Guide to Workspaces:
 

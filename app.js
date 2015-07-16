@@ -11,7 +11,12 @@ app.set('view engine', 'html');
 
 /* MarkLogic set up */
 var marklogic = require('marklogic');
-var conn = require('./env.js').connection;
+var conn;
+try {
+  conn = require('./local-env.js').connection;
+} catch (e) {
+  conn = require('./env.js').connection;
+}
 var db = marklogic.createDatabaseClient(conn);
 var q = marklogic.queryBuilder;
 
