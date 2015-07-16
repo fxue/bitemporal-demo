@@ -29,8 +29,6 @@ function fillText(data, isEditing) {
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
-  console.log('Here\'s the parsed data object: ');
-  console.log(data);
 
   var success = function() {
     alert('PUT call worked, closing textbox.');
@@ -39,7 +37,7 @@ function save(chart) {
   var fail = function(data) {
     alert('PUT didn\'t work: ' + data);
   };
-  console.log('Saving');   // Almost close to working
+  console.log('Saving');   //Only working on mac, bug filed with MarkLogic
   $.ajax({
     type: 'PUT',
     contentType: 'application/json',
@@ -133,7 +131,7 @@ function deleteDoc(uri) {
 
 function changeTextInGraph(chart, params) {
   var docProp = $('input[name = documentProperty]').val();
-  if(docProp === '') {
+  if (docProp === '') {
     window.alert('Please enter a document property.');
   }
   else {
@@ -142,7 +140,7 @@ function changeTextInGraph(chart, params) {
 }
 
 var removeButtonEvents = function () {
-  //Clear these buttons previous event handlers
+  //Clear these buttons' previous event handlers
   $('#editButton').unbind('click');
   $('#deleteButton').unbind('click');
   $('#cancelButton').unbind('click');

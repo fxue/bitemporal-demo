@@ -130,7 +130,7 @@
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results==null) {
+        if (results == null) {
            return null;
         }
         else {
@@ -144,7 +144,7 @@
         document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold();
       }
       else {
-       loadData('addr.json');
+        loadData('addr.json');
       }
 
       $("input[name='insert']").click(function() {
