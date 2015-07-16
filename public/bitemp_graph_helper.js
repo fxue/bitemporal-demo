@@ -119,45 +119,12 @@ function changeTextInGraph(chart, params) {
     window.alert('Please enter a document property.');
   }
   else {
-    var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp);
-
-    var selector = '#' + params.containerId;
-    d3.select(selector + ' .chart').remove();
-    var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  	for(int i = 0; i < ; i++) {
-
-  	}
-	    window.alert('Adding barChart Data!!!   (' + docProp + ')');
-	    var chart = barChart()
-		  .data(params.data)
-		  .width(params.width)
-		  .height(params.height)
-		  .setDisplayProperty(docProp);
-
-		  var selector = '#' + params.containerId;
-		  d3.select(selector + ' .chart').remove();
-		  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-	
-
+    var chart = drawChart(params, docProp);
   }
 }
 
-
 var getBarChart = function (params) {
-
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height);
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+  var chart = drawChart(params, 'data');
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
@@ -184,5 +151,17 @@ var getBarChart = function (params) {
   });
 }
 
+var drawChart = function (params, docProp) {
+	var chart = barChart()
+    .data(params.data)
+    .width(params.width)
+    .height(params.height)
+    .setDisplayProperty(docProp);
 
-};
+    var selector = '#' + params.containerId;
+    d3.select(selector + ' .chart').remove();
+    var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+
+    return chart;
+}
+

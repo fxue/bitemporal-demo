@@ -252,8 +252,6 @@ var barChart = function() {
           
           return d.content[displayProperty];
         });
-
-        window.alert('Here is the property that was passed in!!!' + displayProperty);
       
     }
 
