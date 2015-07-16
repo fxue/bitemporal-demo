@@ -1,9 +1,11 @@
 
-/* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
+/* takes a string containing a multipart/mixed response from MarkLogic 
+*  and a collection name like addr.json and returns an array of objects
+*  representing physical documents.*/
 function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
   var items = [];
-  for (var i=numParts-1; i < split.length - 1; i=i+numParts) {
+  for (var i = numParts - 1; i < split.length - 1; i += numParts) {
     var item = {
       category: null,
       content: null,
@@ -15,19 +17,19 @@ function parseData(data, collection, numParts) {
     };
 
     var matches = split[i].match(/Content-Type: ([\w\/]+)/);
-    if(matches && matches[1]) {
+    if (matches && matches[1]) {
       item.contentType = matches[1];
     }
 
     var matches2 = split[i].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
-    if(matches2) {
-      if(matches2[2]) {
+    if (matches2) {
+      if (matches2[2]) {
         item.uri = matches2[2];
       }
-      if(matches2[3]) {
+      if (matches2[3]) {
         item.category = matches2[3];
       }
-      if(matches2[4]) {
+      if (matches2[4]) {
         item.format = matches2[4];
       }
     }
@@ -58,7 +60,7 @@ function parseData(data, collection, numParts) {
 
     else if (parseInt(numParts) === 2) {
       var collArr = split[i].match(/({[^$]*})/);
-      if(collArr && collArr[1]) {
+      if (collArr && collArr[1]) {
         item.collections = JSON.parse(collArr[0]);
       }
       items.push(item);
@@ -69,7 +71,7 @@ function parseData(data, collection, numParts) {
 
 
 function loadData(collection) {
-  var url = '';
+  var url = ''; // is this useful, or could just the parameter 'collection' that's given be used?
   if (collection !== undefined) {
     url += '/' + collection;
   }
@@ -86,7 +88,7 @@ function loadData(collection) {
     headers: {
       Accept: 'multipart/mixed'
     },
-    success: function ( data ) { 
+    success: function (data) { 
       var arrData = parseData(data, collection, 1);
       getBarChart({
         data: arrData,
@@ -96,13 +98,13 @@ function loadData(collection) {
         yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
       });
-      if(arrData.length && url) { //arrData.length === 0 && url !== ''
+      if (arrData.length === 0 && url !== '') {
         window.alert('Attention!\n\nNo data found in document ' + collection);
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
     // something went wrong. Take a look in jqXHR and find the status code
-      if(textStatus === 'error') {
+      if (textStatus === 'error') {
         window.alert('ERROR!\n\nThe error status is ' + jqXHR.status + '. The error thrown is ' + errorThrown + '.');
         return false;
       }
@@ -112,7 +114,7 @@ function loadData(collection) {
 
 $('#pick-doc').click( function() {
   var uriCollection = $('input[name = collection]').val();
-  if(uriCollection === '') {
+  if (uriCollection === '') {
     alert('Please enter a uri.');
   }
 
