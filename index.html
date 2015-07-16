@@ -123,8 +123,7 @@
         background-color: #DCDCDC;
         opacity: .7;
       }
- 
- 
+
     </style>
   </head>
  
@@ -155,6 +154,11 @@
     <p id="uriEntered"></p>
  
     <br></br>
+    </div>  
+    <p id="uriEntered"></p>
+
+    <br></br>
+   <!--onClick="location.href='/'"-->
 
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
@@ -176,7 +180,7 @@
         if (results === null) {
            return null;
         }
-        else {
+        else { 
            return results[1] || 0;
         }
       }
