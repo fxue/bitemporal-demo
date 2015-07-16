@@ -348,7 +348,12 @@ var barChart = function() {
   };
 
   chart.setDisplayProperty = function(str) {
-    displayProperty = str;
+    if(!str) {
+      displayProperty = 'data';
+    }
+    else {
+      displayProperty = str;
+    }
     return chart;
   };
 
