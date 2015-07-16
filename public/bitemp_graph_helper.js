@@ -23,6 +23,7 @@ function fillText(data, isEditing) {
   }
   textArea.value += '\n}';
   textArea.readOnly = !isEditing;
+  
 }
 
 function save(chart) {
@@ -105,7 +106,6 @@ function edit(uri) {
 }
 
 function deleteDoc(uri) {
-<<<<<<< HEAD
   var origUri = uri;
   if (!uri) { // Not given a valid document uri
     uri = 'addr.json';
@@ -117,23 +117,6 @@ function deleteDoc(uri) {
       uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
     }
   }
-=======
-  console.log('deleting a doc');
-  var origUri = uri;
-  if (!uri) {
-    uri = 'addr.json';
-  }
-  else {
-    var periodLoc = uri.substring(uri.indexOf('.'), uri.length).indexOf('.');
-    if (periodLoc !== -1) {
-      uri = uri.substring(0,uri.indexOf('.'));
-      console.log('uri before: ' + uri);
-      uri += origUri.substring(periodLoc, origUri.length);
-      console.log('uri after: ' + uri);
-    }
-  }
-  console.log('uri: ' + uri);
->>>>>>> a86ba85c3443bccf00e8358ca31feba36af6816d
   $.ajax({
     url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
     type: 'DELETE',
@@ -149,7 +132,7 @@ function deleteDoc(uri) {
 }
 
 var getBarChart = function (params) {
-  
+
   var chart = barChart()
     .data(params.data)
     .width(params.width)
