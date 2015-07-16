@@ -122,7 +122,7 @@ function deleteDoc(uri) {
     type: 'DELETE',
     success: function() {
       console.log('Delete worked');
-      loadData('addr.json');
+      loadData(uri);
     },
     error: function() {
       alert('Delete failed');
