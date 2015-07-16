@@ -105,6 +105,7 @@ function deleteDoc(uri) {
     type: 'DELETE',
     success: function() {
       console.log('Delete worked');
+      loadData('addr.json');
     },
     error: function() {
       alert('Delete failed');
