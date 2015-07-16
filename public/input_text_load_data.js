@@ -96,7 +96,7 @@ function loadData(collection) {
         yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
       });
-      if(arrData.length === 0 && url !== '') {
+      if(arrData.length && url) { //arrData.length === 0 && url !== ''
         window.alert('Attention!\n\nNo data found in document ' + collection);
       }
     },

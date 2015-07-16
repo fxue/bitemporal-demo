@@ -42,7 +42,7 @@ function save(chart) {
   console.log('Saving');   // Almost close to working
   $.ajax({
     type: 'PUT',
-    contentType: "application/json",
+    contentType: 'application/json',
     url: 'http://localhost:3000/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
     processData: false,
     data: JSON.stringify(data),
@@ -137,13 +137,24 @@ function changeTextInGraph(chart, params) {
     window.alert('Please enter a document property.');
   }
   else {
-   drawChart(params, docProp);
+    getBarChart(params, docProp);
   }
 }
 
-var getBarChart = function (params) {
-  var chart = drawChart(params, null);
+var removeButtonEvents = function () {
+  //Clear these buttons previous event handlers
+  $('#editButton').unbind('click');
+  $('#deleteButton').unbind('click');
+  $('#cancelButton').unbind('click');
+  $('#viewButton').unbind('click');
+  $('#saveButton').unbind('click');
+  $('#change-prop').unbind('click');
+}
 
+var getBarChart = function (params, docProp) {
+  var chart = drawChart(params, docProp);
+
+  removeButtonEvents();
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
