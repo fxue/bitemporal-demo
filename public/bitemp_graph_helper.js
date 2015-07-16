@@ -23,6 +23,7 @@ function fillText(data, isEditing) {
   }
   textArea.value += '\n}';
   textArea.readOnly = !isEditing;
+
 }
 
 function save(chart) {
@@ -32,6 +33,7 @@ function save(chart) {
   console.log(data);
 
   var success = function() {
+    alert('PUT call worked, closing textbox.');
     cancel(chart);
   };
   var fail = function(data) {
@@ -47,7 +49,6 @@ function save(chart) {
     success: success,
     error: fail
   });
- //How should the browser appearance behave here? ex. close edit box?
 }
 
 function setupTextArea(uri, isEditing) {
@@ -89,22 +90,39 @@ function view(uri) {
   if (uri) {
     setupTextArea(uri, false); //false so function knows the document is not being edited
   }
+  else {
+    alert('Please click a doc first');
+  }
 }
 
 function edit(uri) {
+  console.log('Editing ' + uri);
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
+  }
+  else {
+    alert('Please click a doc first');
   }
 }
 
 function deleteDoc(uri) {
-  console.log('deleting a doc');
-  uri = 'addr.json';
+  var origUri = uri;
+  if (!uri) { // Not given a valid document uri
+    uri = 'addr.json';
+  }
+  else {
+    var lastPeriodLoc = uri.lastIndexOf('.');
+    var firstPeriodLoc = uri.indexOf('.');
+    if (lastPeriodLoc !== firstPeriodLoc) { //More than '.', indicates a big number within uri.
+      uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
+    }
+  }
   $.ajax({
     url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
     type: 'DELETE',
     success: function() {
       console.log('Delete worked');
+      loadData(uri);
     },
     error: function() {
       alert('Delete failed');
@@ -125,11 +143,11 @@ function changeTextInGraph(chart, params) {
 
 var getBarChart = function (params) {
   var chart = drawChart(params, null);
-  
+
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
-  
+
   $('#deleteButton').click(function() {
     deleteDoc(chart.getCurrentURI());
   });
@@ -137,11 +155,11 @@ var getBarChart = function (params) {
   $('#cancelButton').click(function() {
     cancel(chart);
   });
-  
+
   $('#viewButton').click(function() {
     view(chart.getCurrentURI());
   });
-  
+
   $('#saveButton').click(function() {
     save(chart);
   });
@@ -164,5 +182,4 @@ var drawChart = function (params, docProp) {
 
   return chart;
 }
-
 

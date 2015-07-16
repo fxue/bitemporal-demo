@@ -120,7 +120,6 @@
     <div id="bar-chart-large"></div>
 
     <script type="text/javascript">
-
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -148,7 +147,6 @@
         var ve = $("input[name='validend']").val();
         var sys = $("input[name='systemstart']").val();
         var d = $("input[name='content']").val();
-
         $.get(
           "/update?collection"+col+"&uri="+uri+
           "&validstart="+vs+"&validend="+ve+
@@ -164,6 +162,5 @@
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
     </div>
-
   </body>
 </html>
