@@ -12,7 +12,6 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -34,19 +33,10 @@
         transform: rotate(-45deg);
         text-anchor: end !important;
       }
-      
     </style>
   </head>
 
-  <body> 
-    <p>Change the logical document display to the specified URI of a logical document.</p>
-    <p>Don't forget to include the "dot extension" ie .json.</p>
-    <div>
-       Enter URI:<br>
-       <input type="text" name="collection" value="">
-       <br><br>
-       <input type="button" id="pick-doc" value="Submit">
-    </div>  
+  <body>
 
     <p>Change the logical document display to the specified URI of a logical document.</p>
     <p>Don't forget to include the "dot extension" ie .json.</p>
@@ -71,8 +61,8 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
     <div id="bar-chart-large"></div>
-    <script type="text/javascript">
 
+    <script type="text/javascript">
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -83,7 +73,6 @@
            return results[1] || 0;
         }
       }
-
       if(url = $.urlParam('collection')) {
         console.log( "using url");
         loadData(url);
