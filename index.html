@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-
+ 
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
-
+ 
     <style>
       body {
         background: AliceBlue;
@@ -21,7 +21,7 @@
         text-align: center;
         font-style: italic;
         font-size: 20px;
-      } 
+      }
 
       #instructions {
         position: absolute;
@@ -60,7 +60,7 @@
       .hideSysTimeBoxes {
         visibility: hidden;
       }
-
+ 
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -83,7 +83,7 @@
         font-size: 17px;
         font-weight: bold;
       }
-
+ 
       .yaxis {
         font-size: 14px;
       }
@@ -92,7 +92,7 @@
         text-anchor: end !important;
         font-size: 15px;
       }
-
+ 
       #uriEntered {
         font-size: 16px;
         position: absolute;
@@ -115,13 +115,14 @@
         position: absolute;
         left: 5px;
         top: 20px;
-        width: 25em; 
+        width: 25em;
         word-wrap: normal;
       }
-
+ 
+ 
     </style>
   </head>
-
+ 
   <body>
     <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
     <a href="search" id="searchURL">Click to go to search page</a>
@@ -145,23 +146,24 @@
         <option>Choose a property</option>
       </select>
     </div>
+ 
     <p id="uriEntered"></p>
-
+ 
     <br></br>
 
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-
+ 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
-
+ 
     <div id="bar-chart-large"></div>
-
+ 
     <script type="text/javascript">
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
@@ -173,7 +175,7 @@
            return results[1] || 0;
         }
       }
-
+ 
       var uri = $.urlParam('collection');
       if( uri !== null ) {
         loadData(uri);
@@ -182,7 +184,7 @@
       else { //default
         loadData('addr.json');
       }
-      
+
       $("input[name='insert']").click(function() {
         var col = $("input[name='tempcol']").val();
         var uri = $("input[name='uri']").val();
