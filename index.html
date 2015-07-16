@@ -12,7 +12,22 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
+<<<<<<< HEAD
 
+=======
+     
+      #editDocDiv {
+        position: absolute;
+        top: 805px;
+        left: 40px;
+      }
+      
+      #contents {
+        position: relative;
+        top: 35px;
+      }
+     
+>>>>>>> Hard coded locations in index.html, tentatively will remove shortly
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -38,7 +53,15 @@
     </style>
   </head>
 
-  <body>
+  <body> 
+    <p>Change the logical document display to the specified URI of a logical document.</p>
+    <p>Don't forget to include the "dot extension" ie .json.</p>
+    <div>
+       Enter URI:<br>
+       <input type="text" name="collection" value="">
+       <br><br>
+       <input type="button" id="pick-doc" value="Submit">
+    </div>  
 
     <p>Change the logical document display to the specified URI of a logical document.</p>
     <p>Don't forget to include the "dot extension" ie .json.</p>
@@ -63,7 +86,6 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
     <div id="bar-chart-large"></div>
-
     <script type="text/javascript">
 
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
@@ -109,6 +131,5 @@
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='70' id='contents' hidden = 'true'> </textarea>  
     </div>
-
   </body>
 </html>
