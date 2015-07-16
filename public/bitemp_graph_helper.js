@@ -105,21 +105,17 @@ function edit(uri) {
 }
 
 function deleteDoc(uri) {
-  console.log('deleting a doc');
   var origUri = uri;
-  if (!uri) {
+  if (!uri) { // Not given a valid document uri
     uri = 'addr.json';
   }
   else {
-    var periodLoc = uri.substring(uri.indexOf('.'), uri.length).indexOf('.');
-    if (periodLoc !== -1) {
-      uri = uri.substring(0,uri.indexOf('.'));
-      console.log('uri before: ' + uri);
-      uri += origUri.substring(periodLoc, origUri.length);
-      console.log('uri after: ' + uri);
+    var lastPeriodLoc = uri.lastIndexOf('.');
+    var firstPeriodLoc = uri.indexOf('.');
+    if (lastPeriodLoc !== firstPeriodLoc) { //More than '.', indicates a big number within uri.
+      uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
     }
   }
-  console.log('uri: ' + uri);
   $.ajax({
     url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
     type: 'DELETE',
