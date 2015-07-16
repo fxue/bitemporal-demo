@@ -89,17 +89,36 @@ function view(uri) {
   if (uri) {
     setupTextArea(uri, false); //false so function knows the document is not being edited
   }
+  else {
+    alert('Please click a doc first');
+  }
 }
 
 function edit(uri) {
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
   }
+  else {
+    alert('Please click a doc first');
+  }
 }
 
 function deleteDoc(uri) {
   console.log('deleting a doc');
-  uri = 'addr.json';
+  var origUri = uri;
+  if (!uri) {
+    uri = 'addr.json';
+  }
+  else {
+    var periodLoc = uri.substring(uri.indexOf('.'), uri.length).indexOf('.');
+    if (periodLoc !== -1) {
+      uri = uri.substring(0,uri.indexOf('.'));
+      console.log('uri before: ' + uri);
+      uri += origUri.substring(periodLoc, origUri.length);
+      console.log('uri after: ' + uri);
+    }
+  }
+  console.log('uri: ' + uri);
   $.ajax({
     url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
     type: 'DELETE',
