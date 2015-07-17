@@ -15,7 +15,7 @@ function fillText(data, isEditing) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
         data[property] = null;
       }
-      if (textArea.value !== '{') {
+      if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
         strToAdd += ',';
       }
       strToAdd += '\n\"' + property + '\": '; //+ '\"'+ data[property] +'\"';
