@@ -15,32 +15,21 @@ function fillText(data, isEditing) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
         data[property] = null;
       }
-<<<<<<< HEAD
       if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
-=======
-      if (textArea.value !== '{') {
->>>>>>> Removed single quotes around null properties of sysStart and sysEnd times when editing a document.
         strToAdd += ',';
       }
       strToAdd += '\n\"' + property + '\": '; //+ '\"'+ data[property] +'\"';
       if (data[property]) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
       }
-=======
-        strToAdd += '\"'+ data[property] +'\"';
-=======
         strToAdd += '\"'+ data[property] + '\"';
->>>>>>> Added text fields for user to enter times sysStart and End times when editing
       }
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
       }
->>>>>>> Removed single quotes around null properties of sysStart and sysEnd times when editing a document.
       textArea.value += strToAdd;
     }
   }
