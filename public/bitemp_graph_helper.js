@@ -33,13 +33,6 @@ function fillText(data, isEditing) {
 
 }
 
-/* if (textArea.value === '{') {
-        strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';  //strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
-      }
-      else {
-        strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"'; //  strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
-      }*/
-
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
