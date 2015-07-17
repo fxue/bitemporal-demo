@@ -64,7 +64,6 @@ function parseData(data, collection, numParts) {
         else if(collection === item.uri) {
           items.push(item);
         }
-      }
     }
 
     else if (parseInt(numParts) === 2) {
