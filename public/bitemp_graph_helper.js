@@ -33,7 +33,6 @@ function fillText(data, isEditing) {
 
 }
 
-<<<<<<< HEAD
 function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
@@ -47,8 +46,6 @@ function cancel(chart) {
   chart.setCurrentURI(undefined);
 }
 
-=======
->>>>>>> Added text fields for user to enter times sysStart and End times when editing
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
