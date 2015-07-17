@@ -70,7 +70,6 @@ function setupTextArea(uri, isEditing) {
 
 }
 
-
 function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
