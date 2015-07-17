@@ -100,7 +100,7 @@
       <input type="text" name="collection" value="">
       <br><br>
       <input type="button" id="pick-doc" value="Submit">
- 
+
       <p>Enter a document property to display in the graph ie 'data' or 'sysStart'.</p>
 
       <b>Enter Document Property:</b><br>
@@ -130,7 +130,7 @@
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results == null) {
+        if (results === null) {
            return null;
         }
         else {
@@ -139,7 +139,7 @@
       }
 
       var uri = $.urlParam('collection');
-      if( uri != null ) {
+      if( uri !== null ) {
         loadData(uri);
         document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold();
       }
