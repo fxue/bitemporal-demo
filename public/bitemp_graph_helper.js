@@ -137,6 +137,29 @@ function changeTextInGraph(chart, params) {
   else {
     getBarChart(params, docProp);
   }
+    var text = $('#uriEntered').text();
+    var strOfDoc = text.substring(text.lastIndexOf(' ') + 1);
+
+    var propExists = false;
+
+    for(var i = 0; i < params.data.length && !propExists; i++) {
+      for(var prop in params.data[i].content) {
+      	if (params.data[i].content.hasOwnProperty(prop)) {
+          console.log(prop + ' ' + params.data[i].content[prop]);
+          if(prop === docProp) {
+          	propExists = true;            
+          }
+        }
+      }
+    }
+    if(propExists) {
+      drawChart(params, docProp);
+      getBarChart(params, docProp);
+    }
+    else {
+    	window.alert('Sorry. That property does not exist in any document in the collection');
+    }
+  } 
 }
 
 var removeButtonEvents = function () {
@@ -151,6 +174,12 @@ var removeButtonEvents = function () {
 
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
+  if(docProp) {
+    var chart = drawChart(params, docProp);
+  }
+  else {
+  	var chart = drawChart(params, null);
+  }
 
   removeButtonEvents();
   $('#editButton').click(function() {
@@ -191,4 +220,3 @@ var drawChart = function (params, docProp) {
 
   return chart;
 }
-

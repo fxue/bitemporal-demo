@@ -46,24 +46,40 @@ function parseData(data, collection, numParts) {
 
     if (parseInt(numParts) === 1 && item.content) {
       /* conditional checks that
-      1.) item's content is not null
+      1.) numParts param is 1, item's content is not null
+      2.) collection param exists and is not null
       and either 
-        2.) collection specified is not null AND the collection's substring up until the first '.'' is the same string as the item's filename's substring up to the first '.'. Thus 'addr.json' has the same substring as 'addr.48324723423.json' since 'addr' === 'addr'.
+        3.) collection specified is not null AND the collection's substring up until the first '.'' is the same string as the item's filename's substring up to the first '.'. Also the collection's substring after the last '.' must be the same string as the item's filename's substring after the last '.'. Thus 'addr.json' has the same substring as 'addr.48324723423.json' since 'addr' === 'addr' and '.json' === '.json'.
       OR
-        3.) collection specified is not null AND the collection string equals the item's filename. If a collection and a item's uri are both 'intern'.
-      If 1 and 2 are met OR 1 and 3 are met, then push the object item to the array items.
-*/
-      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || (collection === item.uri)))  {
-        items.push(item);
-      }
-    }
+        4.) the collection string equals the item's filename. If a collection and a item's uri are both 'intern' without a dot extension.
 
+      If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items.
+*/
+      if(collection) {  
+        if (collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
+          if(collection.substring(collection.lastIndexOf('.')) === item.uri.substring(item.uri.lastIndexOf('.'))) {
+            items.push(item);
+          }
+        }
+        else if(collection === item.uri) {
+          items.push(item);
+        }
+      }
+
+<<<<<<< HEAD
     else if (parseInt(numParts) === 2) {
       var collArr = split[i].match(/({[^$]*})/);
       if (collArr && collArr[1]) {
         item.collections = JSON.parse(collArr[0]);
+=======
+      else if (parseInt(numParts) === 2) {
+        var collArr = split[i].match(/({[^$]*})/);
+        if(collArr && collArr[1]) {
+          item.collections = JSON.parse(collArr[0]);
+        }
+        items.push(item);
+>>>>>>> #13 Handles bad properties entered
       }
-      items.push(item);
     }
   }
   return items;
@@ -97,8 +113,13 @@ function loadData(collection) {
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
+<<<<<<< HEAD
       });
       if (arrData.length === 0 && url !== '') {
+=======
+      }, null);
+      if(arrData.length === 0 && url !== '') {
+>>>>>>> #13 Handles bad properties entered
         window.alert('Attention!\n\nNo data found in document ' + collection);
       }
     },
