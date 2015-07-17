@@ -15,16 +15,28 @@ function fillText(data, isEditing) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
         data[property] = null;
       }
+<<<<<<< HEAD
       if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
+=======
+      if (textArea.value !== '{') {
+>>>>>>> Removed single quotes around null properties of sysStart and sysEnd times when editing a document.
         strToAdd += ',';
       }
       strToAdd += '\n\"' + property + '\": '; //+ '\"'+ data[property] +'\"';
       if (data[property]) {
+<<<<<<< HEAD
         strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
       }
+=======
+        strToAdd += '\"'+ data[property] +'\"';
+      }
+      else { // if the property has a null value then don't put quotes around it.
+        strToAdd += data[property];
+      }
+>>>>>>> Removed single quotes around null properties of sysStart and sysEnd times when editing a document.
       textArea.value += strToAdd;
     }
   }
@@ -33,6 +45,7 @@ function fillText(data, isEditing) {
 
 }
 
+<<<<<<< HEAD
 function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
@@ -46,6 +59,14 @@ function cancel(chart) {
   chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
+=======
+/* if (textArea.value === '{') {
+        strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';  //strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
+      }
+      else {
+        strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"'; //  strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
+      }*/
+>>>>>>> Removed single quotes around null properties of sysStart and sysEnd times when editing a document.
 
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
@@ -100,6 +121,8 @@ function cancel(chart) {
   $('#cancelButton').hide();
   $('#contents').hide();
   $('#saveButton').hide();
+  $('#sysStartVal').hide();
+  $('#sysEndVal').hide();
   chart.setEditing(false);
   chart.setViewing(false);
   chart.setCurrentURI(undefined);
