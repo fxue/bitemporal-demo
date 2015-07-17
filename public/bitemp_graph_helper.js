@@ -8,17 +8,24 @@ function fillText(data, isEditing) {
   clearTextArea();
   var textArea = document.getElementById('contents');
   textArea.value += '{';
+  var strToAdd;
   for (var property in data) {
+    strToAdd = '';
     if (data.hasOwnProperty(property)) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
         data[property] = null;
       }
-      if (textArea.value === '{') {
-        textArea.value += '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
+      if (textArea.value !== '{') {
+        strToAdd += ',';
       }
-      else {
-        textArea.value += ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
+      strToAdd += '\n\"' + property + '\": '; //+ '\"'+ data[property] +'\"';
+      if (data[property]) {
+        strToAdd += '\"'+ data[property] +'\"';
       }
+      else { // if the property has a null value then don't put quotes around it.
+        strToAdd += data[property];
+      }
+      textArea.value += strToAdd;
     }
   }
   textArea.value += '\n}';
@@ -91,6 +98,8 @@ function cancel(chart) {
   $('#cancelButton').hide();
   $('#contents').hide();
   $('#saveButton').hide();
+  $('#sysStartVal').hide();
+  $('#sysEndVal').hide();
   chart.setEditing(false);
   chart.setViewing(false);
   chart.setCurrentURI(undefined);
