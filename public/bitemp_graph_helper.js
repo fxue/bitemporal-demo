@@ -20,7 +20,7 @@ function fillText(data, isEditing) {
       }
       strToAdd += '\n\"' + property + '\": '; //+ '\"'+ data[property] +'\"';
       if (data[property]) {
-        strToAdd += '\"'+ data[property] +'\"';
+        strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
@@ -32,13 +32,6 @@ function fillText(data, isEditing) {
   textArea.readOnly = !isEditing;
 
 }
-
-/* if (textArea.value === '{') {
-        strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';  //strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
-      }
-      else {
-        strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"'; //  strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
-      }*/
 
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
