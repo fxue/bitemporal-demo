@@ -20,7 +20,7 @@ function fillText(data, isEditing) {
       }
       strToAdd += '\n\"' + property + '\": '; //+ '\"'+ data[property] +'\"';
       if (data[property]) {
-        strToAdd += '\"'+ data[property] +'\"';
+        strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
@@ -33,6 +33,7 @@ function fillText(data, isEditing) {
 
 }
 
+<<<<<<< HEAD
 function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
@@ -46,6 +47,8 @@ function cancel(chart) {
   chart.setCurrentURI(undefined);
 }
 
+=======
+>>>>>>> Added text fields for user to enter times sysStart and End times when editing
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
