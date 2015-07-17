@@ -8,7 +8,7 @@ var barChart = function() {
   var isEditing;
   var isViewing;
   var displayProperty = '';
-  
+
   var margin = {
     top: 10,
     right: 0,
@@ -24,15 +24,15 @@ var barChart = function() {
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
-  
+
   var chart = function(container) {
     var uri = undefined;
     var isEditing = false;
-    var isViewing = false;   
-   
+    var isViewing = false;
+
     function setDimensions() {
       axisLabelMargin = 35;
-    } 
+    }
 
     function setupXAxis() {
       var mindate =
@@ -63,7 +63,7 @@ var barChart = function() {
         .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
         .outerTickSize(0)
         .orient('bottom')
-        .tickFormat(d3.time.format('%Y-%m-%d'));  
+        .tickFormat(d3.time.format('%Y-%m-%d'));
     }
 
     function setupYAxis() {
@@ -156,10 +156,8 @@ var barChart = function() {
         .attr('height', height - margin.top - margin.bottom);
 
     }
-    
-    function addBarChartData() {
 
-      var c=0;
+    function addBarChartData() {
 
       split = g.selectAll('.split')
         .data(data)
@@ -244,15 +242,15 @@ var barChart = function() {
             bary2 = yScale(moment(d.content.valEnd).toDate());
             return (bary1+bary2)/2;
           }
-        }) 
+        })
         .text(function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-          
+
           return d.content[displayProperty];
         });
-      
+
     }
 
     setDimensions();
@@ -302,27 +300,27 @@ var barChart = function() {
     margin = value;
     return chart;
   };
-  
+
   chart.getEditing = function() {
     return isEditing;
   };
-    
+
   chart.setEditing = function(bool) {
     isEditing = bool;
   };
-    
+
   chart.getViewing = function() {
     return isViewing;
   };
-    
+
   chart.setViewing = function(bool) {
     isViewing = bool;
   };
-    
+
   chart.getCurrentURI = function() {
     return uri;
   };
-    
+
   chart.setCurrentURI = function(u) {
     uri = u;
   };
