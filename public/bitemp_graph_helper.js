@@ -25,6 +25,7 @@ function fillText(data, isEditing) {
       strToAdd += '\n\"' + property + '\": ';
       if (data[property]) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
@@ -32,6 +33,9 @@ function fillText(data, isEditing) {
       }
 =======
         strToAdd += '\"'+ data[property] +'\"';
+=======
+        strToAdd += '\"'+ data[property] + '\"';
+>>>>>>> Added text fields for user to enter times sysStart and End times when editing
       }
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
@@ -45,7 +49,6 @@ function fillText(data, isEditing) {
 
 }
 
-<<<<<<< HEAD
 function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
@@ -59,14 +62,6 @@ function cancel(chart) {
   chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
-=======
-/* if (textArea.value === '{') {
-        strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';  //strToAdd = '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
-      }
-      else {
-        strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"'; //  strToAdd = ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
-      }*/
->>>>>>> Removed single quotes around null properties of sysStart and sysEnd times when editing a document.
 
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
