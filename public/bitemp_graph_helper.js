@@ -97,19 +97,6 @@ function setupTextArea(uri, isEditing) {
 
 }
 
-function cancel(chart) {
-  clearTextArea();
-  $('#editButton').show();
-  $('#viewButton').show();
-  $('#deleteButton').show();
-  $('#cancelButton').hide();
-  $('#contents').hide();
-  $('#saveButton').hide();
-  chart.setEditing(false);
-  chart.setViewing(false);
-  chart.setCurrentURI(undefined);
-}
-
 function view(uri) {
   if (uri) {
     setupTextArea(uri, false); //false so function knows the document is not being edited
@@ -195,7 +182,6 @@ function addDataToMenu(chart, params) {
       }
     }
   }
-
   var select = document.getElementById('select-prop');  
 
   for(var property in propsInGraph) {
