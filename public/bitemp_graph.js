@@ -18,7 +18,7 @@ var barChart = function() {
   var yAxisLabel = 'Valid Time';
 
   var color =
-    d3.scale.category20();
+    d3.scale.category10();
 
 
   var xScale, xAxis, xAxisCssClass;
