@@ -1,4 +1,3 @@
-
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
 function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
@@ -50,11 +49,7 @@ function parseData(data, collection, numParts) {
         3.) collection specified is not null AND the collection's substring up until the first '.'' is the same string as the item's filename's substring up to the first '.'. Also the collection's substring after the last '.' must be the same string as the item's filename's substring after the last '.'. Thus 'addr.json' has the same substring as 'addr.48324723423.json' since 'addr' === 'addr' and '.json' === '.json'.
       OR
         4.) the collection string equals the item's filename. If a collection and a item's uri are both 'intern' without a dot extension.
-<<<<<<< HEAD
       If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items.*/
-=======
-      If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items. */
->>>>>>> Formatting
       if(collection) {  
         if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
           if(collection.substring(collection.lastIndexOf('.')) === item.uri.substring(item.uri.lastIndexOf('.'))) {

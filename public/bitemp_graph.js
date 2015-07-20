@@ -178,8 +178,8 @@ var barChart = function() {
         .data(data)
         .enter()
         .append('g')
-        .attr('class','split');
-        .attr('stroke', 'black')
+        .attr('class','split')
+        .attr('stroke', 'black');
       
       r = split
         .append('rect')
