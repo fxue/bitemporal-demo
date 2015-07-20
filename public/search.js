@@ -1,6 +1,6 @@
 var firstDoc;
 var lastDoc;
- 
+
 //call to get the list of temporal collection
 $.ajax(
   {
@@ -12,7 +12,7 @@ $.ajax(
       var addToDrop = $('#dropdown');
       //endpoint is the number of collections
       var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
- 
+
       //dropArray is the array containing all the temporal Collections
       var dropArray = [];
       for (var j = 0; j < endpoint; j++)
@@ -21,7 +21,7 @@ $.ajax(
       }
       //sorts the array (alphabetically) containing the temporal collections
       dropArray.sort();
- 
+
       //this for loop appends the collection names to the drop down list
       for (var k = 0; k < dropArray.length; k++)
       {
@@ -33,11 +33,11 @@ $.ajax(
       console.log('problem');
     }
   });
- 
- 
+
+
 //variable name for the bullet tag
 var bullet = $('#bulletList');
- 
+
 //function when search button is clicked
 $('#search').click(function()
   {
@@ -48,7 +48,7 @@ $('#search').click(function()
     displayDocs(firstDoc, lastDoc);
   }
 );
- 
+
 //function when the next button is clicked
 $('#next').click(function()
   {
@@ -57,7 +57,7 @@ $('#next').click(function()
     displayDocs(firstDoc, lastDoc);
   }
 );
- 
+
 //function when the prev button is clicked
 $('#prev').click(function()
   {
@@ -66,7 +66,7 @@ $('#prev').click(function()
     displayDocs(firstDoc, lastDoc);
   }
 );
- 
+
 /**
 * Display docs is a function that displays the physical and logcial documents
 * corresponding to the collection selected in the dropdown box.
@@ -80,7 +80,7 @@ function displayDocs( start, end)
   $('#bulletList').empty();
   var dropDownList = document.getElementById('dropdown');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
- 
+
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   var docs = $.ajax(
   {
@@ -95,7 +95,7 @@ function displayDocs( start, end)
       console.log('problem');
     }
   });
- 
+
   function onDisplayDocs(data, textStatus, response)
   {
     console.log('got collections: ' + data);
@@ -107,8 +107,8 @@ function displayDocs( start, end)
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
     // and disables or enables the next/previous buttons based on those indexes.
-    document.getElementById('prev').disabled = start <= 1; 
- 
+    document.getElementById('prev').disabled = start <= 1;
+
     if( end >= totalDocLen)
     {
       document.getElementById('next').disabled = true;
@@ -118,7 +118,7 @@ function displayDocs( start, end)
     {
       document.getElementById('next').disabled = false;
     }
- 
+
     if (parseInt(totalDocLen) === 0)
     {
       document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
@@ -127,7 +127,7 @@ function displayDocs( start, end)
     {
       document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
     }
- 
+
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
     for (var i=0; i < docs.length ; i++)
@@ -150,13 +150,13 @@ function displayDocs( start, end)
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
       var validEnd = docs[i].content.valEnd;
- 
+
       buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: ', false);
       buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: ', true);
     }
   }
 }
- 
+
 /**
 * Appends the dates to the bullet list.
 *
@@ -168,7 +168,7 @@ function buildDate( startDate, endDate, label )
 {
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
- 
+
   bullet.append($('<ul id="bold">').text(label));
   bullet.append( $('<ul>').text(startDate + ' -- ' + endDate));
   if ( label === 'System Time: ' )
@@ -176,15 +176,18 @@ function buildDate( startDate, endDate, label )
     bullet.append($('<p>').text(' '));
   }
 }
- 
+
 /**
-* Shortens the date to only include the day, month, year, and time.
-* The time appears as hours, minutes, seconds, excluding 'GMT'
-*
-* @param date: the date to shorten
-*/
+ * Shortens the date to only include the day, month, year, and time.
+ * The time appears as hours, minutes, seconds, excluding 'GMT'
+ *
+ * @param date: the date to shorten
+ */
 function shortenDate( date )
 {
   date = date.toString().split(' ');
+  if (date[3] >= '9999') {
+    return 'Infinity';
+  }
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
 }
