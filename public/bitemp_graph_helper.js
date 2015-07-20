@@ -26,6 +26,19 @@ function fillText(data, isEditing) {
 
 }
 
+function cancel(chart) {
+  clearTextArea();
+  $('#editButton').show();
+  $('#viewButton').show();
+  $('#deleteButton').show();
+  $('#cancelButton').hide();
+  $('#contents').hide();
+  $('#saveButton').hide();
+  chart.setEditing(false);
+  chart.setViewing(false);
+  chart.setCurrentURI(undefined);
+}
+
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
@@ -70,19 +83,6 @@ function setupTextArea(uri, isEditing) {
 
 }
 
-
-function cancel(chart) {
-  clearTextArea();
-  $('#editButton').show();
-  $('#viewButton').show();
-  $('#deleteButton').show();
-  $('#cancelButton').hide();
-  $('#contents').hide();
-  $('#saveButton').hide();
-  chart.setEditing(false);
-  chart.setViewing(false);
-  chart.setCurrentURI(undefined);
-}
 
 function view(uri) {
   if (uri) {
@@ -158,12 +158,8 @@ function changeTextInGraph(chart, params) {
 
 function addDataToMenu(chart, params) {
   $('#select-prop').empty();
-  if(!params) {
-  	return;
-  }
-  var propsInGraph = [];
-  propsInGraph.push('Choose a property');  
-  var alreadyIn = false;
+  var propsInGraph = {};
+  propsInGraph['Choose a property'] = true;  
 /*
   triple for loop loops through 
   1.) the data array
@@ -173,29 +169,21 @@ function addDataToMenu(chart, params) {
   for(var i = 0; i < params.data.length; i++) {
     for(var prop in params.data[i].content) {
       if (params.data[i].content.hasOwnProperty(prop)) {
-      	for(var j = 0; j < propsInGraph.length; j++) {
-          if(prop === propsInGraph[j]) {
-          	alreadyIn = true;
-          }
-      	}
-      	if(alreadyIn === false) {
-          propsInGraph.push(prop);
-      	}
-      	alreadyIn = false;
+      	propsInGraph[prop] = true;
       }
     }
   }
 
-  var select = document.getElementById("select-prop");  
+  var select = document.getElementById('select-prop');  
 
-  for(var i = 0; i < propsInGraph.length; i++) {
-    var opt = propsInGraph[i];
-    var el = document.createElement("option");
+  for(var property in propsInGraph) {
+    var opt = property;
+    var el = document.createElement('option');
     el.textContent = opt;
     el.value = opt;
     select.appendChild(el);
   }
-};
+}
 
 
 
@@ -208,15 +196,15 @@ var removeButtonEvents = function () {
   $('#saveButton').unbind('click');
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
-}
+};
 
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
   if(docProp) {
-    var chart = drawChart(params, docProp);
+    chart = drawChart(params, docProp);
   }
   else {
-  	var chart = drawChart(params, null);
+    chart = drawChart(params, null);
   }
 
   if(params) {
@@ -248,12 +236,12 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
-  $("#select-prop").change(function () {
-    var selectedText = $(this).find("option:selected").text();
+  $('#select-prop').change(function() {
+    var selectedText = $(this).find('option:selected').text();
     drawChart(params, selectedText);
     getBarChart(params, selectedText);
   });
-}
+};
 
 var drawChart = function (params, docProp) {
   var chart = barChart()
@@ -267,4 +255,4 @@ var drawChart = function (params, docProp) {
   var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
 
   return chart;
-}
+};

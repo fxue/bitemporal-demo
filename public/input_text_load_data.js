@@ -122,11 +122,11 @@ function loadData(collection) {
 $('#pick-doc').click( function() {
   var uriCollection = $('input[name = collection]').val();
   if(uriCollection === '') {
-    alert('Please enter a uri.');
+    window.alert('Please enter a uri.');
   }
 
   else {
-    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriCollection.bold();
+    document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
     loadData(uriCollection);
   }
 });

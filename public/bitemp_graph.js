@@ -110,7 +110,6 @@ var barChart = function() {
 
       var colorDomain = [];
       data.map(function(d){
-      //  colorDomain.push(d.content.data);
         colorDomain.push(d.content[displayProperty]);
       });
 
