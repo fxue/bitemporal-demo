@@ -197,6 +197,8 @@ function addDataToMenu(chart, params) {
   }
 };
 
+
+
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
   $('#editButton').unbind('click');
@@ -205,6 +207,7 @@ var removeButtonEvents = function () {
   $('#viewButton').unbind('click');
   $('#saveButton').unbind('click');
   $('#change-prop').unbind('click');
+  $('#select-prop').unbind('change');
 }
 
 var getBarChart = function (params, docProp) {
@@ -245,7 +248,11 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
-
+  $("#select-prop").change(function () {
+    var selectedText = $(this).find("option:selected").text();
+    drawChart(params, selectedText);
+    getBarChart(params, selectedText);
+  });
 }
 
 var drawChart = function (params, docProp) {
