@@ -43,6 +43,7 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
+  chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
@@ -95,19 +96,6 @@ function setupTextArea(uri, isEditing) {
     format: 'json'
   });
 
-}
-
-function cancel(chart) {
-  clearTextArea();
-  $('#editButton').show();
-  $('#viewButton').show();
-  $('#deleteButton').show();
-  $('#cancelButton').hide();
-  $('#contents').hide();
-  $('#saveButton').hide();
-  chart.setEditing(false);
-  chart.setViewing(false);
-  chart.setCurrentURI(undefined);
 }
 
 function view(uri) {

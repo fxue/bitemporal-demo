@@ -187,17 +187,6 @@ var barChart = function() {
       
       var strokeColor = 'black';
       
-      /*for (var prop in datum) {
-            if (datum.hasOwnProperty(prop)) {
-              console.log(prop + ': ' + datum[prop]);
-            }
-          }
-          for (var prop in index) {
-            if (index.hasOwnProperty(prop)) {
-              console.log(prop + ': ' + index[prop]);
-            }
-          }*/
-      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
