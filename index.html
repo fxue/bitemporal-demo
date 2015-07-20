@@ -52,6 +52,10 @@
         top: 400px;
         width: 25em;
       }
+      
+      hideSysTimeBoxes {
+        visibility: hidden;
+      }
 
       .svg-chart .background {
         shape-rendering: crispEdges;
@@ -152,10 +156,10 @@
         loadData(uri);
         document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold();
       }
-      else {
+      else { //default
         loadData('addr.json');
       }
-
+      
       $("input[name='insert']").click(function() {
         var col = $("input[name='tempcol']").val();
         var uri = $("input[name='uri']").val();
@@ -177,10 +181,14 @@
       <button id='saveButton' hidden="true"> Save </button>
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeBoxes'>
-        <p> <b> SysStart Time: </b> <input type='text' name='sysStartVal' value=''>
-        <br> 
-        <b> SysEnd Time: </b> <input type='text' name='sysEndVal' value=''> </p>
+      <div id='sysTimeDiv' class='hideSysTimeBoxes'> 
+        <p> <b> SysStart Time: </b> <input type='text' name='sysStartBox' value=''>
+        <br> <br>
+        <b> SysEnd Time: </b> <input type='text' name='sysEndBox' value=''> </p>
+        <script> 
+          $('div#sysTimeDiv').addClass('hideSysTimeBoxes'); 
+          console.log("Called");      
+        </script>
       </div>
     </div>
   </body>
