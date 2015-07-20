@@ -184,48 +184,23 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split');
-<<<<<<< HEAD
         .attr('stroke', 'black');
-        
-=======
       
-      var strokeColor = 'black';
-      
-      /*for (var prop in datum) {
-            if (datum.hasOwnProperty(prop)) {
-              console.log(prop + ': ' + datum[prop]);
-            }
-          }
-          for (var prop in index) {
-            if (index.hasOwnProperty(prop)) {
-              console.log(prop + ': ' + index[prop]);
-            }
-          }*/
-      
->>>>>>> sysStart/End boxes displaying and functiong when edit button is clicked. Selected uri label added above the edit/view/delete/buttons. Color of selected document still not updated correctly.
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          chart.setCurrentURI(datum.uri);
-          showCurrURI(datum.uri);
-          r = changeColor(r);
+          if (!chart.getCurrentURI()) {
+            chart.setCurrentURI(datum.uri);
+            changeColor(r);
+          }
         })
         .attr('class', 'split')
         .attr('stroke-width', '2')
         .attr('fill',function(d) {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-          //var colorNum = Math.floor(c%20); c++;
-          //return color(colorNum);
->>>>>>> sysStart/End boxes displaying and functiong when edit button is clicked. Selected uri label added above the edit/view/delete/buttons. Color of selected document still not updated correctly.
           if(!displayProperty) {
             displayProperty = 'data';
           }
           return color(d.content[displayProperty]);
-=======
-          return color(d.content.data);
->>>>>>> sysStart/End boxes displaying and functiong when edit button is clicked. Selected uri label added above the edit/view/delete/buttons. Color of selected document still not updated correctly.
         })
         .attr('x', function(d) {
           var barx = xScale(moment(d.content.sysStart).toDate());

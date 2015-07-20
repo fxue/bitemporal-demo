@@ -43,6 +43,7 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
+  chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
@@ -95,19 +96,6 @@ function setupTextArea(uri, isEditing) {
     format: 'json'
   });
 
-}
-
-function cancel(chart) {
-  clearTextArea();
-  $('#editButton').show();
-  $('#viewButton').show();
-  $('#deleteButton').show();
-  $('#cancelButton').hide();
-  $('#contents').hide();
-  $('#saveButton').hide();
-  chart.setEditing(false);
-  chart.setViewing(false);
-  chart.setCurrentURI(undefined);
 }
 
 function view(uri) {
@@ -222,11 +210,7 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
-   // .valStart(params.valStart)
-   // .valEnd(params.valEnd)
-   // .sysStart(params.sysStart)
-   // .sysEnd(params.sysEnd)  
-    .setDisplayProperty(docProp); 
+    .setDisplayProperty(docProp);
 
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
