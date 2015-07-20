@@ -154,8 +154,48 @@ function changeTextInGraph(chart, params) {
       window.alert('Sorry. That property does not exist in any document in the collection');
     }
   }
-} 
+}
 
+function addDataToMenu(chart, params) {
+  $('#select-prop').empty();
+  if(!params) {
+  	return;
+  }
+  var propsInGraph = [];
+  propsInGraph.push('Choose a property');  
+  var alreadyIn = false;
+/*
+  triple for loop loops through 
+  1.) the data array
+  2.) the properties contained in data
+  3.) the newly created propsInGraph to avoid pushing the same props
+*/
+  for(var i = 0; i < params.data.length; i++) {
+    for(var prop in params.data[i].content) {
+      if (params.data[i].content.hasOwnProperty(prop)) {
+      	for(var j = 0; j < propsInGraph.length; j++) {
+          if(prop === propsInGraph[j]) {
+          	alreadyIn = true;
+          }
+      	}
+      	if(alreadyIn === false) {
+          propsInGraph.push(prop);
+      	}
+      	alreadyIn = false;
+      }
+    }
+  }
+
+  var select = document.getElementById("select-prop");  
+
+  for(var i = 0; i < propsInGraph.length; i++) {
+    var opt = propsInGraph[i];
+    var el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    select.appendChild(el);
+  }
+};
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
@@ -174,6 +214,10 @@ var getBarChart = function (params, docProp) {
   }
   else {
   	var chart = drawChart(params, null);
+  }
+
+  if(params) {
+    addDataToMenu(chart, params);
   }
 
   removeButtonEvents();
@@ -200,6 +244,8 @@ var getBarChart = function (params, docProp) {
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
+
+
 }
 
 var drawChart = function (params, docProp) {
