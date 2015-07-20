@@ -157,6 +157,10 @@ var barChart = function() {
 
     }
 
+    var changeColor = function(rR) {
+      rR.attr('stroke', 'pink');
+    }
+    
     function addBarChartData() {
 
       split = g.selectAll('.split')
@@ -164,17 +168,22 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split');
-
+      
+      var strokeColor = 'black';
+      var changeColor = function(strColor) {
+        strokeColor = strColor;
+      }
       r = split
         .append('rect')
         .on('click', function(datum, index) {
           if (!chart.getCurrentURI()) {
             chart.setCurrentURI(datum.uri);
+            changeColor(r);
           }
         })
         .attr('class', 'split')
-        .attr('stroke','black')
-        .attr('stroke-width','2')
+        .attr('stroke', strokeColor)
+        .attr('stroke-width', '2')
         .attr('fill',function(d) {
           //var colorNum = Math.floor(c%20); c++;
           //return color(colorNum);
