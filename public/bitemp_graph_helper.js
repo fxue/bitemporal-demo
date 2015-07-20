@@ -134,33 +134,28 @@ function changeTextInGraph(chart, params) {
   if (docProp === '') {
     window.alert('Please enter a document property.');
   }
-  else {
-    getBarChart(params, docProp);
-  }
-    var text = $('#uriEntered').text();
-    var strOfDoc = text.substring(text.lastIndexOf(' ') + 1);
+  var propExists = false;
 
-    var propExists = false;
-
-    for(var i = 0; i < params.data.length && !propExists; i++) {
-      for(var prop in params.data[i].content) {
-      	if (params.data[i].content.hasOwnProperty(prop)) {
-          console.log(prop + ' ' + params.data[i].content[prop]);
-          if(prop === docProp) {
-          	propExists = true;            
-          }
+  for(var i = 0; i < params.data.length && !propExists; i++) {
+    for(var prop in params.data[i].content) {
+      if (params.data[i].content.hasOwnProperty(prop)) {
+        if(prop === docProp) {
+          propExists = true;            
         }
       }
     }
-    if(propExists) {
-      drawChart(params, docProp);
-      getBarChart(params, docProp);
+  }
+  if(propExists) {
+    drawChart(params, docProp);
+    getBarChart(params, docProp);
+  }
+  else {
+    if(docProp !== '')	{
+      window.alert('Sorry. That property does not exist in any document in the collection');
     }
-    else {
-    	window.alert('Sorry. That property does not exist in any document in the collection');
-    }
-  } 
-}
+  }
+} 
+
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers

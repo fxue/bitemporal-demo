@@ -178,7 +178,11 @@ var barChart = function() {
         .attr('fill',function(d) {
           //var colorNum = Math.floor(c%20); c++;
           //return color(colorNum);
-          return color(d.content.data);
+          if(!displayProperty) {
+            displayProperty = 'data';
+          }
+
+          return color(d.content[displayProperty]);
         })
         .attr('x', function(d) {
           var barx = xScale(moment(d.content.sysStart).toDate());
