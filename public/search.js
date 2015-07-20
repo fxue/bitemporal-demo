@@ -41,12 +41,12 @@ var bullet = $('#bulletList');
 //function when search button is clicked
 $('#search').click(function()
   {
+
     firstDoc = 1;
     lastDoc = 10;
     $('#next').css({'visibility': 'visible'});
     $('#prev').css({'visibility': 'visible'});
     displayDocs(firstDoc, lastDoc);
-    
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
     $.ajax(
@@ -72,8 +72,12 @@ function displayAxis(times)
   valStart = times.valStart;
   valEnd = times.valEnd;
 }
+<<<<<<< HEAD
 
 
+=======
+ 
+>>>>>>> changed the time to say 'infinity' instead of 9999
 //function when the next button is clicked
 $('#next').click(function()
   {
@@ -167,6 +171,7 @@ function displayDocs( start, end)
           uriLogical = collArr[t];
         }
       }
+
       var sysStart = docs[i].content.sysStart;
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
@@ -212,6 +217,8 @@ function buildDate( startDate, endDate, label )
   var date = $('<div>').addClass('date');
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
+  
+  var time = label.toString + " Time: ";
 
   var def = label;
   if (label.includes('Valid')) {
@@ -248,4 +255,3 @@ function shortenDate( date ) {
   }
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
 }
-

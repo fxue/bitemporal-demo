@@ -123,9 +123,9 @@ $('#pick-doc').click( function() {
   if(uriCollection === '') {
     window.alert('Please enter a uri.');
   }
-
   else {
     document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
+    window.location = "/?collection="+uriCollection;
     loadData(uriCollection);
   }
 });

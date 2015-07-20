@@ -27,9 +27,8 @@
         position: absolute;
         left: 850px;
         top: 78px;
-        font-style: italic;
         font-size: 13px;
-        width: 25em;
+        width: 24em;
         word-wrap: normal;
       }
       
@@ -118,18 +117,32 @@
         width: 25em;
         word-wrap: normal;
       }
+
+      .definition:hover {
+        background-color: LemonChiffon;
+        opacity: .8;
+      }
  
  
     </style>
   </head>
  
   <body>
+<<<<<<< HEAD
     <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
     <a href="search" id="searchURL">Click to go to search page</a>
     <div id='instructions'>
       <p>Change the logical document display to the specified URI of a logical document.</p>
       <p>Don't forget to include the "dot extension" ie .json.</p>
 
+=======
+    <h1><u>MarkLogic <span class = 'definition' title = 'Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.'>Bitemporal</span> Visualization Demo</u></h1>
+    <a href="search" id="searchURL">Click to go to search page</a>
+    <div id='instructions'>
+      <p>Change the logical document display to the specified URI of a logical document.</p>
+      <p><i>Don't forget to include the "dot extension," i.e. .json.</i></p>
+ 
+>>>>>>> changed the time to say 'infinity' instead of 9999
       <b>Enter <span class= 'definition' title = 'URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource'>URI:</span></b><br>
       <input type="text" name="collection" value="">
       <input type="button" id="pick-doc" value="Submit">
@@ -161,7 +174,7 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
- 
+
     <div id="bar-chart-large"></div>
  
     <script type="text/javascript">
