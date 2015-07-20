@@ -74,7 +74,8 @@ function setupTextArea(uri, isEditing) {
   $('#viewButton').hide();
   $('#deleteButton').hide();
   $('#cancelButton').show();
-  $('#contents').show();
+  $('#contents').show(); 
+  
   if (isEditing) {
     $('#saveButton').show();
   }
@@ -98,8 +99,6 @@ function cancel(chart) {
   $('#cancelButton').hide();
   $('#contents').hide();
   $('#saveButton').hide();
-  $('#sysStartVal').hide();
-  $('#sysEndVal').hide();
   chart.setEditing(false);
   chart.setViewing(false);
   chart.setCurrentURI(undefined);
