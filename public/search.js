@@ -72,12 +72,7 @@ function displayAxis(times)
   valStart = times.valStart;
   valEnd = times.valEnd;
 }
-<<<<<<< HEAD
 
-
-=======
- 
->>>>>>> changed the time to say 'infinity' instead of 9999
 //function when the next button is clicked
 $('#next').click(function()
   {
@@ -218,7 +213,15 @@ function buildDate( startDate, endDate, label )
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
   
-  var time = label.toString + " Time: ";
+  var def = label;
+  if( label.includes('Valid') )
+  {
+    def += 'The time at which something actually occured';
+  }
+  else
+  {
+    def += 'The time at which something is recorded in the database.'
+  }
 
   var def = label;
   if (label.includes('Valid')) {
