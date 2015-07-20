@@ -160,12 +160,7 @@ function addDataToMenu(chart, params) {
   $('#select-prop').empty();
   var propsInGraph = {};
   propsInGraph['Choose a property'] = true;  
-/*
-  triple for loop loops through 
-  1.) the data array
-  2.) the properties contained in data
-  3.) the newly created propsInGraph to avoid pushing the same props
-*/
+
   for(var i = 0; i < params.data.length; i++) {
     for(var prop in params.data[i].content) {
       if (params.data[i].content.hasOwnProperty(prop)) {
