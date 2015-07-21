@@ -168,7 +168,7 @@ var barChart = function() {
         
     }
 
-    var changeRectOutline = function(datum) {
+    var changeRectOutline = function() {
       $('rect').attr('stroke', 'red');
     }
     
