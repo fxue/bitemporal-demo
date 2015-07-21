@@ -189,10 +189,9 @@ var barChart = function() {
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          if (!chart.getCurrentURI()) {
-            chart.setCurrentURI(datum.uri);
-            changeColor(r);
-          }
+          chart.setCurrentURI(datum.uri);
+          showCurrURI(datum.uri);
+          r = changeColor(r);
         })
         .attr('class', 'split')
         .attr('stroke', strokeColor)
