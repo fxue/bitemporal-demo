@@ -180,6 +180,7 @@ var barChart = function() {
         .append('g')
         .attr('class','split');
         .attr('stroke', 'black')
+      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
