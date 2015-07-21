@@ -183,11 +183,11 @@ function buildDate( startDate, endDate, label )
  *
  * @param date: the date to shorten
  */
-function shortenDate( date )
-{
+function shortenDate( date ) {
   date = date.toString().split(' ');
   if (date[3] >= '9999') {
     return 'Infinity';
   }
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
 }
+
