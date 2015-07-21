@@ -48,7 +48,6 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
-  chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
@@ -245,6 +244,7 @@ var getBarChart = function (params, docProp) {
   if(params) {
     addDataToMenu(chart, params);
   }
+
   removeButtonEvents();
   
   $('#editButton').click(function() {

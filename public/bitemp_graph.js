@@ -186,7 +186,6 @@ var barChart = function() {
         .attr('class','split');
       
       var strokeColor = 'black';
-      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
@@ -201,7 +200,6 @@ var barChart = function() {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-
           return color(d.content[displayProperty]);
         })
         .attr('x', function(d) {
