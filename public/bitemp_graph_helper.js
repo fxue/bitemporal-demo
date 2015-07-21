@@ -209,10 +209,6 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
-    //.valStart(params.valStart)
-    //.valEnd(params.valEnd)
-    //.sysStart(params.sysStart)
-    //.sysEnd(params.sysEnd)  
     .setDisplayProperty(docProp); 
 
   var selector = '#' + params.containerId;
