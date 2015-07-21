@@ -130,6 +130,7 @@ function loadData(collection) {
         data: arrData,
         width: 800,
         height: 600,
+        
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
