@@ -4,6 +4,10 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
+  var valStart;
+  var valEnd;
+  var sysStart;
+  var sysEnd;
   var uri;
   var isEditing;
   var isViewing;
@@ -35,15 +39,27 @@ var barChart = function() {
     }
 
     function setupXAxis() {
-      var mindate =
-      moment.min(data.map(function(d){
-        return moment(d.content.sysStart);
-      })).toDate();
-      //var maxdate = new Date();
-      var maxdate =
-        moment.max(data.map(function(d){
+      var mindate, maxdate;
+      if (sysStart) {
+        mindate = sysStart.toDate();
+      }
+      else {
+        mindate = moment.min(data.map(function(d){
+          return moment(d.content.sysStart);
+        })).toDate();
+      }
+      if (sysEnd) {
+        maxdate = sysEnd.toDate();
+      }
+      else {
+        maxdate = moment.max(data.map(function(d){
           return moment(d.content.sysStart);
         })).add(10, 'y').toDate();
+      }
+      /*var maxdate =
+        moment.max(data.map(function(d){
+          return moment(d.content.sysStart);
+        })).add(10, 'y').toDate();*/
 
       console.log('xmin='+mindate,' xmax='+maxdate);
 
@@ -158,7 +174,7 @@ var barChart = function() {
     }
 
     var changeColor = function(rR) {
-      rR.attr('stroke', 'pink');
+      return split.attr('stroke', 'blue');
     }
     
     function addBarChartData() {
@@ -170,21 +186,30 @@ var barChart = function() {
         .attr('class','split');
       
       var strokeColor = 'black';
-      var changeColor = function(strColor) {
-        strokeColor = strColor;
-      }
+      
+      /*for (var prop in datum) {
+            if (datum.hasOwnProperty(prop)) {
+              console.log(prop + ': ' + datum[prop]);
+            }
+          }
+          for (var prop in index) {
+            if (index.hasOwnProperty(prop)) {
+              console.log(prop + ': ' + index[prop]);
+            }
+          }*/
+      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          if (!chart.getCurrentURI()) {
-            chart.setCurrentURI(datum.uri);
-            changeColor(r);
-          }
+          chart.setCurrentURI(datum.uri);
+          showCurrURI(datum.uri);
+          r = changeColor(r);
         })
         .attr('class', 'split')
         .attr('stroke', strokeColor)
         .attr('stroke-width', '2')
         .attr('fill',function(d) {
+<<<<<<< HEAD
           //var colorNum = Math.floor(c%20); c++;
           //return color(colorNum);
           if(!displayProperty) {
@@ -192,6 +217,9 @@ var barChart = function() {
           }
 
           return color(d.content[displayProperty]);
+=======
+          return color(d.content.data);
+>>>>>>> sysStart/End boxes displaying and functiong when edit button is clicked. Selected uri label added above the edit/view/delete/buttons. Color of selected document still not updated correctly.
         })
         .attr('x', function(d) {
           var barx = xScale(moment(d.content.sysStart).toDate());

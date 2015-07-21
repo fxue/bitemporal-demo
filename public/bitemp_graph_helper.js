@@ -43,13 +43,18 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
-  chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
+  
+  if (document.getElementById('sysStartBox').value)
+    data.sysStart = document.getElementById('sysStartBox').value;
+  if (document.getElementById('sysEndBox').value)
+    data.sysStart = document.getElementById('sysEndBox').value;
+  
 
   var success = function() {
     alert('PUT call worked, closing textbox.');
@@ -204,7 +209,11 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
-    .setDisplayProperty(docProp);
+   // .valStart(params.valStart)
+   // .valEnd(params.valEnd)
+   // .sysStart(params.sysStart)
+   // .sysEnd(params.sysEnd)  
+    .setDisplayProperty(docProp); 
 
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
@@ -212,6 +221,10 @@ var drawChart = function (params, docProp) {
 
   return chart;
 };
+
+function showCurrURI(uri) {
+  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
+}
 
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
@@ -225,8 +238,9 @@ var getBarChart = function (params, docProp) {
   if(params) {
     addDataToMenu(chart, params);
   }
-
+  
   removeButtonEvents();
+  
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
