@@ -184,8 +184,8 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split');
-      
-      var strokeColor = 'black';
+        .attr('stroke', 'black');
+        
       r = split
         .append('rect')
         .on('click', function(datum, index) {
@@ -194,7 +194,6 @@ var barChart = function() {
           r = changeColor(r);
         })
         .attr('class', 'split')
-        .attr('stroke', strokeColor)
         .attr('stroke-width', '2')
         .attr('fill',function(d) {
           if(!displayProperty) {
