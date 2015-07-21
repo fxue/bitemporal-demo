@@ -7,7 +7,7 @@ $.ajax(
     url: "/manage/v2/databases/Documents/temporal/collections?format=json",
     success: function(response, textStatus)
     {
-      console.log('got collections: ' + JSON.stringify(response));
+      //console.log('got collections: ' + JSON.stringify(response));
       //adds names of the collections to the drop down list
       var addToDrop = $('#dropdown');
       //endpoint is the number of collections
@@ -71,6 +71,11 @@ function displayAxis(times)
   sysEnd = times.sysEnd;
   valStart = times.valStart;
   valEnd = times.valEnd;
+
+  console.log(sysStart);
+  console.log(sysEnd);
+
+  var arrTimes = [valStart, valEnd, sysStart, sysEnd];
 }
 
 //function when the next button is clicked
@@ -122,7 +127,7 @@ function displayDocs( start, end)
 
   function onDisplayDocs(data, textStatus, response)
   {
-    console.log('got collections: ' + data);
+    //console.log('got collections: ' + data);
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if( totalDocLen > 0 )
     {

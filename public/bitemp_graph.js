@@ -20,8 +20,6 @@ var barChart = function() {
   var color =
     d3.scale.category10();
 
-
-
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
@@ -123,7 +121,7 @@ var barChart = function() {
 
       var colorDomain = [];
       data.map(function(d){
-        colorDomain.push(d.content[displayProperty]);
+        colorDomain.push(d.content.data);
       });
 
       color.domain(colorDomain);

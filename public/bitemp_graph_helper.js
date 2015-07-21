@@ -252,7 +252,7 @@ var getBarChart = function (params, docProp) {
   });
 
   $('#deleteButton').click(function() {
-    deleteDoc(chart.getCurrentURI());
+    deleteDoc(chart.getCurrentURI(),chart.get);
   });
 
   $('#cancelButton').click(function() {
