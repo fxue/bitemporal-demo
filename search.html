@@ -89,7 +89,7 @@
         position: relative;
         left: -40px;
         top: 105px;
-        font-size: 1.0em;
+        font-size: 1.1em;
       }
 
       #search {
@@ -145,7 +145,7 @@
       }
 
       #physicalDoc {
-        font-size: 1.25em;
+        font-size: 1.22em;
       }
 
       #page {
@@ -154,18 +154,35 @@
         top: 50px;
       }
 
+      .result a {
+        font-size: 1.15em;
+        color: blue;
+        margin-left: 5px;
+      }
+      .result .date {
+        margin-left: 40px;
+      }
+
+      .definition {
+        background-color: #E2E2E2;
+        display: inline-block;
+        font-weight: bold;
+        opacity: .7;
+        cursor: pointer;
+      }
+
     </style>
 
   </head>
   <body>
-    <h1><u>MarkLogic Bitemporal Search Page</u></h1>
+    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Search Page</h1>
     <a href="/" id="homeURL">Click to go to home page</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
     <a href="http://www.marklogic.com/"> <img id="logo" src="http://siliconangle.tv/wp-content/uploads/2015/03/StorageReview-MarkLogic-Logo.jpg"></img></a>
     <div id= "page">
-      <p id="instructSelect">Select a Temporal Collection</p>
+      <p id="instructSelect">Select a <span class='definition' title='Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices'>Temporal Collection</span></p>
       <select id="dropdown"></select>
       <button type="button" id="search">Search</button>
       <button type="button" id="next">Next</button>
