@@ -240,7 +240,7 @@ var getBarChart = function (params, docProp) {
   if(params) {
     addDataToMenu(chart, params);
   }
-
+  
   removeButtonEvents();
   initButtons();
   
