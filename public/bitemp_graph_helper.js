@@ -48,7 +48,6 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
-  chart.setCurrentURI(undefined);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
@@ -215,7 +214,11 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
-    .setDisplayProperty(docProp);
+   // .valStart(params.valStart)
+   // .valEnd(params.valEnd)
+   // .sysStart(params.sysStart)
+   // .sysEnd(params.sysEnd)  
+    .setDisplayProperty(docProp); 
 
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
@@ -240,7 +243,6 @@ var getBarChart = function (params, docProp) {
   if(params) {
     addDataToMenu(chart, params);
   }
-  
   removeButtonEvents();
   
   $('#editButton').click(function() {
