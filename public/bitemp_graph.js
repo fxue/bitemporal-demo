@@ -184,19 +184,7 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split');
-      
-      var strokeColor = 'black';
-      
-      /*for (var prop in datum) {
-            if (datum.hasOwnProperty(prop)) {
-              console.log(prop + ': ' + datum[prop]);
-            }
-          }
-          for (var prop in index) {
-            if (index.hasOwnProperty(prop)) {
-              console.log(prop + ': ' + index[prop]);
-            }
-          }*/
+        .attr('stroke', strokeColor)
       
       r = split
         .append('rect')
@@ -206,7 +194,6 @@ var barChart = function() {
           r = changeColor(r);
         })
         .attr('class', 'split')
-        .attr('stroke', strokeColor)
         .attr('stroke-width', '2')
         .attr('fill',function(d) {
           return color(d.content.data);

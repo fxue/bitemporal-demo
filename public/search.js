@@ -51,8 +51,7 @@ $('#search').click(function()
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
     $.ajax(
     {
-      //url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
-      url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection=myTemporal' ,
+      url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
       success: function(response, textStatus) 
       {
         displayAxis(response);
@@ -72,10 +71,6 @@ function displayAxis(times)
   sysEnd = times.sysEnd;
   valStart = times.valStart;
   valEnd = times.valEnd;
-  console.log(sysStart);
-  console.log(sysEnd);
-  console.log(valStart);
-  console.log(valEnd);
 }
 
 
