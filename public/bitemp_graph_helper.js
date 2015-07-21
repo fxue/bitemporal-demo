@@ -26,6 +26,19 @@ function fillText(data, isEditing) {
 
 }
 
+function cancel(chart) {
+  clearTextArea();
+  $('#editButton').show();
+  $('#viewButton').show();
+  $('#deleteButton').show();
+  $('#cancelButton').hide();
+  $('#contents').hide();
+  $('#saveButton').hide();
+  chart.setEditing(false);
+  chart.setViewing(false);
+  chart.setCurrentURI(undefined);
+}
+
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
@@ -70,19 +83,6 @@ function setupTextArea(uri, isEditing) {
 
 }
 
-
-function cancel(chart) {
-  clearTextArea();
-  $('#editButton').show();
-  $('#viewButton').show();
-  $('#deleteButton').show();
-  $('#cancelButton').hide();
-  $('#contents').hide();
-  $('#saveButton').hide();
-  chart.setEditing(false);
-  chart.setViewing(false);
-  chart.setCurrentURI(undefined);
-}
 
 function view(uri) {
   if (uri) {
@@ -134,10 +134,53 @@ function changeTextInGraph(chart, params) {
   if (docProp === '') {
     window.alert('Please enter a document property.');
   }
-  else {
+  var propExists = false;
+
+  for(var i = 0; i < params.data.length && !propExists; i++) {
+    for(var prop in params.data[i].content) {
+      if (params.data[i].content.hasOwnProperty(prop)) {
+        if(prop === docProp) {
+          propExists = true;            
+        }
+      }
+    }
+  }
+  if(propExists) {
+    drawChart(params, docProp);
     getBarChart(params, docProp);
   }
+  else {
+    if(docProp !== '')	{
+      window.alert('Sorry. That property does not exist in any document in the collection');
+    }
+  }
 }
+
+function addDataToMenu(chart, params) {
+  $('#select-prop').empty();
+  var propsInGraph = {};
+  propsInGraph['Choose a property'] = true;  
+
+  for(var i = 0; i < params.data.length; i++) {
+    for(var prop in params.data[i].content) {
+      if (params.data[i].content.hasOwnProperty(prop)) {
+      	propsInGraph[prop] = true;
+      }
+    }
+  }
+
+  var select = document.getElementById('select-prop');  
+
+  for(var property in propsInGraph) {
+    var opt = property;
+    var el = document.createElement('option');
+    el.textContent = opt;
+    el.value = opt;
+    select.appendChild(el);
+  }
+}
+
+
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
@@ -147,10 +190,21 @@ var removeButtonEvents = function () {
   $('#viewButton').unbind('click');
   $('#saveButton').unbind('click');
   $('#change-prop').unbind('click');
-}
+  $('#select-prop').unbind('change');
+};
 
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
+  if(docProp) {
+    chart = drawChart(params, docProp);
+  }
+  else {
+    chart = drawChart(params, null);
+  }
+
+  if(params) {
+    addDataToMenu(chart, params);
+  }
 
   removeButtonEvents();
   $('#editButton').click(function() {
@@ -176,7 +230,13 @@ var getBarChart = function (params, docProp) {
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
-}
+
+  $('#select-prop').change(function() {
+    var selectedText = $(this).find('option:selected').text();
+    drawChart(params, selectedText);
+    getBarChart(params, selectedText);
+  });
+};
 
 var drawChart = function (params, docProp) {
   var chart = barChart()
@@ -190,5 +250,4 @@ var drawChart = function (params, docProp) {
   var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
 
   return chart;
-}
-
+};
