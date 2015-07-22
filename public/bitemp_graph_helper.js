@@ -135,7 +135,7 @@ function deleteDoc(uri) {
     }
   }
   $.ajax({
-    url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
+    url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri, //Need to get actual collection of document
     type: 'DELETE',
     success: function() {
       console.log('Delete worked');
@@ -214,10 +214,10 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
-   // .valStart(params.valStart)
-   // .valEnd(params.valEnd)
-   // .sysStart(params.sysStart)
-   // .sysEnd(params.sysEnd)  
+    //.valStart(params.valStart)
+    //.valEnd(params.valEnd)
+    //.sysStart(params.sysStart)
+    //.sysEnd(params.sysEnd)  
     .setDisplayProperty(docProp); 
 
   var selector = '#' + params.containerId;
@@ -229,6 +229,12 @@ var drawChart = function (params, docProp) {
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
+}
+
+function initButtons() {
+  document.getElementById('editButton').disabled = true;
+  document.getElementById('deleteButton').disabled = true;
+  document.getElementById('viewButton').disabled = true;
 }
 
 var getBarChart = function (params, docProp) {
@@ -244,6 +250,7 @@ var getBarChart = function (params, docProp) {
     addDataToMenu(chart, params);
   }
   removeButtonEvents();
+  initButtons();
   
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
