@@ -4,13 +4,8 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var valStart;
-  var valEnd;
-  var sysStart;
-  var sysEnd;
-  var uri;
-  var isEditing;
-  var isViewing;
+  var valStart, valEnd, sysStart, sysEnd;
+  var uri, isEditing, isViewing;
   var displayProperty = '';
 
   var margin = {
@@ -83,7 +78,7 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-
+      console.log("Inside y axis setup");
       var mindate =
       moment.min(data.map(function(d){
         return moment(d.content.valStart);
@@ -170,11 +165,11 @@ var barChart = function() {
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
-
+        
     }
 
-    var changeColor = function(rR) {
-      return split.attr('stroke', 'blue');
+    var changeRectOutline = function(datum) {
+      $('.'+datum).attr('stroke', 'red');
     }
     
     function addBarChartData() {
@@ -184,22 +179,26 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split');
-<<<<<<< HEAD
+        .attr('stroke', 'black')
       
-      var strokeColor = 'black';
-=======
-        .attr('stroke', strokeColor)
-      
->>>>>>> Fixing changes for pull request
       r = split
         .append('rect')
         .on('click', function(datum, index) {
+          console.log("DATUM: " + datum);
+          datum = JSON.stringify(datum);
+          console.log(datum);
+          datum.addClass(datum.uri);
+        }
+          document.getElementById('editButton').disabled = false;
+          document.getElementById('deleteButton').disabled = false;
+          document.getElementById('viewButton').disabled = false;
+          
           chart.setCurrentURI(datum.uri);
           showCurrURI(datum.uri);
-          r = changeColor(r);
+          changeRectOutline(datum.uri);
         })
-        .attr('class', 'split')
-        .attr('stroke-width', '2')
+        .attr('class', 'rect')
+        .attr('stroke-width', '3')
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
