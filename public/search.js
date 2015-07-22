@@ -46,8 +46,33 @@ $('#search').click(function()
     $('#next').css({'visibility': 'visible'});
     $('#prev').css({'visibility': 'visible'});
     displayDocs(firstDoc, lastDoc);
+    
+    var dropDownList = document.getElementById('dropdown');
+    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+    $.ajax(
+    {
+      url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
+      success: function(response, textStatus) 
+      {
+        displayAxis(response);
+      },
+      error: function(jqXHR, textStatus, errorThrown) 
+      {
+        console.log('problem');
+      }
+    });
   }
 );
+
+//function 
+function displayAxis(times)
+{
+  sysStart = times.sysStart;
+  sysEnd = times.sysEnd;
+  valStart = times.valStart;
+  valEnd = times.valEnd;
+}
+
 
 //function when the next button is clicked
 $('#next').click(function()

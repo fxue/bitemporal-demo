@@ -4,9 +4,8 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var uri;
-  var isEditing;
-  var isViewing;
+  var valStart, valEnd, sysStart, sysEnd;
+  var uri, isEditing, isViewing;
   var displayProperty = '';
 
   var margin = {
@@ -35,15 +34,27 @@ var barChart = function() {
     }
 
     function setupXAxis() {
-      var mindate =
-      moment.min(data.map(function(d){
-        return moment(d.content.sysStart);
-      })).toDate();
-      //var maxdate = new Date();
-      var maxdate =
-        moment.max(data.map(function(d){
+      var mindate, maxdate;
+      if (sysStart) {
+        mindate = sysStart.toDate();
+      }
+      else {
+        mindate = moment.min(data.map(function(d){
+          return moment(d.content.sysStart);
+        })).toDate();
+      }
+      if (sysEnd) {
+        maxdate = sysEnd.toDate();
+      }
+      else {
+        maxdate = moment.max(data.map(function(d){
           return moment(d.content.sysStart);
         })).add(10, 'y').toDate();
+      }
+      /*var maxdate =
+        moment.max(data.map(function(d){
+          return moment(d.content.sysStart);
+        })).add(10, 'y').toDate();*/
 
       console.log('xmin='+mindate,' xmax='+maxdate);
 
@@ -67,7 +78,7 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-
+      console.log("Inside y axis setup");
       var mindate =
       moment.min(data.map(function(d){
         return moment(d.content.valStart);
@@ -154,9 +165,13 @@ var barChart = function() {
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
-
+        
     }
 
+    var changeRectOutline = function(datum) {
+      $('rect').attr('stroke', 'red');
+    }
+    
     function addBarChartData() {
 
       split = g.selectAll('.split')
@@ -164,24 +179,25 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split');
-
+        .attr('stroke', 'black')
+      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          if (!chart.getCurrentURI()) {
-            chart.setCurrentURI(datum.uri);
-          }
+          document.getElementById('editButton').disabled = false;
+          document.getElementById('deleteButton').disabled = false;
+          document.getElementById('viewButton').disabled = false;
+          
+          chart.setCurrentURI(datum.uri);
+          showCurrURI(datum.uri);
+          changeRectOutline(datum.uri);
         })
-        .attr('class', 'split')
-        .attr('stroke','black')
-        .attr('stroke-width','2')
+        .attr('class', 'rect')
+        .attr('stroke-width', '3')
         .attr('fill',function(d) {
-          //var colorNum = Math.floor(c%20); c++;
-          //return color(colorNum);
           if(!displayProperty) {
             displayProperty = 'data';
           }
-
           return color(d.content[displayProperty]);
         })
         .attr('x', function(d) {

@@ -8,17 +8,24 @@ function fillText(data, isEditing) {
   clearTextArea();
   var textArea = document.getElementById('contents');
   textArea.value += '{';
+  var strToAdd;
   for (var property in data) {
+    strToAdd = '';
     if (data.hasOwnProperty(property)) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
         data[property] = null;
       }
-      if (textArea.value === '{') {
-        textArea.value += '\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
+      if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
+        strToAdd += ',';
       }
-      else {
-        textArea.value += ',\n\"' + property + '\": ' + '\"'+ data[property] +'\"';
+      strToAdd += '\n\"' + property + '\": ';
+      if (data[property]) {
+        strToAdd += '\"'+ data[property] + '\"';
       }
+      else { // if the property has a null value then don't put quotes around it.
+        strToAdd += data[property];
+      }
+      textArea.value += strToAdd;
     }
   }
   textArea.value += '\n}';
@@ -36,12 +43,18 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
-  chart.setCurrentURI(undefined);
+  $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
+  
+  if (document.getElementById('sysStartBox').value)
+    data.sysStart = document.getElementById('sysStartBox').value;
+  if (document.getElementById('sysEndBox').value)
+    data.sysStart = document.getElementById('sysEndBox').value;
+  
 
   var success = function() {
     alert('PUT call worked, closing textbox.');
@@ -67,7 +80,8 @@ function setupTextArea(uri, isEditing) {
   $('#viewButton').hide();
   $('#deleteButton').hide();
   $('#cancelButton').show();
-  $('#contents').show();
+  $('#contents').show(); 
+  
   if (isEditing) {
     $('#saveButton').show();
   }
@@ -83,10 +97,10 @@ function setupTextArea(uri, isEditing) {
 
 }
 
-
 function view(uri) {
   if (uri) {
     setupTextArea(uri, false); //false so function knows the document is not being edited
+    $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   }
   else {
     alert('Please click a doc first');
@@ -97,6 +111,7 @@ function edit(uri) {
   console.log('Editing ' + uri);
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
+    $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
   }
   else {
     alert('Please click a doc first');
@@ -104,19 +119,18 @@ function edit(uri) {
 }
 
 function deleteDoc(uri) {
-  var origUri = uri;
   if (!uri) { // Not given a valid document uri
     uri = 'addr.json';
   }
   else {
     var lastPeriodLoc = uri.lastIndexOf('.');
     var firstPeriodLoc = uri.indexOf('.');
-    if (lastPeriodLoc !== firstPeriodLoc) { //More than '.', indicates a big number within uri.
+    if (lastPeriodLoc !== firstPeriodLoc) { //More than one '.', indicates a big number within uri.
       uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
     }
   }
   $.ajax({
-    url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri,
+    url: 'http://localhost:3000/v1/documents/?temporal-collection=myTemporal&uri=' + uri, //Need to get actual collection of document
     type: 'DELETE',
     success: function() {
       console.log('Delete worked');
@@ -168,7 +182,6 @@ function addDataToMenu(chart, params) {
       }
     }
   }
-
   var select = document.getElementById('select-prop');  
 
   for(var property in propsInGraph) {
@@ -180,8 +193,6 @@ function addDataToMenu(chart, params) {
   }
 }
 
-
-
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
   $('#editButton').unbind('click');
@@ -192,6 +203,34 @@ var removeButtonEvents = function () {
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
 };
+
+var drawChart = function (params, docProp) {
+  var chart = barChart()
+    .data(params.data)
+    .width(params.width)
+    .height(params.height)
+    //.valStart(params.valStart)
+    //.valEnd(params.valEnd)
+    //.sysStart(params.sysStart)
+    //.sysEnd(params.sysEnd)  
+    .setDisplayProperty(docProp); 
+
+  var selector = '#' + params.containerId;
+  d3.select(selector + ' .chart').remove();
+  d3.select(selector).append('div').classed('chart', true).call(chart);
+
+  return chart;
+};
+
+function showCurrURI(uri) {
+  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
+}
+
+function initButtons() {
+  document.getElementById('editButton').disabled = true;
+  document.getElementById('deleteButton').disabled = true;
+  document.getElementById('viewButton').disabled = true;
+}
 
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
@@ -205,8 +244,9 @@ var getBarChart = function (params, docProp) {
   if(params) {
     addDataToMenu(chart, params);
   }
-
   removeButtonEvents();
+  initButtons();
+  
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });

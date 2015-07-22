@@ -51,10 +51,9 @@ function parseData(data, collection, numParts) {
       OR
         4.) the collection string equals the item's filename. If a collection and a item's uri are both 'intern' without a dot extension.
 
-      If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items.
-*/
+      If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items.*/
       if(collection) {  
-        if (collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
+        if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
           if(collection.substring(collection.lastIndexOf('.')) === item.uri.substring(item.uri.lastIndexOf('.'))) {
             items.push(item);
           }
@@ -62,7 +61,6 @@ function parseData(data, collection, numParts) {
         else if(collection === item.uri) {
           items.push(item);
         }
-      }
     }
 
     else if (parseInt(numParts) === 2) {
@@ -101,6 +99,7 @@ function loadData(collection) {
         data: arrData,
         width: 800,
         height: 600,
+        
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
