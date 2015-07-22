@@ -168,8 +168,13 @@ var barChart = function() {
         
     }
 
+<<<<<<< HEAD
     var changeRectOutline = function() {
       $('rect').attr('stroke', 'red');
+=======
+    var changeRectOutline = function(datum) {
+      $('.'+datum).attr('stroke', 'red');
+>>>>>>> Working to add color on graph
     }
     
     function addBarChartData() {
@@ -184,6 +189,14 @@ var barChart = function() {
       r = split
         .append('rect')
         .on('click', function(datum, index) {
+<<<<<<< HEAD
+=======
+          console.log("DATUM: " + datum);
+          datum = JSON.stringify(datum);
+          console.log(datum);
+          datum.addClass(datum.uri);
+        }
+>>>>>>> Working to add color on graph
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;

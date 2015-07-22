@@ -214,6 +214,13 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
+<<<<<<< HEAD
+=======
+    //.valStart(params.valStart)
+    //.valEnd(params.valEnd)
+    //.sysStart(params.sysStart)
+    //.sysEnd(params.sysEnd)  
+>>>>>>> Working to add color on graph
     .setDisplayProperty(docProp); 
 
   var selector = '#' + params.containerId;
