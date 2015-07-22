@@ -279,11 +279,25 @@ var getBarChart = function (params, docProp) {
 };
 
 var drawChart = function (params, docProp) {
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp);
+
+  if( params.timeRanges ) {
+    var chart = barChart()
+      .data(params.data)
+      .width(params.width)
+      .height(params.height)
+      .xMin(params.timeRanges.sysStart)
+      .xMax(params.timeRanges.sysEnd)
+      .yMin(params.timeRanges.valStart)
+      .yMax(params.timeRanges.valEnd)
+      .setDisplayProperty(docProp);
+  }
+  else {
+    var chart = barChart()
+      .data(params.data)
+      .width(params.width)
+      .height(params.height)
+      .setDisplayProperty(docProp);
+  }
 
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();

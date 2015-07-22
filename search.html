@@ -22,6 +22,44 @@
         font-size: 20px;
       }
 
+      .svg-chart .background {
+        shape-rendering: crispEdges;
+        stroke: #ccc;
+        fill: #fdfdfd;
+        stroke-width: 1px;
+        z-index: 2;
+      }
+      .svg-chart .g { fill: #4682B4; }
+
+      .tooltip-txt {
+        margin: 0;
+        font-family: Helvetica;
+        font-size: 18px;
+        line-height: 18px;
+        font-weight: bold;
+      }
+
+      .axis-label {
+        font-family: Helvetica;
+        font-size: 17px;
+        font-weight: bold;
+      }
+
+      .yaxis {
+        font-size: 14px;
+      }
+      .svg-chart .xaxis .tick text {
+        transform: rotate(-45deg);
+        text-anchor: end !important;
+        font-size: 15px;
+      }
+
+      #bar-chart-large {
+        position: absolute;
+        left: -25px;
+        top: 90px;
+      }
+
       #logo {
         height: 150px;
         width: 600px;
@@ -199,9 +237,20 @@
         <ul id="bulletList"></ul>
       </div>
 
+    <div id="tooltip" class="hidden">
+      <p><span id="value"></span></p>
+    </div>
+
+    <div id="bar-chart-large"></div>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
-    <script src="/public/split.js"></script>
+    <script src="/public/split.js"></script> 
+    <script type="text/javascript" src="public/moment.js"></script>
+    <script type="text/javascript" src="public/d3.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
+    <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
   </body>
 </html>

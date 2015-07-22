@@ -102,6 +102,7 @@ function loadData(collection) {
         
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
+        timeRanges: null,
         containerId: 'bar-chart-large'
       }, null);
       if(arrData.length === 0 && url !== '') {

@@ -75,7 +75,21 @@ function displayAxis(times)
   console.log(sysStart);
   console.log(sysEnd);
 
-  var arrTimes = [valStart, valEnd, sysStart, sysEnd];
+  var timeRanges = {
+    valStart: valStart, 
+    valEnd: valEnd,
+    sysStart: sysStart,
+    sysEnd: sysEnd
+  }
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
 }
 
 //function when the next button is clicked

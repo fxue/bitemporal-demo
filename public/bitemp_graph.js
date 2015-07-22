@@ -30,31 +30,29 @@ var barChart = function() {
     var isViewing = false;
 
     function setDimensions() {
-      axisLabelMargin = 35;
+      axisLabelMargin = 60;
     }
 
     function setupXAxis() {
       var mindate, maxdate;
-      if (sysStart) {
-        mindate = sysStart.toDate();
+      if (xMin) {
+        mindate = xMin;
       }
       else {
-        mindate = moment.min(data.map(function(d){
+        mindate =
+        moment.min(data.map(function(d){
           return moment(d.content.sysStart);
         })).toDate();
       }
-      if (sysEnd) {
-        maxdate = sysEnd.toDate();
+      if (xMax) {
+        maxdate = xMax;
       }
       else {
-        maxdate = moment.max(data.map(function(d){
-          return moment(d.content.sysStart);
-        })).add(10, 'y').toDate();
+        maxdate =
+          moment.max(data.map(function(d){
+            return moment(d.content.sysStart);
+          })).add(10, 'y').toDate();
       }
-      /*var maxdate =
-        moment.max(data.map(function(d){
-          return moment(d.content.sysStart);
-        })).add(10, 'y').toDate();*/
 
       console.log('xmin='+mindate,' xmax='+maxdate);
 
@@ -78,16 +76,25 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-      console.log("Inside y axis setup");
-      var mindate =
-      moment.min(data.map(function(d){
-        return moment(d.content.valStart);
-      })).toDate();
-
-      var maxdate =
-      moment.max(data.map(function(d){
-        return moment(d.content.valStart);
-      })).add(5, 'y').toDate();
+      var mindate, maxdate;
+      if (yMin) {
+        mindate = yMin;
+      }
+      else {
+        mindate =
+        moment.min(data.map(function(d){
+          return moment(d.content.valStart);
+        })).toDate();
+      }
+      if (yMax) {
+        maxdate = yMax;
+      }
+      else {
+        maxdate =
+          moment.max(data.map(function(d){
+            return moment(d.content.valStart);
+          })).add(5, 'y').toDate();
+      }
 
       console.log('ymin='+mindate,' ymax='+maxdate);
 
@@ -310,6 +317,38 @@ var barChart = function() {
       return height;
     }
     height = value;
+    return chart;
+  };
+
+  chart.xMin = function(value) {
+    if (!arguments.length) {
+      return xMin;
+    }
+    xMin = value;
+    return chart;
+  };
+
+  chart.xMax = function(value) {
+    if (!arguments.length) {
+      return xMax;
+    }
+    xMax = value;
+    return chart;
+  };
+
+  chart.yMin = function(value) {
+    if (!arguments.length) {
+      return yMin;
+    }
+    yMin = value;
+    return chart;
+  };
+
+  chart.yMax = function(value) {
+    if (!arguments.length) {
+      return yMax;
+    }
+    yMax = value;
     return chart;
   };
 
