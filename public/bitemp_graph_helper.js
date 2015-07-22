@@ -25,11 +25,6 @@ function fillText(data, isEditing) {
       else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
       }
-        strToAdd += '\"'+ data[property] + '\"';
-      }
-      else { // if the property has a null value then don't put quotes around it.
-        strToAdd += data[property];
-      }
       textArea.value += strToAdd;
     }
   }
