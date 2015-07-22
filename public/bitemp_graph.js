@@ -168,17 +168,8 @@ var barChart = function() {
         
     }
 
-<<<<<<< HEAD
     var changeRectOutline = function() {
       $('rect').attr('stroke', 'red');
-=======
-    var changeRectOutline = function(datum) {
-<<<<<<< HEAD
-      $('.'+datum).attr('stroke', 'red');
->>>>>>> Working to add color on graph
-=======
-      $('rect').attr('stroke', 'red');
->>>>>>> No functionality added, rebasing
     }
     
     function addBarChartData() {
