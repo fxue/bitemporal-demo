@@ -169,7 +169,7 @@ var barChart = function() {
     }
 
     var changeRectOutline = function(datum) {
-      $('.'+datum).attr('stroke', 'red');
+      $('rect').attr('stroke', 'red');
     }
     
     function addBarChartData() {
@@ -184,11 +184,6 @@ var barChart = function() {
       r = split
         .append('rect')
         .on('click', function(datum, index) {
-          console.log("DATUM: " + datum);
-          datum = JSON.stringify(datum);
-          console.log(datum);
-          datum.addClass(datum.uri);
-        }
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
