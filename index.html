@@ -87,18 +87,26 @@
         word-wrap: normal;
       }
 
+      .definition {
+        background-color: #E2E2E2;
+        display: inline-block;
+        font-weight: bold;
+        opacity: .7;
+        cursor: pointer;
+      }
+
 
     </style>
   </head>
 
   <body>
-    <h1><u>MarkLogic Bitemporal Visualization Demo</u></h1>
+    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
     <a href="search" id="searchURL">Click to go to search page</a>
     <div id='instructions'>
       <p>Change the logical document display to the specified URI of a logical document.</p>
       <p>Don't forget to include the "dot extension" ie .json.</p>
 
-      <b>Enter URI:</b><br>
+      <b>Enter <span class= 'definition' title = 'URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource'>URI:</span></b><br>
       <input type="text" name="collection" value="">
       <input type="button" id="pick-doc" value="Submit">
 

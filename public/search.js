@@ -142,17 +142,35 @@ function displayDocs( start, end)
           uriLogical = collArr[t];
         }
       }
-      bullet.append($("<hr id='break'>"));
-      bullet.append($("<em id= 'physicalDoc'>").text(uri + '   '));
-      bullet.append($("<a href = '/?collection="+uriLogical+"' id='links' name="+i+">").text('('+uriLogical+')'));
-
       var sysStart = docs[i].content.sysStart;
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
       var validEnd = docs[i].content.valEnd;
 
-      buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: ', false);
-      buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: ', true);
+      bullet
+        .append($("<hr id='break'>")
+        )
+        .append(
+          $('<div>')
+            .addClass('result')
+            .append(
+              $('<em>')
+                .attr('id', 'physicalDoc')
+                .attr('class', 'definition')
+                .attr('title', 'Physical Document: Represent specific visual effects which are intended to be reproduced in a precise manner, and carry no connotation as to their semantic meaning')
+                .text(uri)
+            )
+            .append(
+              $('<a>')
+                .attr('href', '/?collection='+uriLogical)
+                .attr('class', 'definition')
+                .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
+                .text('('+uriLogical+')')
+            )
+            .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: ', false))
+            .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: ', true))
+            .append('<br>')
+        );
     }
   }
 }
@@ -166,15 +184,30 @@ function displayDocs( start, end)
 */
 function buildDate( startDate, endDate, label )
 {
+  var date = $('<div>').addClass('date');
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
 
-  bullet.append($('<ul id="bold">').text(label));
-  bullet.append( $('<ul>').text(startDate + ' -- ' + endDate));
-  if ( label === 'System Time: ' )
-  {
-    bullet.append($('<p>').text(' '));
+  var def = label;
+  if (label.includes('Valid')) {
+    def += 'The time at which something actually occured';
   }
+  else {
+    def += 'The time at which something is recorded in the database';
+  }
+  date
+    .append(
+      $('<div>')
+        .addClass('definition')
+        .attr('title', def)
+        .text(label)
+    )
+    .append(
+      $('<div>')
+        .text(startDate + ' -- ' + endDate)
+    );
+
+  return date;
 }
 
 /**
@@ -183,11 +216,11 @@ function buildDate( startDate, endDate, label )
  *
  * @param date: the date to shorten
  */
-function shortenDate( date )
-{
+function shortenDate( date ) {
   date = date.toString().split(' ');
   if (date[3] >= '9999') {
     return 'Infinity';
   }
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
 }
+
