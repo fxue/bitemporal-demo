@@ -16,12 +16,12 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-    
+
       h1 {
         text-align: center;
         font-style: italic;
         font-size: 20px;
-      } 
+      }
 
       #instructions {
         position: absolute;
@@ -32,11 +32,7 @@
         width: 25em;
         word-wrap: normal;
       }
-      
-      .split {
-        color: pink;
-      }
-      
+
       #sysTimeBoxes {
         width: 25em;
         word-wrap: normal;
@@ -56,7 +52,7 @@
         top: 400px;
         width: 25em;
       }
-      
+
       .hideSysTimeBoxes {
         visibility: hidden;
       }
@@ -129,10 +125,10 @@
 
       <b>Enter Document Property:</b><br>
       <input type="text" name="documentProperty" value="">
-     
+
       <input type="button" id="change-prop" value="Submit">
       <br><br>
-      
+
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
@@ -175,19 +171,7 @@
       else { //default
         loadData('addr.json');
       }
-      
-      $("input[name='insert']").click(function() {
-        var col = $("input[name='tempcol']").val();
-        var uri = $("input[name='uri']").val();
-        var vs = $("input[name='validstart']").val();
-        var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemstart']").val();
-        var d = $("input[name='content']").val();
-        $.get(
-          "/update?collection"+col+"&uri="+uri+
-          "&validstart="+vs+"&validend="+ve+
-          "&system="+sys+"&content="+d);
-        });
+
     </script>
 
     <div id='editDocDiv'>
@@ -198,12 +182,12 @@
       <button id='saveButton' hidden="true"> Save </button>
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'> 
+      <div id='sysTimeDiv'>
         <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
         <br> <br>
         <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
-        <script> 
-          $('#sysTimeDiv').addClass('hideSysTimeBoxes');   
+        <script>
+          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
         </script>
       </div>
     </div>
