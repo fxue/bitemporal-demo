@@ -1,5 +1,17 @@
 /*globals d3, jQuery, loadData, barChart */
-var drawChart = function (params, docProp) {
+var drawChart = function(params, docProp) {
+  var chart = barChart()
+    .data(params.data)
+    .width(params.width)
+    .height(params.height)
+    .setDisplayProperty(docProp); 
+
+  var selector = '#' + params.containerId;
+  d3.select(selector + ' .chart').remove();
+  d3.select(selector).append('div').classed('chart', true).call(chart);
+
+  return chart;
+};
 
 function clearTextArea() {
   document.getElementById('contents').value = '';
@@ -257,17 +269,4 @@ var getBarChart = function (params, docProp) {
     drawChart(params, selectedText);
     getBarChart(params, selectedText);
   });
-};
-
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp); 
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  return chart;
 };
