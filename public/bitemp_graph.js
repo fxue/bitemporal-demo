@@ -4,8 +4,11 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var valStart, valEnd, sysStart, sysEnd;
   var uri, isEditing, isViewing;
+  var xMin = null;
+  var xMax = null;
+  var yMin = null;
+  var yMax = null;
   var displayProperty = '';
 
   var margin = {
@@ -175,7 +178,7 @@ var barChart = function() {
         
     }
 
-    var changeRectOutline = function(datum) {
+    var changeRectOutline = function() {
       $('rect').attr('stroke', 'red');
     }
     
@@ -185,7 +188,7 @@ var barChart = function() {
         .data(data)
         .enter()
         .append('g')
-        .attr('class','split');
+        .attr('class','split')
         .attr('stroke', 'black')
       
       r = split
@@ -197,7 +200,7 @@ var barChart = function() {
           
           chart.setCurrentURI(datum.uri);
           showCurrURI(datum.uri);
-          changeRectOutline(datum.uri);
+          changeRectOutline();
         })
         .attr('class', 'rect')
         .attr('stroke-width', '3')

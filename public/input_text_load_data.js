@@ -61,6 +61,7 @@ function parseData(data, collection, numParts) {
         else if(collection === item.uri) {
           items.push(item);
         }
+      }
     }
 
     else if (parseInt(numParts) === 2) {
@@ -98,8 +99,7 @@ function loadData(collection) {
       getBarChart({
         data: arrData,
         width: 800,
-        height: 600,
-        
+        height: 600,   
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         timeRanges: null,

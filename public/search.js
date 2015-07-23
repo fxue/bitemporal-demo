@@ -26,6 +26,9 @@ $.ajax(
       for (var k = 0; k < dropArray.length; k++)
       {
         addToDrop.append($('<option>').text(dropArray[k])) ;
+        if( k === 0 ) {
+          ajaxTimesCall(dropArray[k]);
+        }
       }
     },
     error: function(jqXHR, textStatus, errorThrown)
@@ -41,45 +44,49 @@ var bullet = $('#bulletList');
 //function when search button is clicked
 $('#search').click(function()
   {
-
     firstDoc = 1;
     lastDoc = 10;
     $('#next').css({'visibility': 'visible'});
     $('#prev').css({'visibility': 'visible'});
     displayDocs(firstDoc, lastDoc);
+  }
+);
+
+$('#dropdown').change(function()
+  {
+    firstDoc = 1;
+    lastDoc = 10;
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    $.ajax(
+    ajaxTimesCall(selectedColl);
+  }
+);
+
+function ajaxTimesCall(selectedColl)
+{
+  $.ajax(
     {
       url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
       success: function(response, textStatus) 
       {
-        displayAxis(response);
+        var timeRanges = displayAxis(response);
       },
       error: function(jqXHR, textStatus, errorThrown) 
       {
         console.log('problem');
+        alert('There are no documents in this temporal collection');
       }
     });
-  }
-);
+}
 
 //function 
 function displayAxis(times)
 {
-  sysStart = times.sysStart;
-  sysEnd = times.sysEnd;
-  valStart = times.valStart;
-  valEnd = times.valEnd;
-
-  console.log(sysStart);
-  console.log(sysEnd);
-
   var timeRanges = {
-    valStart: valStart, 
-    valEnd: valEnd,
-    sysStart: sysStart,
-    sysEnd: sysEnd
+    valStart: new Date(times.valStart), 
+    valEnd: new Date(times.valEnd),
+    sysStart: new Date(times.sysStart),
+    sysEnd: new Date(times.sysEnd)
   }
   getBarChart({
     data: [],
@@ -118,7 +125,7 @@ $('#prev').click(function()
 * @param start: the index of the first document you want to display
 * @param end: the index of the last document you want to display (will always be 9 greater than start)
 */
-function displayDocs( start, end)
+function displayDocs( start, end, timeRanges)
 {
   $('#bulletList').empty();
   var dropDownList = document.getElementById('dropdown');
@@ -139,8 +146,9 @@ function displayDocs( start, end)
     }
   });
 
-  function onDisplayDocs(data, textStatus, response)
+  function onDisplayDocs(data, textStatus, response )
   {
+    var docs;
     //console.log('got collections: ' + data);
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if( totalDocLen > 0 )
