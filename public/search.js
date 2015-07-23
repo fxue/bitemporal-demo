@@ -1,10 +1,9 @@
-var firstDoc;
-var lastDoc;
-
+var firstDoc, lastDoc;
+/* global displayAxis, parseData */
 //call to get the list of temporal collection
 $.ajax(
   {
-    url: "/manage/v2/databases/Documents/temporal/collections?format=json",
+    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
     success: function(response, textStatus)
     {
       console.log('got collections: ' + JSON.stringify(response));
@@ -64,16 +63,6 @@ $('#search').click(function()
   }
 );
 
-//function 
-function displayAxis(times)
-{
-  sysStart = times.sysStart;
-  sysEnd = times.sysEnd;
-  valStart = times.valStart;
-  valEnd = times.valEnd;
-}
-
-
 //function when the next button is clicked
 $('#next').click(function()
   {
@@ -109,7 +98,7 @@ function displayDocs( start, end)
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   var docs = $.ajax(
   {
-    url: "/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22"+selectedColl+"%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start="+start,
+    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22"+selectedColl+"%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
     headers:
     {
       'Accept': 'multipart/mixed'
@@ -134,7 +123,7 @@ function displayDocs( start, end)
     // and disables or enables the next/previous buttons based on those indexes.
     document.getElementById('prev').disabled = start <= 1;
 
-    if( end >= totalDocLen)
+    if (end >= totalDocLen)
     {
       document.getElementById('next').disabled = true;
       end = totalDocLen;
@@ -173,7 +162,7 @@ function displayDocs( start, end)
       var validEnd = docs[i].content.valEnd;
 
       bullet
-        .append($("<hr id='break'>")
+        .append($('<hr id=\'break\'>')
         )
         .append(
           $('<div>')
@@ -203,8 +192,8 @@ function displayDocs( start, end)
 /**
 * Appends the dates to the bullet list.
 *
-* @param start date: the starting date
-* @param end date: the end date
+* @param startDate: the starting date
+* @param endate: the end date
 * @param label: either 'System Time' or 'Valid Time'
 */
 function buildDate( startDate, endDate, label )

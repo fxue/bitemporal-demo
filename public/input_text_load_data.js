@@ -1,4 +1,5 @@
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
+/* global getBarChart */
 function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
   var items = [];
@@ -59,6 +60,7 @@ function parseData(data, collection, numParts) {
         else if(collection === item.uri) {
           items.push(item);
         }
+      }
     }
 
     else if (parseInt(numParts) === 2) {
@@ -81,6 +83,7 @@ function loadData(collection) {
   else {
     collection = 'addr.json';
   }
+  
   $.ajax({
     url: '/v1/search?pageLength=1000',
     data: {
@@ -91,13 +94,12 @@ function loadData(collection) {
     headers: {
       Accept: 'multipart/mixed'
     },
-    success: function ( data ) { 
+    success: function(data) { 
       var arrData = parseData(data, collection, 1);
       getBarChart({
         data: arrData,
         width: 800,
         height: 600,
-        
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         containerId: 'bar-chart-large'
@@ -107,13 +109,14 @@ function loadData(collection) {
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
-    // something went wrong. Take a look in jqXHR and find the status code
+      // something went wrong. Take a look in jqXHR and find the status code
       if(textStatus === 'error') {
         window.alert('ERROR!\n\nThe error status is ' + jqXHR.status + '. The error thrown is ' + errorThrown + '.');
         return false;
       }
     }
-  }); 
+  });
+
 }
 
 $('#pick-doc').click( function() {
@@ -127,8 +130,3 @@ $('#pick-doc').click( function() {
     loadData(uriCollection);
   }
 });
-
-
-
-
-

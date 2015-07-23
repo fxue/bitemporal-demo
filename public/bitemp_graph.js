@@ -1,12 +1,17 @@
 /*global d3, moment */
 
+function showCurrURI(uri) {
+  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
+}
+
 var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var valStart, valEnd, sysStart, sysEnd;
+  var sysStart, sysEnd;
   var uri, isEditing, isViewing;
   var displayProperty = '';
+  var lastDoc;
 
   var margin = {
     top: 10,
@@ -25,16 +30,19 @@ var barChart = function() {
   var axisLabelMargin;
 
   var chart = function(container) {
-    var uri = undefined;
-    var isEditing = false;
-    var isViewing = false;
 
+    for (var prop in container) {
+      if (container.hasOwnProperty(prop))
+        console.log(prop);
+    }
+  
     function setDimensions() {
       axisLabelMargin = 35;
     }
 
     function setupXAxis() {
       var mindate, maxdate;
+      
       if (sysStart) {
         mindate = sysStart.toDate();
       }
@@ -51,12 +59,6 @@ var barChart = function() {
           return moment(d.content.sysStart);
         })).add(10, 'y').toDate();
       }
-      /*var maxdate =
-        moment.max(data.map(function(d){
-          return moment(d.content.sysStart);
-        })).add(10, 'y').toDate();*/
-
-      console.log('xmin='+mindate,' xmax='+maxdate);
 
       xScale = d3.time.scale()
         .domain([mindate, maxdate])
@@ -78,7 +80,6 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-      console.log("Inside y axis setup");
       var mindate =
       moment.min(data.map(function(d){
         return moment(d.content.valStart);
@@ -95,6 +96,7 @@ var barChart = function() {
         .domain([mindate, maxdate])
         .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
 
+      var yAxisCssClass;
       if (data.length > 12 && width < 500) {
         yAxisCssClass = 'axis-font-small';
       } else {
@@ -167,9 +169,12 @@ var barChart = function() {
         .attr('height', height - margin.top - margin.bottom);
         
     }
-
-    var changeRectOutline = function() {
-      $('rect').attr('stroke', 'red');
+    function setLastDoc(ld) {
+      lastDoc = ld;
+    }
+    
+    function getLastDoc() {
+      return lastDoc;
     }
     
     function addBarChartData() {
@@ -180,7 +185,7 @@ var barChart = function() {
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
-      
+      var r;
       r = split
         .append('rect')
         .on('click', function(datum, index) {
@@ -188,12 +193,21 @@ var barChart = function() {
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
           
-          chart.setCurrentURI(datum.uri);
-          showCurrURI(datum.uri);
-          changeRectOutline(datum.uri);
+          if (!chart.getEditing() && !chart.getViewing()) {
+            chart.setCurrentURI(datum.uri);
+            showCurrURI(datum.uri);
+            //Selection of a box in graph visualization
+          $(this).attr('stroke', 'black');
+          $(this).attr('stroke-width', '4');
+          if (getLastDoc() !== this) {
+            $(getLastDoc()).attr('stroke', 'grey');
+            $(getLastDoc()).attr('stroke-width', '0');
+          }
+          setLastDoc(this);
+          }
         })
-        .attr('class', 'rect')
-        .attr('stroke-width', '3')
+        .attr('stroke', 'grey')
+        .attr('stroke-width', '2')
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
