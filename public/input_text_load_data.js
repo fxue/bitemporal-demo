@@ -46,12 +46,12 @@ function parseData(data, collection, numParts) {
       /* conditional checks that
       1.) numParts param is 1, item's content is not null
       2.) collection param exists and is not null
-      and either 
+      and either
         3.) collection specified is not null AND the collection's substring up until the first '.'' is the same string as the item's filename's substring up to the first '.'. Also the collection's substring after the last '.' must be the same string as the item's filename's substring after the last '.'. Thus 'addr.json' has the same substring as 'addr.48324723423.json' since 'addr' === 'addr' and '.json' === '.json'.
       OR
         4.) the collection string equals the item's filename. If a collection and a item's uri are both 'intern' without a dot extension.
       If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items.*/
-      if(collection) {  
+      if(collection) {
         if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
           if(collection.substring(collection.lastIndexOf('.')) === item.uri.substring(item.uri.lastIndexOf('.'))) {
             items.push(item);
@@ -83,7 +83,7 @@ function loadData(collection) {
   else {
     collection = 'addr.json';
   }
-  
+
   $.ajax({
     url: '/v1/search?pageLength=1000',
     data: {
@@ -94,7 +94,7 @@ function loadData(collection) {
     headers: {
       Accept: 'multipart/mixed'
     },
-    success: function(data) { 
+    success: function(data) {
       var arrData = parseData(data, collection, 1);
       getBarChart({
         data: arrData,

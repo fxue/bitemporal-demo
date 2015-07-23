@@ -45,17 +45,17 @@ $('#search').click(function()
     $('#next').css({'visibility': 'visible'});
     $('#prev').css({'visibility': 'visible'});
     displayDocs(firstDoc, lastDoc);
-    
+
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
     $.ajax(
     {
       url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
-      success: function(response, textStatus) 
+      success: function(response, textStatus)
       {
         displayAxis(response);
       },
-      error: function(jqXHR, textStatus, errorThrown) 
+      error: function(jqXHR, textStatus, errorThrown)
       {
         console.log('problem');
       }

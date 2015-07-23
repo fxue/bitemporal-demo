@@ -35,14 +35,14 @@ var barChart = function() {
       if (container.hasOwnProperty(prop))
         console.log(prop);
     }
-  
+
     function setDimensions() {
       axisLabelMargin = 35;
     }
 
     function setupXAxis() {
       var mindate, maxdate;
-      
+
       if (sysStart) {
         mindate = sysStart.toDate();
       }
@@ -167,16 +167,16 @@ var barChart = function() {
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
-        
+
     }
     function setLastDoc(ld) {
       lastDoc = ld;
     }
-    
+
     function getLastDoc() {
       return lastDoc;
     }
-    
+
     function addBarChartData() {
 
       split = g.selectAll('.split')
@@ -192,7 +192,7 @@ var barChart = function() {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
-          
+
           if (!chart.getEditing() && !chart.getViewing()) {
             chart.setCurrentURI(datum.uri);
             showCurrURI(datum.uri);
