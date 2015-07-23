@@ -239,16 +239,6 @@ function buildDate( startDate, endDate, label )
   var date = $('<div>').addClass('date');
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
-  
-  var def = label;
-  if( label.includes('Valid') )
-  {
-    def += 'The time at which something actually occured';
-  }
-  else
-  {
-    def += 'The time at which something is recorded in the database.'
-  }
 
   var def = label;
   if (label.includes('Valid')) {
