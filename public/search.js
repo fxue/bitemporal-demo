@@ -37,9 +37,71 @@ $.ajax(
     }
   });
 
+$('#dropdown').change(function()
+  {
+    firstDoc = 1;
+    lastDoc = 10;
+    var dropDownList = document.getElementById('dropdown');
+    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+    ajaxTimesCall(selectedColl);
+  }
+);
 
-//variable name for the bullet tag
-var bullet = $('#bulletList');
+//function to make ajax call to get min and max times
+function ajaxTimesCall(selectedColl)
+{
+  $.ajax(
+    {
+      url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
+      success: function(response, textStatus) 
+      {
+        displayAxis(response);
+      },
+      error: function(jqXHR, textStatus, errorThrown) 
+      {
+        console.log('problem');
+      }
+    });
+}
+
+//function to display axis
+function displayAxis(times)
+{
+  var showAlertBox;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart), 
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+function toReturnDate(time) {
+  if( time ) {
+    return new Date(time);
+  }
+  else {
+    return null;
+  }
+}
 
 //function when search button is clicked
 $('#search').click(function()
@@ -51,53 +113,6 @@ $('#search').click(function()
     displayDocs(firstDoc, lastDoc);
   }
 );
-
-$('#dropdown').change(function()
-  {
-    firstDoc = 1;
-    lastDoc = 10;
-    var dropDownList = document.getElementById('dropdown');
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    ajaxTimesCall(selectedColl);
-  }
-);
-
-function ajaxTimesCall(selectedColl)
-{
-  $.ajax(
-    {
-      url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
-      success: function(response, textStatus) 
-      {
-        var timeRanges = displayAxis(response);
-      },
-      error: function(jqXHR, textStatus, errorThrown) 
-      {
-        console.log('problem');
-        alert('There are no documents in this temporal collection');
-      }
-    });
-}
-
-//function 
-function displayAxis(times)
-{
-  var timeRanges = {
-    valStart: new Date(times.valStart), 
-    valEnd: new Date(times.valEnd),
-    sysStart: new Date(times.sysStart),
-    sysEnd: new Date(times.sysEnd)
-  }
-  getBarChart({
-    data: [],
-    width: 800,
-    height: 600,
-    xAxisLabel: 'System',
-    yAxisLabel: 'Valid',
-    timeRanges: timeRanges,
-    containerId: 'bar-chart-large'
-  }, null);
-}
 
 //function when the next button is clicked
 $('#next').click(function()
@@ -125,9 +140,10 @@ $('#prev').click(function()
 * @param start: the index of the first document you want to display
 * @param end: the index of the last document you want to display (will always be 9 greater than start)
 */
-function displayDocs( start, end, timeRanges)
+function displayDocs( start, end)
 {
-  $('#bulletList').empty();
+  var bullet = $('#bulletList');
+  bullet.empty();
   var dropDownList = document.getElementById('dropdown');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
 

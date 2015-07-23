@@ -229,38 +229,40 @@ var getBarChart = function (params, docProp) {
   if(params) {
     addDataToMenu(chart, params);
   }
-  // removeButtonEvents();
-  // initButtons();
-  
-  // $('#editButton').click(function() {
-  //   edit(chart.getCurrentURI());
-  // });
+  removeButtonEvents();
+  if( params.timeRanges === null) {
+    initButtons();
+  }
 
-  // $('#deleteButton').click(function() {
-  //   deleteDoc(chart.getCurrentURI(),chart.get);
-  // });
+  $('#editButton').click(function() {
+    edit(chart.getCurrentURI());
+  });
 
-  // $('#cancelButton').click(function() {
-  //   cancel(chart);
-  // });
+  $('#deleteButton').click(function() {
+    deleteDoc(chart.getCurrentURI(),chart.get);
+  });
 
-  // $('#viewButton').click(function() {
-  //   view(chart.getCurrentURI());
-  // });
+  $('#cancelButton').click(function() {
+    cancel(chart);
+  });
 
-  // $('#saveButton').click(function() {
-  //   save(chart);
-  // });
+  $('#viewButton').click(function() {
+    view(chart.getCurrentURI());
+  });
 
-  // $('#change-prop').click(function() {
-  //   changeTextInGraph(chart, params);
-  // });
+  $('#saveButton').click(function() {
+    save(chart);
+  });
 
-  // $('#select-prop').change(function() {
-  //   var selectedText = $(this).find('option:selected').text();
-  //   drawChart(params, selectedText);
-  //   getBarChart(params, selectedText);
-  // });
+  $('#change-prop').click(function() {
+    changeTextInGraph(chart, params);
+  });
+
+  $('#select-prop').change(function() {
+    var selectedText = $(this).find('option:selected').text();
+    drawChart(params, selectedText);
+    getBarChart(params, selectedText);
+  });
 };
 
 var drawChart = function (params, docProp) {
