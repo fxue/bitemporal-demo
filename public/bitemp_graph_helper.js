@@ -1,4 +1,31 @@
-/*global d3 */
+/*globals d3, jQuery, loadData, barChart */
+var drawChart = function(params, docProp) {
+  var chart;
+  if( params.timeRanges ) {
+    chart = barChart()
+      .data(params.data)
+      .width(params.width)
+      .height(params.height)
+      .xMin(params.timeRanges.sysStart)
+      .xMax(params.timeRanges.sysEnd)
+      .yMin(params.timeRanges.valStart)
+      .yMax(params.timeRanges.valEnd)
+      .setDisplayProperty(docProp);
+  }
+  else {
+    chart = barChart()
+      .data(params.data)
+      .width(params.width)
+      .height(params.height)
+      .setDisplayProperty(docProp);
+  }
+
+  var selector = '#' + params.containerId;
+  d3.select(selector + ' .chart').remove();
+  d3.select(selector).append('div').classed('chart', true).call(chart);
+
+  return chart;
+};
 
 function clearTextArea() {
   document.getElementById('contents').value = '';
@@ -30,7 +57,6 @@ function fillText(data, isEditing) {
   }
   textArea.value += '\n}';
   textArea.readOnly = !isEditing;
-
 }
 
 function cancel(chart) {
@@ -47,21 +73,22 @@ function cancel(chart) {
 }
 
 function save(chart) {
-  data = document.getElementById('contents').value.replace(/\n/g, '');
+  var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
 
-  if (document.getElementById('sysStartBox').value)
+  if (document.getElementById('sysStartBox').value) {
     data.sysStart = document.getElementById('sysStartBox').value;
-  if (document.getElementById('sysEndBox').value)
+  }
+  if (document.getElementById('sysEndBox').value) {
     data.sysStart = document.getElementById('sysEndBox').value;
-
+  }
 
   var success = function() {
-    alert('PUT call worked, closing textbox.');
+    window.alert('PUT call worked, closing textbox.');
     cancel(chart);
   };
   var fail = function(data) {
-    alert('PUT didn\'t work: ' + data);
+    window.alert('PUT didn\'t work: ' + data);
   };
   console.log('Saving');   //Only working on mac, bug filed with MarkLogic
   $.ajax({
@@ -103,18 +130,17 @@ function view(uri) {
     $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   }
   else {
-    alert('Please click a doc first');
+    window.alert('Please click a doc first');
   }
 }
 
 function edit(uri) {
-  console.log('Editing ' + uri);
   if (uri) {
     setupTextArea(uri, true); //true so function knows the document is being edited
     $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
   }
   else {
-    alert('Please click a doc first');
+    window.alert('Please click a doc first');
   }
 }
 
@@ -137,7 +163,7 @@ function deleteDoc(uri) {
       loadData(uri);
     },
     error: function() {
-      alert('Delete failed');
+      window.alert('Delete failed');
     },
     format: 'json'
   });
@@ -207,14 +233,11 @@ var removeButtonEvents = function () {
   $('#select-prop').unbind('change');
 };
 
-function showCurrURI(uri) {
-  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
-}
-
 function initButtons() {
   document.getElementById('editButton').disabled = true;
   document.getElementById('deleteButton').disabled = true;
   document.getElementById('viewButton').disabled = true;
+  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + 'null'.bold();
 }
 
 var getBarChart = function (params, docProp) {
@@ -226,7 +249,7 @@ var getBarChart = function (params, docProp) {
     chart = drawChart(params, null);
   }
 
-  if(params) {
+  if (params) {
     addDataToMenu(chart, params);
   }
   removeButtonEvents();
@@ -236,6 +259,7 @@ var getBarChart = function (params, docProp) {
 
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
+    chart.setEditing(true);
   });
 
   $('#deleteButton').click(function() {
@@ -248,6 +272,7 @@ var getBarChart = function (params, docProp) {
 
   $('#viewButton').click(function() {
     view(chart.getCurrentURI());
+    chart.setViewing(true);
   });
 
   $('#saveButton').click(function() {
@@ -263,32 +288,4 @@ var getBarChart = function (params, docProp) {
     drawChart(params, selectedText);
     getBarChart(params, selectedText);
   });
-};
-
-var drawChart = function (params, docProp) {
-
-  if( params.timeRanges ) {
-    var chart = barChart()
-      .data(params.data)
-      .width(params.width)
-      .height(params.height)
-      .xMin(params.timeRanges.sysStart)
-      .xMax(params.timeRanges.sysEnd)
-      .yMin(params.timeRanges.valStart)
-      .yMax(params.timeRanges.valEnd)
-      .setDisplayProperty(docProp);
-  }
-  else {
-    var chart = barChart()
-      .data(params.data)
-      .width(params.width)
-      .height(params.height)
-      .setDisplayProperty(docProp);
-  }
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  return chart;
 };

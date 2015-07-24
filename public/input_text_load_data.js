@@ -1,4 +1,5 @@
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
+/* global getBarChart */
 function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
   var items = [];
@@ -49,7 +50,6 @@ function parseData(data, collection, numParts) {
         3.) collection specified is not null AND the collection's substring up until the first '.'' is the same string as the item's filename's substring up to the first '.'. Also the collection's substring after the last '.' must be the same string as the item's filename's substring after the last '.'. Thus 'addr.json' has the same substring as 'addr.48324723423.json' since 'addr' === 'addr' and '.json' === '.json'.
       OR
         4.) the collection string equals the item's filename. If a collection and a item's uri are both 'intern' without a dot extension.
-
       If 1, 2, and 3 are met OR 1, 2, and 4 are met, then push the object item to the array items.*/
       if(collection) {
         if (collection && collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) {
@@ -83,6 +83,7 @@ function loadData(collection) {
   else {
     collection = 'addr.json';
   }
+
   $.ajax({
     url: '/v1/search?pageLength=1000',
     data: {
@@ -93,7 +94,7 @@ function loadData(collection) {
     headers: {
       Accept: 'multipart/mixed'
     },
-    success: function ( data ) {
+    success: function(data) {
       var arrData = parseData(data, collection, 1);
       getBarChart({
         data: arrData,
@@ -109,7 +110,7 @@ function loadData(collection) {
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
-    // something went wrong. Take a look in jqXHR and find the status code
+      // something went wrong. Take a look in jqXHR and find the status code
       if(textStatus === 'error') {
         window.alert('ERROR!\n\nThe error status is ' + jqXHR.status + '. The error thrown is ' + errorThrown + '.');
         return false;
@@ -129,8 +130,3 @@ $('#pick-doc').click( function() {
     loadData(uriCollection);
   }
 });
-
-
-
-
-
