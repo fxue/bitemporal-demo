@@ -231,13 +231,9 @@ var barChart = function() {
         .attr('stroke', 'black');
 
       var r;
-<<<<<<< HEAD
-      r = split.append('rect')
-=======
       
       r = split
         .append('rect')
->>>>>>> trying to rebase
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -308,15 +304,15 @@ var barChart = function() {
           var barx1 = xScale(moment(d.content.sysStart).toDate());
           var barx2;
           if (!d.content.sysEnd) {
-            return 0;
+            return 75;
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return barx1;
+            return (barx1+barx2)/2 + 40;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
-            return (barx1+barx2)/2;
+            return (barx1+barx2)/2 + 40;
           }
         })
         .attr('y', function(d) {
@@ -348,8 +344,22 @@ var barChart = function() {
             }   
           }
           
-        });
+            str = path(d, 'content.' + displayProperty);
+          }
+          var alreadyInGraph = false;
+          for(var i = 0; i < displayedProps.length; i++) {
+            if(displayedProps[i] === str) {
+              alreadyInGraph = true;
+            } 
+          }
+          if(alreadyInGraph === false) {
+            displayedProps.push(str);
+            return str;
+          }
+        })
+        .call(wrapText, 225);
     }
+
 
     function path(object, fullPath) {
       var selection = object;
