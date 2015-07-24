@@ -49,12 +49,12 @@ function cancel(chart) {
 function save(chart) {
   data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
-  
+
   if (document.getElementById('sysStartBox').value)
     data.sysStart = document.getElementById('sysStartBox').value;
   if (document.getElementById('sysEndBox').value)
     data.sysStart = document.getElementById('sysEndBox').value;
-  
+
 
   var success = function() {
     alert('PUT call worked, closing textbox.');
@@ -80,8 +80,8 @@ function setupTextArea(uri, isEditing) {
   $('#viewButton').hide();
   $('#deleteButton').hide();
   $('#cancelButton').show();
-  $('#contents').show(); 
-  
+  $('#contents').show();
+
   if (isEditing) {
     $('#saveButton').show();
   }
@@ -154,7 +154,7 @@ function changeTextInGraph(chart, params) {
     for(var prop in params.data[i].content) {
       if (params.data[i].content.hasOwnProperty(prop)) {
         if(prop === docProp) {
-          propExists = true;            
+          propExists = true;
         }
       }
     }
@@ -173,7 +173,7 @@ function changeTextInGraph(chart, params) {
 function addDataToMenu(chart, params) {
   $('#select-prop').empty();
   var propsInGraph = {};
-  propsInGraph['Choose a property'] = true;  
+  propsInGraph['Choose a property'] = true;
 
   for(var i = 0; i < params.data.length; i++) {
     for(var prop in params.data[i].content) {
@@ -182,7 +182,7 @@ function addDataToMenu(chart, params) {
       }
     }
   }
-  var select = document.getElementById('select-prop');  
+  var select = document.getElementById('select-prop');
 
   for(var property in propsInGraph) {
     var opt = property;
@@ -209,11 +209,7 @@ var drawChart = function (params, docProp) {
     .data(params.data)
     .width(params.width)
     .height(params.height)
-    //.valStart(params.valStart)
-    //.valEnd(params.valEnd)
-    //.sysStart(params.sysStart)
-    //.sysEnd(params.sysEnd)  
-    .setDisplayProperty(docProp); 
+    .setDisplayProperty(docProp);
 
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
@@ -246,7 +242,7 @@ var getBarChart = function (params, docProp) {
   }
   removeButtonEvents();
   initButtons();
-  
+
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
@@ -278,16 +274,3 @@ var getBarChart = function (params, docProp) {
   });
 };
 
-var drawChart = function (params, docProp) {
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp);
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  return chart;
-};
