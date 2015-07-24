@@ -7,7 +7,7 @@ $.ajax(
     url: "/manage/v2/databases/Documents/temporal/collections?format=json",
     success: function(response, textStatus)
     {
-      console.log('got collections: ' + JSON.stringify(response));
+      //console.log('got collections: ' + JSON.stringify(response));
       //adds names of the collections to the drop down list
       var addToDrop = $('#dropdown');
       //endpoint is the number of collections
@@ -26,6 +26,9 @@ $.ajax(
       for (var k = 0; k < dropArray.length; k++)
       {
         addToDrop.append($('<option>').text(dropArray[k])) ;
+        if( k === 0 ) {
+          ajaxTimesCall(dropArray[k]);
+        }
       }
     },
     error: function(jqXHR, textStatus, errorThrown)
@@ -34,22 +37,20 @@ $.ajax(
     }
   });
 
-
-//variable name for the bullet tag
-var bullet = $('#bulletList');
-
-//function when search button is clicked
-$('#search').click(function()
+$('#dropdown').change(function()
   {
     firstDoc = 1;
     lastDoc = 10;
-    $('#next').css({'visibility': 'visible'});
-    $('#prev').css({'visibility': 'visible'});
-    displayDocs(firstDoc, lastDoc);
-    
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    $.ajax(
+    ajaxTimesCall(selectedColl);
+  }
+);
+
+//function to make ajax call to get min and max times
+function ajaxTimesCall(selectedColl)
+{
+  $.ajax(
     {
       url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
       success: function(response, textStatus) 
@@ -61,18 +62,57 @@ $('#search').click(function()
         console.log('problem');
       }
     });
-  }
-);
-
-//function 
-function displayAxis(times)
-{
-  sysStart = times.sysStart;
-  sysEnd = times.sysEnd;
-  valStart = times.valStart;
-  valEnd = times.valEnd;
 }
 
+//function to display axis
+function displayAxis(times)
+{
+  var showAlertBox;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart), 
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+function toReturnDate(time) {
+  if( time ) {
+    return new Date(time);
+  }
+  else {
+    return null;
+  }
+}
+
+//function when search button is clicked
+$('#search').click(function()
+  {
+    firstDoc = 1;
+    lastDoc = 10;
+    $('#next').css({'visibility': 'visible'});
+    $('#prev').css({'visibility': 'visible'});
+    displayDocs(firstDoc, lastDoc);
+  }
+);
 
 //function when the next button is clicked
 $('#next').click(function()
@@ -102,7 +142,8 @@ $('#prev').click(function()
 */
 function displayDocs( start, end)
 {
-  $('#bulletList').empty();
+  var bullet = $('#bulletList');
+  bullet.empty();
   var dropDownList = document.getElementById('dropdown');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
 
@@ -121,9 +162,10 @@ function displayDocs( start, end)
     }
   });
 
-  function onDisplayDocs(data, textStatus, response)
+  function onDisplayDocs(data, textStatus, response )
   {
-    console.log('got collections: ' + data);
+    var docs;
+    //console.log('got collections: ' + data);
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if( totalDocLen > 0 )
     {
@@ -167,6 +209,7 @@ function displayDocs( start, end)
           uriLogical = collArr[t];
         }
       }
+
       var sysStart = docs[i].content.sysStart;
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
@@ -248,4 +291,3 @@ function shortenDate( date ) {
   }
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
 }
-

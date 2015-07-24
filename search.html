@@ -22,6 +22,44 @@
         font-size: 20px;
       }
 
+      .svg-chart .background {
+        shape-rendering: crispEdges;
+        stroke: #ccc;
+        fill: #fdfdfd;
+        stroke-width: 1px;
+        z-index: 2;
+      }
+      .svg-chart .g { fill: #4682B4; }
+
+      .tooltip-txt {
+        margin: 0;
+        font-family: Helvetica;
+        font-size: 18px;
+        line-height: 18px;
+        font-weight: bold;
+      }
+
+      .axis-label {
+        font-family: Helvetica;
+        font-size: 17px;
+        font-weight: bold;
+      }
+
+      .yaxis {
+        font-size: 14px;
+      }
+      .svg-chart .xaxis .tick text {
+        transform: rotate(-45deg);
+        text-anchor: end !important;
+        font-size: 15px;
+      }
+
+      #bar-chart-large {
+        position: absolute;
+        left: -25px;
+        top: 90px;
+      }
+
       #logo {
         height: 150px;
         width: 600px;
@@ -64,7 +102,6 @@
 
       #bold {
         font-weight: bold;
-
       }
 
       #dropdown:hover {
@@ -89,7 +126,7 @@
         position: relative;
         left: -40px;
         top: 105px;
-        font-size: 1.1em;
+        font-size: 1.0em;
       }
 
       #search {
@@ -145,7 +182,7 @@
       }
 
       #physicalDoc {
-        font-size: 1.22em;
+        font-size: 1.25em;
       }
 
       #page {
@@ -159,6 +196,7 @@
         color: blue;
         margin-left: 5px;
       }
+
       .result .date {
         margin-left: 40px;
       }
@@ -175,14 +213,13 @@
 
   </head>
   <body>
-    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Search Page</h1>
+    <h1>MarkLogic <span class= 'definition' title= 'Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.'>Bitemporal</span> Search Page</h1>
     <a href="/" id="homeURL">Click to go to home page</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <a href="http://www.marklogic.com/"> <img id="logo" src="http://siliconangle.tv/wp-content/uploads/2015/03/StorageReview-MarkLogic-Logo.jpg"></img></a>
     <div id= "page">
-      <p id="instructSelect">Select a <span class='definition' title='Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices'>Temporal Collection</span></p>
+      <p id="instructSelect">Select a <span class= 'definition' title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
       <select id="dropdown"></select>
       <button type="button" id="search">Search</button>
       <button type="button" id="next">Next</button>
@@ -191,9 +228,19 @@
         <ul id="bulletList"></ul>
       </div>
 
+    <div id="tooltip" class="hidden">
+      <p><span id="value"></span></p>
+    </div>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
-    <script src="/public/input_text_load_data.js"></script>
+    <script type="text/javascript" src="public/moment.js"></script>
+    <script type="text/javascript" src="public/d3.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
+    <script type="text/javascript" src="public/input_text_load_data.js"></script>
+
+    <div id="bar-chart-large"></div>
 
   </body>
 </html>

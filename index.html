@@ -27,9 +27,8 @@
         position: absolute;
         left: 850px;
         top: 78px;
-        font-style: italic;
         font-size: 13px;
-        width: 25em;
+        width: 24em;
         word-wrap: normal;
       }
 
@@ -37,6 +36,7 @@
         width: 25em;
         word-wrap: normal;
         font-size: 13px;
+        font-style: italic;
       }
 
       #searchURL {
@@ -98,6 +98,15 @@
         word-wrap: normal;
       }
 
+      #uriEntered {
+        font-size: 16px;
+        position: absolute;
+        left: 5px;
+        top: 20px;
+        width: 25em;
+        word-wrap: normal;
+      }
+
       .definition {
         background-color: #E2E2E2;
         display: inline-block;
@@ -137,6 +146,7 @@
     <p id="uriEntered"></p>
 
     <br></br>
+   <!--onClick="location.href='/'"-->
 
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
@@ -163,6 +173,7 @@
         }
       }
 
+
       var uri = $.urlParam('collection');
       if( uri !== null ) {
         loadData(uri);
@@ -173,7 +184,6 @@
       }
 
     </script>
-
     <div id='editDocDiv'>
       <p id='selectedURI'> Selected URI: <b> null </b></p>
       <button id='editButton' > Edit </button>

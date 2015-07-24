@@ -171,25 +171,28 @@ function changeTextInGraph(chart, params) {
 }
 
 function addDataToMenu(chart, params) {
-  $('#select-prop').empty();
-  var propsInGraph = {};
-  propsInGraph['Choose a property'] = true;
+  if(params.timeRanges === null && params.data.length <= 0) {
+    console.log('DoesNOThaveTimeRanges');
+    $('#select-prop').empty();
+    var propsInGraph = {};
+    propsInGraph['Choose a property'] = true;
 
-  for(var i = 0; i < params.data.length; i++) {
-    for(var prop in params.data[i].content) {
-      if (params.data[i].content.hasOwnProperty(prop)) {
-      	propsInGraph[prop] = true;
+    for(var i = 0; i < params.data.length; i++) {
+      for(var prop in params.data[i].content) {
+        if (params.data[i].content.hasOwnProperty(prop)) {
+        	propsInGraph[prop] = true;
+        }
       }
     }
-  }
-  var select = document.getElementById('select-prop');
+    var select = document.getElementById('select-prop');
 
-  for(var property in propsInGraph) {
-    var opt = property;
-    var el = document.createElement('option');
-    el.textContent = opt;
-    el.value = opt;
-    select.appendChild(el);
+    for(var property in propsInGraph) {
+      var opt = property;
+      var el = document.createElement('option');
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
   }
 }
 
@@ -202,20 +205,6 @@ var removeButtonEvents = function () {
   $('#saveButton').unbind('click');
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
-};
-
-var drawChart = function (params, docProp) {
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp);
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  return chart;
 };
 
 function showCurrURI(uri) {
@@ -241,14 +230,16 @@ var getBarChart = function (params, docProp) {
     addDataToMenu(chart, params);
   }
   removeButtonEvents();
-  initButtons();
+  if( params.timeRanges === null) {
+    initButtons();
+  }
 
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
 
   $('#deleteButton').click(function() {
-    deleteDoc(chart.getCurrentURI());
+    deleteDoc(chart.getCurrentURI(),chart.get);
   });
 
   $('#cancelButton').click(function() {
@@ -274,3 +265,30 @@ var getBarChart = function (params, docProp) {
   });
 };
 
+var drawChart = function (params, docProp) {
+
+  if( params.timeRanges ) {
+    var chart = barChart()
+      .data(params.data)
+      .width(params.width)
+      .height(params.height)
+      .xMin(params.timeRanges.sysStart)
+      .xMax(params.timeRanges.sysEnd)
+      .yMin(params.timeRanges.valStart)
+      .yMax(params.timeRanges.valEnd)
+      .setDisplayProperty(docProp);
+  }
+  else {
+    var chart = barChart()
+      .data(params.data)
+      .width(params.width)
+      .height(params.height)
+      .setDisplayProperty(docProp);
+  }
+
+  var selector = '#' + params.containerId;
+  d3.select(selector + ' .chart').remove();
+  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+
+  return chart;
+};

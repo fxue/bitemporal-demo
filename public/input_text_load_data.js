@@ -99,9 +99,9 @@ function loadData(collection) {
         data: arrData,
         width: 800,
         height: 600,
-
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
+        timeRanges: null,
         containerId: 'bar-chart-large'
       }, null);
       if(arrData.length === 0 && url !== '') {
@@ -123,9 +123,9 @@ $('#pick-doc').click( function() {
   if(uriCollection === '') {
     window.alert('Please enter a uri.');
   }
-
   else {
     document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
+    window.location = "/?collection="+uriCollection;
     loadData(uriCollection);
   }
 });
