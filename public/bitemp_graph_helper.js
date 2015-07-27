@@ -218,35 +218,15 @@ function findProperties(obj, path, properties) {
        //    }
        /* } else */if (typeof obj[prop] === 'object' && !Array.isArray(obj[prop])) {
           findProperties(obj[prop], newPath, properties);
-        } else {
-          properties[newPath] = true;
+          } else {
+            properties[newPath] = true;
+          }
         }
       }
     }
   }
 }
-}
 
-function addDataToMenu(chart, params) {
-  if(params.timeRanges === null && params.data.length <= 0) {
-    console.log('DoesNOThaveTimeRanges');
-    $('#select-prop').empty();
-    var propsInGraph = {};
-    propsInGraph['Choose a property'] = true;
-
-    for(var i = 0; i < params.data.length; i++) {
-      findProperties(params.data[i].content, null, propsInGraph);
-    }
-    var select = document.getElementById('select-prop');
-    if(select) {
-      for(var property in propsInGraph) {
-        var opt = property;
-        var el = document.createElement('option');
-        el.textContent = opt;
-        el.value = opt;
-        select.appendChild(el);
-      }
-=======
 function addDataToMenu(chart, params) {
   $('#select-prop').empty();
   var propsInGraph = {};
@@ -263,7 +243,6 @@ function addDataToMenu(chart, params) {
       el.textContent = opt;
       el.value = opt;
       select.appendChild(el);
->>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
     }
   }
 }

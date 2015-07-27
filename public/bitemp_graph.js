@@ -14,11 +14,8 @@ var barChart = function() {
   var yMin = null;
   var yMax = null;
   var displayProperty = '';
-<<<<<<< HEAD
   var lastDoc;
-=======
   var displayedProps = [];
->>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
 
   var margin = {
     top: 10,
@@ -191,13 +188,8 @@ var barChart = function() {
       lastDoc = ld;
     }
 
-<<<<<<< HEAD
     function getLastDoc() {
       return lastDoc;
-=======
-    var changeRectOutline = function(uri) {
-      $(uri).attr('stroke', 'red');
->>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
     }
 
     function addBarChartData() {
@@ -208,12 +200,9 @@ var barChart = function() {
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
-<<<<<<< HEAD
       var r;
-=======
 
         //.filter('random.json');
->>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
       
       r = split
         .append('rect')
@@ -221,7 +210,6 @@ var barChart = function() {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
-<<<<<<< HEAD
 
           if (!chart.getEditing() && !chart.getViewing()) {
             chart.setCurrentURI(datum.uri);
@@ -238,19 +226,6 @@ var barChart = function() {
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '2')
-=======
-          datum.selected = true;
-          chart.setCurrentURI(datum.uri);
-          showCurrURI(datum.uri);
-          changeRectOutline(datum.uri);
-        })
-        //.attr('class', 'rect')
-        .attr('class', function(datum) {
-          return datum.uri;
-        })
-        .attr('stroke-width', '3')
-        
->>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
