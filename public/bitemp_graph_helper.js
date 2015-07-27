@@ -419,7 +419,7 @@ function changeTextInGraph(chart, params) {
   for(var i = 0; i < params.data.length && !propExists; i++) {
     for(var prop in params.data[i].content) {
       if (params.data[i].content.hasOwnProperty(prop)) {
-        if(prop === docProp) {
+        if(prop === docProp || docProp.substring(0, docProp.indexOf('.')) === prop) {
           propExists = true;
         }
       }
@@ -452,6 +452,7 @@ function findProperties(obj, path, properties) {
     }
   }
 }
+
 
 function addDataToMenu(chart, params) {
   if (!params.timeRanges){
