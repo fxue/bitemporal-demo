@@ -324,10 +324,36 @@ var barChart = function() {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-
-          return d.content[displayProperty];
+      //    if (d.content[displayProperty] !== null && typeof d.content[displayProperty] === 'object') {
+      //      return JSON.stringify(d.content[displayProperty]);
+      //    }
+          else {
+            console.log(displayProperty);
+            if (displayProperty.indexOf('.') === -1) {
+              return d.content[displayProperty];
+            }
+            else {
+              str = path(d, 'content.' + displayProperty);
+              return str;
+            }   
+          }
+          
         });
     }
+
+    function path(object, fullPath) {
+      var selection = object;
+      fullPath.split('.').forEach(function(path) { selection = selection[path]; });
+      return selection;
+    }
+
+    /*
+      var x = { foo: { bar: { stuff: 'something' } } }
+      var path = 'foo.bar.stuff'
+      var selected = x;
+      path.split('.').forEach(function(path) { selected = selected[path]; });
+      selected
+    */
 
     setDimensions();
     setupXAxis();

@@ -433,6 +433,26 @@ function changeTextInGraph(chart, params) {
   }
 }
 
+function findProperties(obj, path, properties) {
+  var newPath;
+  if (typeof obj === 'object') {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        newPath = path ? path + '.' + prop : prop;
+        if (Array.isArray(obj[prop])) {
+          // for (var item in obj[prop]) {
+          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+          // }
+        } else if (typeof obj[prop] === 'object') {
+          findProperties(obj[prop], newPath, properties);
+        } else {
+          properties[newPath] = true;
+        }
+      }
+    }
+  }
+}
+
 function addDataToMenu(chart, params) {
   if (!params.timeRanges){
     $('#select-prop').empty();
@@ -440,24 +460,21 @@ function addDataToMenu(chart, params) {
     propsInGraph['Choose a property'] = true;
 
     for(var i = 0; i < params.data.length; i++) {
-      for(var prop in params.data[i].content) {
-        if (params.data[i].content.hasOwnProperty(prop)) {
-        	propsInGraph[prop] = true;
-        }
+      findProperties(params.data[i].content, null, propsInGraph);
+    }
+    var select = document.getElementById('select-prop');
+    if(select) {
+      for(var property in propsInGraph) {
+        var opt = property;
+        var el = document.createElement('option');
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
       }
     }
   }
-  var select = document.getElementById('select-prop');  
-  if(select) {
-    for(var property in propsInGraph) {
-      var opt = property;
-      var el = document.createElement('option');
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
-    }
-  }
 }
+
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
