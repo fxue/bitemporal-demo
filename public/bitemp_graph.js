@@ -226,7 +226,15 @@ var barChart = function() {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-          return color(d.content[displayProperty]);
+          else {
+            if (displayProperty.indexOf('.') === -1) {
+              return color(d.content[displayProperty]);
+            }
+            else {
+              str = path(d, 'content.' + displayProperty);
+              return color(str);
+            }
+          }
         })
         .attr('x', function(d) {
           var barx = xScale(moment(d.content.sysStart).toDate());
@@ -295,11 +303,7 @@ var barChart = function() {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-      //    if (d.content[displayProperty] !== null && typeof d.content[displayProperty] === 'object') {
-      //      return JSON.stringify(d.content[displayProperty]);
-      //    }
           else {
-            console.log(displayProperty);
             if (displayProperty.indexOf('.') === -1) {
               return d.content[displayProperty];
             }
