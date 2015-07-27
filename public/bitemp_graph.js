@@ -200,6 +200,7 @@ var barChart = function() {
         .attr('class','split')
         .attr('stroke', 'black');
       var r;
+      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
@@ -319,7 +320,9 @@ var barChart = function() {
 
     function path(object, fullPath) {
       var selection = object;
-      fullPath.split('.').forEach(function(path) { selection = selection[path]; });
+      fullPath.split('.').forEach(function(path) { 
+        selection = selection[path]; 
+      });
       return selection;
     }
 
