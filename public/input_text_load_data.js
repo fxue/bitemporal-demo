@@ -37,7 +37,11 @@ function parseData(data, collection, numParts) {
       item.contentLength = matches3[1];
     }
 
-    var matches4 = split[i+numParts-1].match(/({[^$]*})/);
+    if(item.contentType === 'application/xml') {
+  //    convertXMLToJSON();
+    }
+
+    var matches4 = split[i+numParts-1].match(/({[^]*})/);
     if(matches4 && matches4[1]) {
       item.content = JSON.parse(matches4[1]);
     }

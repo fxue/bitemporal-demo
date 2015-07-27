@@ -189,6 +189,8 @@ var barChart = function() {
 
     function addBarChartData() {
 
+      var arr = [];
+
       split = g.selectAll('.split')
         .data(data)
         .enter()
@@ -196,8 +198,6 @@ var barChart = function() {
         .attr('class','split')
         .attr('stroke', 'black');
       var r;
-
-        //.filter('random.json');
       
       r = split
         .append('rect')
@@ -212,7 +212,7 @@ var barChart = function() {
             //Selection of a box in graph visualization
             $(this).attr('stroke', 'black');
             $(this).attr('stroke-width', '4');
-            $(this).attr('fill-opacity', 0.75);
+            $(this).attr('fill-opacity', 0.7);
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '0');
@@ -250,7 +250,7 @@ var barChart = function() {
         .style('opacity', 0)
         .transition()
         .duration(1500)
-        .style('opacity', 1)
+        .style('opacity', 0.9)
         .attr('height', function(d) {
           var bValStart = yScale(moment(d.content.valStart).toDate());
           var bValEnd = yScale(moment(d.content.valEnd).toDate());
@@ -269,6 +269,10 @@ var barChart = function() {
 
       split.append('text')
         .attr('class','tooltip-txt')
+        .style('opacity', 0)
+        .transition()
+        .duration(1500)
+        .style('opacity', 1)
         .style('text-anchor', 'middle')
         .attr('x', function(d) {
           var barx1 = xScale(moment(d.content.sysStart).toDate());
@@ -322,7 +326,7 @@ var barChart = function() {
             return str;
           }
         })
-        .call(wrapText, 225);
+      .call(wrapText, 225);
     }
 
 //Generic text wrap D3 function for long text. 
