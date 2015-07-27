@@ -16,6 +16,7 @@ var barChart = function() {
   var displayProperty = '';
   var lastDoc;
   var data;
+  var displayedProps = [];
 
   var margin = {
     top: 10,
@@ -231,7 +232,7 @@ var barChart = function() {
         .attr('stroke', 'black');
 
       var r;
-      
+
       r = split
         .append('rect')
         .on('click', function(datum, index) {

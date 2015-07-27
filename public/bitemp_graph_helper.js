@@ -445,8 +445,9 @@ function findProperties(obj, path, properties) {
           // }
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
-        } else {
-          properties[newPath] = true;
+          } else {
+            properties[newPath] = true;
+          }
         }
       }
     }
