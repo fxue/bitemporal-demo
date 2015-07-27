@@ -212,9 +212,11 @@ var barChart = function() {
             //Selection of a box in graph visualization
             $(this).attr('stroke', 'black');
             $(this).attr('stroke-width', '4');
+            $(this).attr('fill-opacity', 0.75);
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '0');
+              $(getLastDoc()).attr('fill-opacity', 1);
             }
             setLastDoc(this);
           }
