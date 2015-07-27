@@ -309,11 +309,11 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2 + 40;
+            return (barx1+barx2)/2 + 80;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
-            return (barx1+barx2)/2 + 40;
+            return (barx1+barx2)/2 + 80;
           }
         })
         .attr('y', function(d) {
@@ -358,7 +358,6 @@ var barChart = function() {
             return str;
           }
         })
-        .call(wrapText, 225);
     }
 
 

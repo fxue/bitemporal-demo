@@ -445,9 +445,8 @@ function findProperties(obj, path, properties) {
           // }
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
-          } else {
-            properties[newPath] = true;
-          }
+        } else {
+          properties[newPath] = true;
         }
       }
     }
@@ -569,18 +568,4 @@ var getBarChart = function (params, docProp) {
     var selectedText = $(this).find('option:selected').text();
     getBarChart(params, selectedText);
   });
-};
-
-var drawChart = function (params, docProp) {
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp);
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  return chart;
 };
