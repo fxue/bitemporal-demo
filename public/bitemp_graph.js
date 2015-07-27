@@ -15,7 +15,7 @@ var barChart = function() {
   var yMax = null;
   var displayProperty = '';
   var lastDoc;
-  var displayedProps = [];
+//  var displayedProps = [];
 
   var margin = {
     top: 10,
@@ -34,11 +34,6 @@ var barChart = function() {
   var axisLabelMargin;
 
   var chart = function(container) {
-
-    for (var prop in container) {
-      if (container.hasOwnProperty(prop))
-        console.log(prop);
-    }
 
     function setDimensions() {
       axisLabelMargin = 60;
@@ -281,11 +276,11 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2 + 40;
+            return (barx1+barx2)/2 + 80;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
-            return (barx1+barx2)/2 + 40;
+            return (barx1+barx2)/2 + 80;
           }
         })
         .attr('y', function(d) {
@@ -337,7 +332,7 @@ var barChart = function() {
         line = [],
         linenumber = 0,
         lineHeight = 1.1, // ems
-        x = textEl.attr('x');
+        x = textEl.attr('x'),
         y = textEl.attr('y'),
         dx = parseFloat(textEl.attr('dx') || 0), 
         dy = parseFloat(textEl.attr('dy') || 0),
@@ -352,9 +347,9 @@ var barChart = function() {
           line = [word];
           tspan = textEl.append('tspan').attr('x', x).attr('y', y).attr('dx', dx).attr('dy', ++linenumber * lineHeight + dy + 'em').text(word);
         }
-    }
-        });
-    }
+      }
+    });
+  }
 
 
     function path(object, fullPath) {

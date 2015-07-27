@@ -212,15 +212,9 @@ function findProperties(obj, path, properties) {
           //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
           // }
         } else if (typeof obj[prop] === 'object') {
-       // if (Array.isArray(obj[prop])) {
-       //    for (var item in obj[prop]) {
-       //      findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-       //    }
-       /* } else */if (typeof obj[prop] === 'object' && !Array.isArray(obj[prop])) {
           findProperties(obj[prop], newPath, properties);
-          } else {
-            properties[newPath] = true;
-          }
+        } else {
+          properties[newPath] = true;
         }
       }
     }
@@ -228,21 +222,25 @@ function findProperties(obj, path, properties) {
 }
 
 function addDataToMenu(chart, params) {
-  $('#select-prop').empty();
-  var propsInGraph = {};
-  propsInGraph['Choose a property'] = true;
+  if(!params.timeRanges) {
+    console.log('DoesNOThaveTimeRanges');
 
-  for(var i = 0; i < params.data.length; i++) {
-    findProperties(params.data[i].content, null, propsInGraph);
-  }
-  var select = document.getElementById('select-prop');
-  if(select) {
-    for(var property in propsInGraph) {
-      var opt = property;
-      var el = document.createElement('option');
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
+    $('#select-prop').empty();
+    var propsInGraph = {};
+    propsInGraph['Choose a property'] = true;
+
+    for(var i = 0; i < params.data.length; i++) {
+      findProperties(params.data[i].content, null, propsInGraph);
+    }
+    var select = document.getElementById('select-prop');
+    if(select) {
+      for(var property in propsInGraph) {
+        var opt = property;
+        var el = document.createElement('option');
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+      }
     }
   }
 }
@@ -308,18 +306,4 @@ var getBarChart = function (params, docProp) {
     drawChart(params, selectedText);
     getBarChart(params, selectedText);
   });
-};
-
-var drawChart = function (params, docProp) {
-  var chart = barChart()
-    .data(params.data)
-    .width(params.width)
-    .height(params.height)
-    .setDisplayProperty(docProp);
-
-  var selector = '#' + params.containerId;
-  d3.select(selector + ' .chart').remove();
-  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
-
-  return chart;
 };
