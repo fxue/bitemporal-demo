@@ -231,7 +231,13 @@ var barChart = function() {
         .attr('stroke', 'black');
 
       var r;
+<<<<<<< HEAD
       r = split.append('rect')
+=======
+      
+      r = split
+        .append('rect')
+>>>>>>> trying to rebase
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -347,7 +353,9 @@ var barChart = function() {
 
     function path(object, fullPath) {
       var selection = object;
-      fullPath.split('.').forEach(function(path) { selection = selection[path]; });
+      fullPath.split('.').forEach(function(path) { 
+        selection = selection[path]; 
+      });
       return selection;
     }
 
