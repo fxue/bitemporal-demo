@@ -196,6 +196,11 @@ function changeTextInGraph(chart, params) {
   }
 }
 
+/*
+ * @param obj
+ * @param path 
+ * @param properties -- modified as new properties are found
+ */
 function findProperties(obj, path, properties) {
   var newPath;
   if (typeof obj === 'object') {
@@ -207,6 +212,11 @@ function findProperties(obj, path, properties) {
           //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
           // }
         } else if (typeof obj[prop] === 'object') {
+       // if (Array.isArray(obj[prop])) {
+       //    for (var item in obj[prop]) {
+       //      findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+       //    }
+       /* } else */if (typeof obj[prop] === 'object' && !Array.isArray(obj[prop])) {
           findProperties(obj[prop], newPath, properties);
         } else {
           properties[newPath] = true;
@@ -215,7 +225,7 @@ function findProperties(obj, path, properties) {
     }
   }
 }
-
+}
 
 function addDataToMenu(chart, params) {
   if(params.timeRanges === null && params.data.length <= 0) {
@@ -236,6 +246,24 @@ function addDataToMenu(chart, params) {
         el.value = opt;
         select.appendChild(el);
       }
+=======
+function addDataToMenu(chart, params) {
+  $('#select-prop').empty();
+  var propsInGraph = {};
+  propsInGraph['Choose a property'] = true;
+
+  for(var i = 0; i < params.data.length; i++) {
+    findProperties(params.data[i].content, null, propsInGraph);
+  }
+  var select = document.getElementById('select-prop');
+  if(select) {
+    for(var property in propsInGraph) {
+      var opt = property;
+      var el = document.createElement('option');
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+>>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
     }
   }
 }

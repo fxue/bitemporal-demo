@@ -14,7 +14,11 @@ var barChart = function() {
   var yMin = null;
   var yMax = null;
   var displayProperty = '';
+<<<<<<< HEAD
   var lastDoc;
+=======
+  var displayedProps = [];
+>>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
 
   var margin = {
     top: 10,
@@ -187,8 +191,13 @@ var barChart = function() {
       lastDoc = ld;
     }
 
+<<<<<<< HEAD
     function getLastDoc() {
       return lastDoc;
+=======
+    var changeRectOutline = function(uri) {
+      $(uri).attr('stroke', 'red');
+>>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
     }
 
     function addBarChartData() {
@@ -199,7 +208,12 @@ var barChart = function() {
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
+<<<<<<< HEAD
       var r;
+=======
+
+        //.filter('random.json');
+>>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
       
       r = split
         .append('rect')
@@ -207,6 +221,7 @@ var barChart = function() {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
+<<<<<<< HEAD
 
           if (!chart.getEditing() && !chart.getViewing()) {
             chart.setCurrentURI(datum.uri);
@@ -223,6 +238,19 @@ var barChart = function() {
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '2')
+=======
+          datum.selected = true;
+          chart.setCurrentURI(datum.uri);
+          showCurrURI(datum.uri);
+          changeRectOutline(datum.uri);
+        })
+        //.attr('class', 'rect')
+        .attr('class', function(datum) {
+          return datum.uri;
+        })
+        .attr('stroke-width', '3')
+        
+>>>>>>> #40 elegant recursion, line wrapping of text, took out duplicate text in graph
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
@@ -301,22 +329,58 @@ var barChart = function() {
           }
         })
         .text(function(d) {
+          var str = '';
           if(!displayProperty) {
             displayProperty = 'data';
           }
-          else {
-            if (displayProperty.indexOf('.') === -1) {
-              return d.content[displayProperty];
-            }
-            else {
-              str = path(d, 'content.' + displayProperty);
-              return str;
-            }   
+          if (displayProperty.indexOf('.') === -1) {
+            str = d.content[displayProperty];
           }
-          
-        });
-
+          else {
+            str = path(d, 'content.' + displayProperty);
+          }
+          var alreadyInGraph = false;
+          for(var i = 0; i < displayedProps.length; i++) {
+            if(displayedProps[i] === str) {
+              alreadyInGraph = true;
+            } 
+          }
+          if(alreadyInGraph === false) {
+            displayedProps.push(str);
+            return str;
+          }
+        })
+        .call(wrapText, 125);
     }
+
+//Generic text wrap D3 function for long text. 
+function wrapText(text, width) {
+        text.each(function () {
+            var textEl = d3.select(this),
+                words = textEl.text().split(/\s+|-+/).reverse(),
+                word,
+                line = [],
+                linenumber = 0,
+                lineHeight = 1.1, // ems
+                x = textEl.attr('x');
+                y = textEl.attr('y'),
+                dx = parseFloat(textEl.attr('dx') || 0), 
+                dy = parseFloat(textEl.attr('dy') || 0),
+                tspan = textEl.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(' '));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(' '));
+                    line = [word];
+                    tspan = textEl.append('tspan').attr('x', x).attr('y', y).attr('dx', dx).attr('dy', ++linenumber * lineHeight + dy + 'em').text(word);
+                }
+            }
+        });
+    }
+
 
     function path(object, fullPath) {
       var selection = object;
@@ -325,14 +389,6 @@ var barChart = function() {
       });
       return selection;
     }
-
-    /*
-      var x = { foo: { bar: { stuff: 'something' } } }
-      var path = 'foo.bar.stuff'
-      var selected = x;
-      path.split('.').forEach(function(path) { selected = selected[path]; });
-      selected
-    */
 
     setDimensions();
     setupXAxis();
