@@ -15,7 +15,7 @@ var barChart = function() {
   var yMax = null;
   var displayProperty = '';
   var lastDoc;
-//  var displayedProps = [];
+  var displayedProps = [];
 
   var margin = {
     top: 10,
