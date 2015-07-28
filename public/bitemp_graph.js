@@ -395,7 +395,7 @@ var barChart = function() {
           var w=bSysEnd-bSysStart;
           return w;
         });
- 
+        
       split.append('text')
         .attr('id', 'box')
         .style('fill', 'DarkMagenta')
