@@ -267,16 +267,13 @@ function initButtons() {
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
 
-  if(!params.timeRanges) {
-    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
-  }
-
   if (params) {
     addDataToMenu(chart, params);
   }
   removeButtonEvents();
   if( params.timeRanges === null) {
     initButtons();
+    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
   }
 
   $('#editButton').click(function() {
