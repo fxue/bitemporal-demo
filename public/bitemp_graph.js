@@ -8,7 +8,7 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var uri, isEditing, isViewing;
+  var uri, isEditing, isViewing, logicURI;
   var xMin = null;
   var xMax = null;
   var yMin = null;
@@ -200,12 +200,14 @@ var barChart = function() {
         .attr('class','split')
         .attr('stroke', 'black');
       var r;
+      
       r = split
         .append('rect')
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
+          document.getElementById('deleteErrMessage').innerHTML = '';
 
           if (!chart.getEditing() && !chart.getViewing()) {
             chart.setCurrentURI(datum.uri);
@@ -226,6 +228,7 @@ var barChart = function() {
           if(!displayProperty) {
             displayProperty = 'data';
           }
+          console.log('Using ' + displayProperty);
           return color(d.content[displayProperty]);
         })
         .attr('x', function(d) {
@@ -424,6 +427,14 @@ var barChart = function() {
   chart.getDisplayProperty = function() {
     return displayProperty;
   };
+  
+  chart.setLogicalURI = function(str) {
+    logicURI = str;
+  }
+  
+  chart.getLogicalURI = function() {
+    return logicURI;
+  }
 
   chart.setDisplayProperty = function(str) {
     if(!str) {

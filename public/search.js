@@ -51,20 +51,21 @@ $('#dropdown').change(function()
 );
 
 //function to make ajax call to get min and max times
-function ajaxTimesCall(selectedColl)
+var ajaxTimesCall = function(selectedColl)
 {
   $.ajax(
+  {
+    url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
+    success: function(response, textStatus)
     {
-      url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
-      success: function(response, textStatus)
-      {
-        displayAxis(response);
-      },
-      error: function(jqXHR, textStatus, errorThrown)
-      {
-        console.log('problem');
-      }
-    });
+      displayAxis(response);
+      respTimes = response;
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
 }
 
 //function to display axis
@@ -75,6 +76,11 @@ function displayAxis(times)
     showAlertBox = true;
   }
 
+  for (var prop in times) {
+    if (times.hasOwnProperty(prop))
+      console.log('times property = ' + prop+ ' value = ' + times[prop]);
+  }
+  
   var timeRanges = {
     valStart: toReturnDate(times.valStart),
     valEnd: toReturnDate(times.valEnd),
@@ -95,6 +101,19 @@ function displayAxis(times)
   if (showAlertBox) {
     alert('There are no documents in this collection. Please select another.');
   }
+}
+
+var getDocColl = function(uri) {
+  $.ajax({
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
+    success: function(data, textStatus) {
+      console.log('got collections: ' + data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem');
+    },
+    async: false,
+  });
 }
 
 function toReturnDate(time) {
@@ -143,7 +162,7 @@ $('#prev').click(function()
 * @param start: the index of the first document you want to display
 * @param end: the index of the last document you want to display (will always be 9 greater than start)
 */
-function displayDocs( start, end)
+function displayDocs(start, end)
 {
   var bullet = $('#bulletList');
   bullet.empty();
@@ -153,7 +172,7 @@ function displayDocs( start, end)
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   var docs = $.ajax(
   {
-    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22"+selectedColl+"%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
+    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22'+selectedColl+'%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
     headers:
     {
       'Accept': 'multipart/mixed'

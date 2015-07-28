@@ -98,15 +98,6 @@
         word-wrap: normal;
       }
 
-      #uriEntered {
-        font-size: 16px;
-        position: absolute;
-        left: 5px;
-        top: 20px;
-        width: 25em;
-        word-wrap: normal;
-      }
-
       .definition {
         background-color: #E2E2E2;
         display: inline-block;
@@ -153,6 +144,7 @@
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="public/search.js"></script>-->
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
@@ -182,23 +174,28 @@
       else { //default
         loadData('addr.json');
       }
-
-    </script>
+    </script>   
     <div id='editDocDiv'>
       <p id='selectedURI'> Selected URI: <b> null </b></p>
       <button id='editButton' > Edit </button>
       <button id='viewButton'> View </button>
       <button id='deleteButton'> Delete </button>
-      <button id='saveButton' hidden="true"> Save </button>
+      <p id='deleteErrMessage'> </p>
+      <button id='saveButton' hidden='true'> Save </button>
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
       <div id='sysTimeDiv'>
         <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
-        <br> <br>
-        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
         <script>
           $('#sysTimeDiv').addClass('hideSysTimeBoxes');
         </script>
+      </div>
+      <div id='deleteButtonsDiv'>
+          <button id='deleteOKButton'> OK </button>
+          <button id='deleteCancelButton'> Cancel </button>
+          <script>
+            $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
+          </script>
       </div>
     </div>
   </body>
