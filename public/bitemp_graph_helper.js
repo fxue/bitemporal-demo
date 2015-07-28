@@ -267,7 +267,9 @@ function initButtons() {
 var getBarChart = function (params, docProp) {
   var chart = drawChart(params, docProp);
 
- // document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
+  if(!params.timeRanges) {
+    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
+  }
 
   if (params) {
     addDataToMenu(chart, params);
