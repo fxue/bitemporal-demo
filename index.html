@@ -184,7 +184,7 @@
         loadData('addr.json');
       }
 
-      $("input[name='insert']").click(function() {
+      $("input[name='insert']").serialize(function() {
         var col = $("input[name='tempcol']").val();
         var uri = $("input[name='uri']").val();
         var vs = $("input[name='validstart']").val();

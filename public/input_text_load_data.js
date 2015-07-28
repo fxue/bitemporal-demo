@@ -37,10 +37,9 @@ function parseData(data, collection, numParts) {
       item.contentLength = matches3[1];
     }
 
-    
-    var matches4;
+    //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
-      matches4 = split[i+numParts-1].match(/(<[^]*>)/);
+      var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
       if(matches4[1]) {
         matches4 = matches4[1].match(/^(?!.*version).*$/m);
       }
@@ -62,8 +61,9 @@ function parseData(data, collection, numParts) {
         item.content = itemContent;
       }
     }
+    //Handles JSON docs
     else {
-      matches4 = split[i+numParts-1].match(/({[^]*})/);
+      var matches4 = split[i+numParts-1].match(/({[^]*})/);
       if(matches4 && matches4[1]) {
         item.content = JSON.parse(matches4[1]);
       }
@@ -148,39 +148,39 @@ function loadData(collection) {
 
 // Changes XML to JSON
 xmlToJson = function(xml) {
-    var obj = {};
-    if (xml.nodeType == 1) {                
-        if (xml.attributes.length > 0) {
-            obj["@attributes"] = {};
-            for (var j = 0; j < xml.attributes.length; j++) {
-                var attribute = xml.attributes.item(j);
-                obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-            }
-        }
-    } else if (xml.nodeType == 3) { 
-        obj = xml.nodeValue;
-    }            
-    if (xml.hasChildNodes()) {
-        for (var i = 0; i < xml.childNodes.length; i++) {
-            var item = xml.childNodes.item(i);
-            var nodeName = item.nodeName;
-            if (typeof (obj[nodeName]) == "undefined") {
-                if(nodeName === 'sysStart' || nodeName === 'sysEnd' || nodeName === 'valStart' || nodeName === 'valEnd') {
-                  obj[nodeName] = item.textContent;
-                }
-                else
-                  obj[nodeName] = xmlToJson(item);
-            } else {
-                if (typeof (obj[nodeName].push) == "undefined") {
-                    var old = obj[nodeName];
-                    obj[nodeName] = [];
-                    obj[nodeName].push(old);
-                }
-                obj[nodeName].push(xmlToJson(item));
-            }
-        }
+  var obj = {};
+  if (xml.nodeType == 1) {
+    if (xml.attributes.length > 0) {
+      obj["@attributes"] = {};
+      for (var j = 0; j < xml.attributes.length; j++) {
+        var attribute = xml.attributes.item(j);
+        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+      }
     }
-    return obj;
+  } else if (xml.nodeType == 3) {
+    obj = xml.nodeValue;
+  }
+  if (xml.hasChildNodes()) {
+    for (var i = 0; i < xml.childNodes.length; i++) {
+      var item = xml.childNodes.item(i);
+      var nodeName = item.nodeName;
+      if (typeof (obj[nodeName]) == "undefined") {
+        if(nodeName === 'sysStart' || nodeName === 'sysEnd' || nodeName === 'valStart' || nodeName === 'valEnd') {
+          obj[nodeName] = item.textContent;
+        }
+        else
+          obj[nodeName] = xmlToJson(item);
+      } else {
+        if (typeof (obj[nodeName].push) == "undefined") {
+          var old = obj[nodeName];
+          obj[nodeName] = [];
+          obj[nodeName].push(old);
+        }
+        obj[nodeName].push(xmlToJson(item));
+      }
+    }
+  }
+  return obj;
 }
 
 $('#pick-doc').click( function() {
