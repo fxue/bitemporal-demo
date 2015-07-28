@@ -36,5 +36,3 @@ function get(context, params) {
 }
 
 exports.GET = get;
-
-//http://localhost:8000/v1/resources/temporal-range?rs:collection=myTemporal 

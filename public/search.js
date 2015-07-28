@@ -1,17 +1,146 @@
-/* global displayAxis, parseData */
+var firstDoc, lastDoc;
+
+function generateOps() {
+  var operators = ['None', 'ALN_EQUALS', 'ALN_CONTAINS', 'ALN_CONTAINED_BY', 'ALN_MEETS', 'ALN_MET_BY', 'ALN_BEFORE', 'ALN_AFTER', 'ALN_STARTS', 'ALN_STARTED_BY', 'ALN_FINISHES', 'ALN_FINISHED_BY', 'ALN_OVERLAPS', 'ALN_OVERLAPPED_BY', 'ISO_OVERLAPS', 'ISO CONTAINS', 'ISO_PRECEDES', 'ISO_SUCCEEDS', 'ISO_IMM_PRECEDES', 'ISO_IMM_SUCCEEDS', 'ISO_EQUALS'];
+  for( var i = 0; i < operators.length; i++ ) {
+    $('#valDropdown').append($('<option>').text(operators[i]));
+    $('#sysDropdown').append($('<option>').text(operators[i]));
+  }
+}
+
+function getSelected(id) {
+  var dropDownList = document.getElementById(id);
+  return dropDownList.options[dropDownList.selectedIndex].value;
+}
+
+$('#valDropdown').change(function() {
+  operatorChange('valDropdown', 'myValid');
+});
+
+$('#sysDropdown').change(function() {
+  operatorChange('sysDropdown', 'mySystem');
+});
+
+function operatorChange(id, axis) {
+  var selectedOp = getSelected(id);
+  var selectedColl = getSelected('dropdown');
+  $.ajax(
+    {
+      url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:axis='+axis+'&rs:operator='+selectedOp+'&rs:period=9999-12-31T23:59:59.99Z',
+      success: function(response, textStatus)
+      {
+        console.log(response);
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+        console.log('problem');
+      }
+    });
+}
+
+//call to get the list of temporal collection
+$.ajax(
+  {
+    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+    success: function(response, textStatus)
+    {
+      generateOps();
+      //console.log('got collections: ' + JSON.stringify(response));
+      //adds names of the collections to the drop down list
+      var addToDrop = $('#dropdown');
+      //endpoint is the number of collections
+      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
+
+      //dropArray is the array containing all the temporal Collections
+      var dropArray = [];
+      for (var j = 0; j < endpoint; j++)
+      {
+        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
+      }
+      //sorts the array (alphabetically) containing the temporal collections
+      dropArray.sort();
+
+      //this for loop appends the collection names to the drop down list
+      for (var k = 0; k < dropArray.length; k++)
+      {
+        addToDrop.append($('<option>').text(dropArray[k])) ;
+        if( k === 0 ) {
+          ajaxTimesCall(dropArray[k]);
+        }
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
+
 $('#dropdown').change(function()
   {
     $('#next').css({'visibility': 'hidden'});
     $('#prev').css({'visibility': 'hidden'});
-
-    var dropDownList = document.getElementById('dropdown');
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+    var selectedColl = getSelected('dropdown');
     ajaxTimesCall(selectedColl);
     $('#bulletList').empty();
     $('#numDocs').empty();
   }
 );
 
+//function to make ajax call to get min and max times
+function ajaxTimesCall(selectedColl)
+{
+  $.ajax(
+    {
+      url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
+      success: function(response, textStatus)
+      {
+        displayAxis(response);
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+        console.log('problem');
+      }
+    });
+}
+
+//function to display axis
+function displayAxis(times)
+{
+  var showAlertBox;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart),
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+function toReturnDate(time) {
+  if( time ) {
+    return new Date(time);
+  }
+  else {
+    return null;
+  }
+}
 
 //function when search button is clicked
 $('#search').click(function()
@@ -59,8 +188,7 @@ function displayDocs(start, end)
 {
   var bullet = $('#bulletList');
   bullet.empty();
-  var dropDownList = document.getElementById('dropdown');
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  var selectedColl = getSelected('dropdown');
 
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   var docs = $.ajax(

@@ -57,7 +57,18 @@
       #bar-chart-large {
         position: absolute;
         left: -25px;
-        top: 90px;
+        top: 230px;
+      }
+
+      #ctsQuery {
+        position: absolute;
+        left: 140px;
+        top: 800px;
+        font-size: 14px;
+      }
+
+      #text {
+        font-size: 14px;
       }
 
       #logo {
@@ -83,7 +94,6 @@
         display: block;
         padding: 0 16px;
         width: 266px;
-        position: relative;
         cursor: pointer;
         border-left: 4px solid #739cda;
         background: #fff;
@@ -98,6 +108,63 @@
          -ms-transition: all 0.15s linear;
          -o-transition: all 0.15s linear;
          transition: all 0.15s linear;
+      }
+
+      #valDropdown {
+        height: 20px;
+        display: block;
+        padding: 13px 16px;
+        width: 150px;
+        cursor: pointer;
+        border-left: 4px solid #739cda;
+        background: #fff;
+        font-size: .8em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+        -moz-transition: all 0.15s linear;
+        -ms-transition: all 0.15s linear;
+        -o-transition: all 0.15s linear;
+        transition: all 0.15s linear;
+      }
+
+      #valTimes {
+        position: relative;
+        left: 128px;
+        top: 100px;
+        margin-bottom: 0px;
+        font-size: 15px;
+      }
+
+      #sysDropdown {
+        height: 20px;
+        display: block;
+        padding: 13px 16px;
+        width: 150px;
+        cursor: pointer;
+        border-left: 4px solid #739cda;
+        background: #fff;
+        font-size: .8em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+        -moz-transition: all 0.15s linear;
+        -ms-transition: all 0.15s linear;
+        -o-transition: all 0.15s linear;
+        transition: all 0.15s linear;
+      }
+
+      #sysTimes {
+        position: absolute;
+        left: 614px;
+        top: 138px;
+        font-size: 15px;
       }
 
       #bold {
@@ -209,14 +276,39 @@
         cursor: pointer;
       }
 
+      #dragArea {
+        height: 435px;
+        width: 635px;
+        border: solid;
+        position: absolute;
+        left: 134px;
+        top: 230px;
+      }
+
+      #ops {
+        position: absolute;
+        left: 38px;
+        top: 175px;
+        font-size: 1.1em;
+      }
+
     </style>
 
   </head>
   <body>
     <h1>MarkLogic <span class= 'definition' title= 'Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.'>Bitemporal</span> Search Page</h1>
-    <a href="/" id="homeURL">Click to go to home page</a>
+    <a href="/" id="homeURL">Home</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
+    </div>
+    <p id='ops'>Operators</p>
+    <div id='valTimes'>
+      <p><b>Valid Time</b></p>
+      <select id="valDropdown"></select>
+    </div>
+    <div id='sysTimes'>
+      <p><b>System Time</b></p>
+      <select id="sysDropdown"></select>
     </div>
     <div id= "page">
       <p id="instructSelect">Select a <span class= 'definition' title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
@@ -227,10 +319,6 @@
       <p id="numDocs"></p>
         <ul id="bulletList"></ul>
       </div>
-
-    <div id="tooltip" class="hidden">
-      <p><span id="value"></span></p>
-    </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
@@ -243,4 +331,56 @@
     <div id="bar-chart-large"></div>
 
   </body>
+</html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <style>
+    .dragValBar {
+      cursor: pointer;
+      height: 5px;
+      margin-bottom: 0px;
+      margin-top: 0px;
+    }
+
+    #valBar1 {
+      position: relative;
+    }
+
+    #valBar2 {
+      position: relative;
+      top: 425px;
+    }
+
+  </style>
+  <meta charset="utf-8">
+  <title>jQuery UI Draggable - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $( ".dragValBar" ).draggable(
+      {
+        axis: 'y',
+        containment: 'parent'
+      });
+  });
+  </script>
+
+  <div id='dragArea'>
+    <hr noshade class='dragValBar' id='valBar1' width='100%' color='blue'></hr> 
+    <hr noshade class='dragValBar' id='valBar2' width='100%' color='blue'></hr> 
+  </div>
+  <div id='ctsQuery'>
+    <p>cts query</p>
+    <textarea rows='10' cols='50' color='blue' id='text'> </textarea>
+  </div>
+
+</head>
+<body>
+ 
+ 
+</body>
 </html>
