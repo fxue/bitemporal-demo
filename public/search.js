@@ -79,7 +79,6 @@ function runSearchQuery() {
     valEnd = new Date(valEnd).toISOString();
   }
 
-<<<<<<< HEAD
   var sysStart = '';
   var sysEnd = '';
 
@@ -93,18 +92,6 @@ function runSearchQuery() {
     }
     sysStart = new Date(sysStart).toISOString();
     sysEnd = new Date(sysEnd).toISOString();
-=======
-$('#dropdown').change(function()
-  {
-    $('#next').css({'visibility': 'hidden'});
-    $('#prev').css({'visibility': 'hidden'});
-
-    var dropDownList = document.getElementById('dropdown');
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    ajaxTimesCall(selectedColl);
-    $('#bulletList').empty();
-    $('#numDocs').empty();
->>>>>>> changed dropdown so it won't display bulletList when you change a selection
   }
 
   if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
