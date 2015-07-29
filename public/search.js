@@ -61,7 +61,7 @@ function runSearchQuery() {
  
   var valAxis = '';
   var sysAxis = '';
- 
+  
   var valStart = '';
   var valEnd = '';
  
