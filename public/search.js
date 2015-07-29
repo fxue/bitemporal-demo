@@ -14,28 +14,51 @@ function getSelected(id) {
 }
 
 $('#valDropdown').change(function() {
-  operatorChange('valDropdown', 'myValid');
+  operatorChange();
 });
 
 $('#sysDropdown').change(function() {
-  operatorChange('sysDropdown', 'mySystem');
+  operatorChange();
 });
 
-function operatorChange(id, axis) {
-  var selectedOp = getSelected(id);
+function operatorChange() { 
   var selectedColl = getSelected('dropdown');
+
+  var valSelectedOp = getSelected('valDropdown');
+  var sysSelectedOp = getSelected('sysDropdown');
+
+  var valAxis = '';
+  var sysAxis = '';
+
+  if(valSelectedOp !== 'None') {
+    valAxis = 'myValid';
+  }
+  if(sysSelectedOp !== 'None') {
+    sysAxis = 'mySystem';
+  }
+
+  var valStart = '9997-12-31T23:59:59.99Z';
+  var valEnd = '9998-12-31T23:59:59.99Z';
+  var sysStart = '9998-12-31T23:59:59.99Z';
+  var sysEnd = '9999-12-31T23:59:59.99Z';  
+
   $.ajax(
     {
-      url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:axis='+axis+'&rs:operator='+selectedOp+'&rs:period=9999-12-31T23:59:59.99Z',
+      url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
       success: function(response, textStatus)
       {
         console.log(response);
+        displayQuery(response);
       },
       error: function(jqXHR, textStatus, errorThrown)
       {
         console.log('problem');
       }
     });
+}
+
+function displayQuery(response) {
+  document.getElementById('queryText').innerHTML = response.query;
 }
 
 //call to get the list of temporal collection
