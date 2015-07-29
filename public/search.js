@@ -143,6 +143,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
   $.ajax(
     {
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
+      async: false,
       success: function(response, textStatus)
       {
         var data = [];
@@ -210,6 +211,36 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
       }
     }
   );
+}
+
+//function to display axis
+function displayAxis(times)
+{
+  var showAlertBox;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart),
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
 }
 
 function toReturnDate(time) {
