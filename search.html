@@ -19,7 +19,7 @@
       h1 {
         text-align: center;
         font-style: italic;
-        font-size: 20px;
+        font-size: 23px;
       }
 
       .svg-chart .background {
@@ -63,7 +63,7 @@
       #ctsQuery {
         position: absolute;
         left: 140px;
-        top: 800px;
+        top: 790px;
         font-size: 14px;
       }
 
@@ -114,7 +114,7 @@
         height: 20px;
         display: block;
         padding: 13px 16px;
-        width: 150px;
+        width: 160px;
         cursor: pointer;
         border-left: 4px solid #739cda;
         background: #fff;
@@ -122,19 +122,13 @@
         color: #000000;
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
-        -moz-transition: all 0.15s linear;
-        -ms-transition: all 0.15s linear;
-        -o-transition: all 0.15s linear;
-        transition: all 0.15s linear;
       }
 
       #valTimes {
         position: relative;
-        left: 128px;
-        top: 100px;
+        left: 133px;
+        top: 138px;
         margin-bottom: 0px;
         font-size: 15px;
       }
@@ -155,7 +149,7 @@
         height: 20px;
         display: block;
         padding: 13px 16px;
-        width: 150px;
+        width: 160px;
         cursor: pointer;
         border-left: 4px solid #739cda;
         background: #fff;
@@ -163,13 +157,7 @@
         color: #000000;
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
-        -moz-transition: all 0.15s linear;
-        -ms-transition: all 0.15s linear;
-        -o-transition: all 0.15s linear;
-        transition: all 0.15s linear;
       }
 
       #sysTimes {
@@ -198,7 +186,7 @@
         left: 0px;
         top: -40px;
         font-weight: bold;
-        font-size: 1.55em;
+        font-size: 1.45em;
       }
 
       #bulletList {
@@ -231,7 +219,7 @@
 
       #break {
         position: absolute;
-        width: 30%;
+        width: 100%;
         left: 37px;
         margin-top: -0.13em;
       }
@@ -266,8 +254,8 @@
 
       #page {
         position: relative;
-        left: 860px;
-        top: 50px;
+        left: 840px;
+        top: 100px;
       }
 
       .result a {
@@ -304,6 +292,12 @@
         font-size: 1.1em;
       }
 
+      #searchPage {
+        position: absolute;
+        left: 20px;
+        top: -75px;
+      }
+
     </style>
 
   </head>
@@ -313,12 +307,13 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <p id='ops'>Operators</p>
+    <div id='searchPage'>
+    <p id='ops' title='Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps.' class='definition'>Operators</p>
     <div id='valTimes'>
       <p><b>Valid Time</b></p>
       <select id="valDropdown"></select>
     </div>
-    <p id='dragInstruct'>Drag the blue bars on the sides of each axis to create your selected time range</p>
+    <p id='dragInstruct'>*Drag the blue bars on the sides of each axis to create your selected time range*</p>
     <div id='sysTimes'>
       <p><b>System Time</b></p>
       <select id="sysDropdown"></select>
@@ -346,9 +341,6 @@
   </body>
 </html>
 
-<!doctype html>
-<html lang="en">
-<head>
   <style>
     .dragValBar {
       cursor: pointer;
@@ -367,9 +359,6 @@
     }
 
   </style>
-  <meta charset="utf-8">
-  <title>jQuery UI Draggable - Default functionality</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script>
@@ -383,17 +372,19 @@
   </script>
 
   <div id='dragArea'>
-    <hr noshade class='dragValBar' id='valBar1' width='100%' color='blue'></hr> 
-    <hr noshade class='dragValBar' id='valBar2' width='100%' color='blue'></hr> 
+    <hr noshade class='dragValBar' id='valBar1' width='100%' color='blue'></hr>
+    <hr noshade class='dragValBar' id='valBar2' width='100%' color='blue'></hr>
   </div>
   <div id='ctsQuery'>
-    <p>cts query</p>
+    <p class='definition' title='cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges'>cts:query</p>
     <textarea rows='15' cols='50' color='blue' id='queryText'></textarea>
   </div>
+</div>
 
 </head>
 <body>
- 
- 
+
+
 </body>
 </html>
+

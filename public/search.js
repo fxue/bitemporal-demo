@@ -22,7 +22,7 @@ $('#sysDropdown').change(function() {
 });
 
 function operatorChange() {
-  $('#dragInstruct').css({'visibility': 'hidden'});
+  $('#dragInstruct').css({'visibility': 'visible'});
   var selectedColl = getSelected('dropdown');
 
   var valSelectedOp = getSelected('valDropdown');
@@ -35,11 +35,17 @@ function operatorChange() {
     valAxis = 'myValid';
     $('#dragInstruct').css({'visibility': 'visible'});
   }
+
   if(sysSelectedOp !== 'None') {
     sysAxis = 'mySystem';
     $('#dragInstruct').css({'visibility': 'visible'});
   }
 
+  if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
+     $('#dragInstruct').css({'visibility': 'hidden'});
+     ajaxTimesCall(selectedColl, null);
+    return;
+  }
   var valStart = '9997-12-31T23:59:59.99Z';
   var valEnd = '9998-12-31T23:59:59.99Z';
   var sysStart = '9998-12-31T23:59:59.99Z';
@@ -50,9 +56,8 @@ function operatorChange() {
       url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
       success: function(response, textStatus)
       {
-        console.log(response);
         displayQuery(response);
-        createGraph(response);
+        ajaxTimesCall(response.collection, response);
       },
       error: function(jqXHR, textStatus, errorThrown)
       {
@@ -65,43 +70,14 @@ function displayQuery(response) {
   document.getElementById('queryText').innerHTML = response.query;
 }
 
-function createGraph(response) {
-  var data = createCorrData(response);
-  if (!data) {
-    showAlertBox = true;
-    data = [];
-  }
-  var times = ajaxTimesCall(response.collection);
-   var timeRanges = {
-    valStart: toReturnDate(times.valStart),
-    valEnd: toReturnDate(times.valEnd),
-    sysStart: toReturnDate(times.sysStart),
-    sysEnd: toReturnDate(times.sysEnd)
-  }
-   getBarChart({
-    data: data,
-    width: 800,
-    height: 600,
-    xAxisLabel: 'System',
-    yAxisLabel: 'Valid',
-    timeRanges: timeRanges,
-    containerId: 'bar-chart-large'
-  }, null);
-
-  if (showAlertBox) {
-    alert('There are no documents within this time range. Please select another operator.');
-  }
-}
-
 function createCorrData(response) {
   var result = [];
-  if(!response.values) {
-    return null;
-  }
-  for(var i = 0; i < response.values.length; i++) {
-    result.push({
-      content: response.values[i]
-    });
+  if(response.values) {
+    for(var i = 0; i < response.values.length; i++) {
+      result.push({
+        content: response.values[i]
+      });
+    }
   }
   return result;
 }
@@ -114,7 +90,6 @@ $.ajax(
     success: function(response, textStatus)
     {
       generateOps();
-      //console.log('got collections: ' + JSON.stringify(response));
       //adds names of the collections to the drop down list
       var addToDrop = $('#dropdown');
       //endpoint is the number of collections
@@ -134,7 +109,7 @@ $.ajax(
       {
         addToDrop.append($('<option>').text(dropArray[k])) ;
         if( k === 0 ) {
-          ajaxTimesCall(dropArray[k]);
+          ajaxTimesCall(dropArray[k], null);
         }
       }
     },
@@ -149,7 +124,7 @@ $('#dropdown').change(function()
     $('#next').css({'visibility': 'hidden'});
     $('#prev').css({'visibility': 'hidden'});
     var selectedColl = getSelected('dropdown');
-    ajaxTimesCall(selectedColl);
+    ajaxTimesCall(selectedColl, null);
     $('#bulletList').empty();
     $('#numDocs').empty();
     document.getElementById("valDropdown").selectedIndex = 0;
@@ -158,54 +133,45 @@ $('#dropdown').change(function()
 );
 
 //function to make ajax call to get min and max times
-function ajaxTimesCall(selectedColl)
+function ajaxTimesCall(selectedColl, dataToDisplay)
 {
-  var ranges;
   $.ajax(
     {
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
-      async: false,
       success: function(response, textStatus)
       {
-        ranges = response;
-        displayAxis(response);
+        var data = [];
+
+        if(dataToDisplay !== null) {
+          data = createCorrData(dataToDisplay);
+        }
+        var times = response;
+        var timeRanges = {
+          valStart: toReturnDate(times.valStart),
+          valEnd: toReturnDate(times.valEnd),
+          sysStart: toReturnDate(times.sysStart),
+          sysEnd: toReturnDate(times.sysEnd)
+        }
+
+        getBarChart({
+          data: data,
+          width: 800,
+          height: 600,
+          xAxisLabel: 'System',
+          yAxisLabel: 'Valid',
+          timeRanges: timeRanges,
+          containerId: 'bar-chart-large'
+        }, null);
+
+        if (!timeRanges.sysStart) {
+          alert('There are no documents in this collection. Please select another.');
+        }
       },
       error: function(jqXHR, textStatus, errorThrown)
       {
         console.log('problem');
       }
     });
-  return ranges;
-}
-
-//function to display axis
-function displayAxis(times)
-{
-  var showAlertBox;
-  if( !times.valStart ) {
-    showAlertBox = true;
-  }
-
-  var timeRanges = {
-    valStart: toReturnDate(times.valStart),
-    valEnd: toReturnDate(times.valEnd),
-    sysStart: toReturnDate(times.sysStart),
-    sysEnd: toReturnDate(times.sysEnd)
-  }
-
-  getBarChart({
-    data: [],
-    width: 800,
-    height: 600,
-    xAxisLabel: 'System',
-    yAxisLabel: 'Valid',
-    timeRanges: timeRanges,
-    containerId: 'bar-chart-large'
-  }, null);
-
-  if (showAlertBox) {
-    alert('There are no documents in this collection. Please select another.');
-  }
 }
 
 function toReturnDate(time) {
