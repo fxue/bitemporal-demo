@@ -125,6 +125,7 @@ function loadData(collection) { //Called from top-level code
     async: false,
     success: function(data) {
       var arrData = parseData(data, collection, 1);
+      console.log(arrData);
       getBarChart({
         data: arrData,
         width: 800,

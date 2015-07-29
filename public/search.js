@@ -144,6 +144,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
   $.ajax(
     {
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
+      async: false,
       success: function(response, textStatus)
       {
         var data = [];
@@ -283,6 +284,7 @@ function displayDocs(start, end) {
     else if( totalDocLen > 0 )
     {
       docs = parseData(data, null, 2);
+      console.log(docs);
     }
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
