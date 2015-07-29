@@ -139,6 +139,18 @@
         font-size: 15px;
       }
 
+      #dragInstruct {
+        position: absolute;
+        left: 330px;
+        top: 170px;
+        text-wrap: normal;
+        display: block;
+        width: 240px;
+        text-align: center;
+        color: #708090;
+        visibility: hidden;
+      }
+
       #sysDropdown {
         height: 20px;
         display: block;
@@ -306,6 +318,7 @@
       <p><b>Valid Time</b></p>
       <select id="valDropdown"></select>
     </div>
+    <p id='dragInstruct'>Drag the blue bars on the sides of each axis to create your selected time range</p>
     <div id='sysTimes'>
       <p><b>System Time</b></p>
       <select id="sysDropdown"></select>
