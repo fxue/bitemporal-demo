@@ -219,7 +219,8 @@ function displayDocs(start, end)
 
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
-    for (var i=0; i < docs.length ; i++)
+    //Checks if docs has a defined value
+    for (var i=0; docs && i < docs.length ; i++)
     {
       var uri = docs[i].uri;
       var uriLogical;
