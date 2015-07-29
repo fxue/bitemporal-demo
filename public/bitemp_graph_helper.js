@@ -18,6 +18,7 @@ var drawChart = function(params, docProp) {
       .width(params.width)
       .height(params.height)
       .setDisplayProperty(docProp);
+    
   }
 
   var selector = '#' + params.containerId;
@@ -271,7 +272,7 @@ var getBarChart = function (params, docProp) {
     addDataToMenu(chart, params);
   }
   removeButtonEvents();
-  if( params.timeRanges === null) {
+  if(params.timeRanges === null) {
     initButtons();
     document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
   }
