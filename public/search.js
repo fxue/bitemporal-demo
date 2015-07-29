@@ -143,7 +143,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
   $.ajax(
     {
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
-      async: false,
       success: function(response, textStatus)
       {
         var data = [];
