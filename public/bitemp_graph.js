@@ -35,7 +35,7 @@ var barChart = function() {
   var chart = function(container) {
 
     function setDimensions() {
-      axisLabelMargin = 0;
+      axisLabelMargin = 60;
     }
 
     function setupXAxis() {
@@ -70,7 +70,6 @@ var barChart = function() {
         xAxisCssClass = '';
       }
 
-      console.log('xScale = ' + xScale);
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
@@ -140,33 +139,38 @@ var barChart = function() {
     }
 
     function addXAxisLabel() {
-
+      //Rotate ticks
       g.append('g')
         .attr('class', 'xaxis ' + xAxisCssClass)
         .attr('transform', 'translate(0,' +
           (height - axisLabelMargin - margin.top - margin.bottom) + ')')
-        .call(xAxis)  
+        .call(xAxis)
         .selectAll('text')
           .style('text-anchor', 'end')
           .attr('dx', '-0.9em')
           .attr('transform', 'rotate(-60)');
-          
-      //g.append('g').call(xAxis).tickSize(5,5,5);
         
+      //Add x axis label  
+      g.append('g')
+        .append('text')
+        .attr('class', 'axis-label')
+        .attr('y', height - margin.bottom + axisLabelMargin)
+        .attr('x', width/2 - axisLabelMargin/2)
+        .text(xAxisLabel);
     }
 
     function addYAxisLabel() {
-
+      
       g.append('g')
         .attr('class', 'yaxis ')
-        .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
+        .attr('transform', 'translate('+axisLabelMargin+', 0)')
         .call(yAxis)
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -margin.left)
-        .attr('x', -(height - margin.top - margin.bottom - axisLabelMargin) / 2)
-        .style('text-anchor', 'middle')
+        .attr('y', -margin.left) 
+        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin) / 2)
+        .style('text-anchor', 'left')
         .text(yAxisLabel);
 
     }
