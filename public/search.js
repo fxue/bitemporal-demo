@@ -127,6 +127,7 @@ function formatData(response) {
   return result;
 }
 
+<<<<<<< HEAD
 $('#dropdown').change(function() {
   $('#next, #prev, .hide, #startValBox, #endValBox, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
   var selectedColl = getSelected('dropdown');
@@ -137,6 +138,58 @@ $('#dropdown').change(function() {
   document.getElementById('valDropdown').selectedIndex = 0;
   document.getElementById('sysDropdown').selectedIndex = 0;
 });
+=======
+
+//call to get the list of temporal collection
+$.ajax(
+  {
+    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+    success: function(response, textStatus)
+    {
+      generateOps();
+      //adds names of the collections to the drop down list
+      var addToDrop = $('#dropdown');
+      //endpoint is the number of collections
+      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
+
+      //dropArray is the array containing all the temporal Collections
+      var dropArray = [];
+      for (var j = 0; j < endpoint; j++)
+      {
+        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
+      }
+      //sorts the array (alphabetically) containing the temporal collections
+      dropArray.sort();
+
+      //this for loop appends the collection names to the drop down list
+      for (var k = 0; k < dropArray.length; k++)
+      {
+        addToDrop.append($('<option>').text(dropArray[k])) ;
+        if( k === 0 ) {
+          ajaxTimesCall(dropArray[k], null);
+        }
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
+
+$('#dropdown').change(function()
+  {
+    $('#next').css({'visibility': 'hidden'});
+    $('#prev').css({'visibility': 'hidden'});
+    var selectedColl = getSelected('dropdown');
+    ajaxTimesCall(selectedColl, null);
+    $('#bulletList').empty();
+    $('#numDocs').empty();
+    document.getElementById("valDropdown").selectedIndex = 0;
+    document.getElementById("sysDropdown").selectedIndex = 0;
+    $('#dragInstruct').css({'visibility': 'hidden'});
+  }
+);
+>>>>>>> created draggable bars in d3
 
 //function to make ajax call to get min and max times
 function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
@@ -146,6 +199,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
       success: function(response, textStatus)
       {
         var data = [];
+<<<<<<< HEAD
         var drag = true;
         if(dataToDisplay !== null) {
           data = formatData(dataToDisplay);
@@ -153,6 +207,14 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
             $('#errorMessage').css({'visibility': 'visible'});
           }
           drag = false;
+=======
+        if(dataToDisplay !== null) {
+          data = createCorrData(dataToDisplay);
+        } 
+
+        if(data.length <= 0) {
+          $('#dragInstruct').css({'visibility': 'hidden'});
+>>>>>>> created draggable bars in d3
         }
 
         var times = response;
