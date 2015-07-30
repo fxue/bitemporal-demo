@@ -118,7 +118,7 @@ function displayQuery(response) {
  
 function formatData(response) {
   var result = [];
-  if(response.values) {
+  if(response.values) { 
     for(var i = 0; i < response.values.length; i++) {
       result.push({content: response.values[i]});
     }
