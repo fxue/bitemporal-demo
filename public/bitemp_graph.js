@@ -59,7 +59,7 @@ var barChart = function() {
         moment.max(data.map(function(d){
           return moment(d.content.start);
         })).add('y', 10);
-      
+
       if (xMax) {
         maxEnd = xMax;
       }
@@ -113,7 +113,7 @@ var barChart = function() {
         moment.max(data.map(function(d){
           return moment(d.content.valStart);
         })).add('y', 10);
-      
+
       if (yMax) {
         maxEnd = yMax;
       }
@@ -220,7 +220,7 @@ var barChart = function() {
       return lastDoc;
     }
 
-    
+
     function addBarChartData() {
 
       var split = g.selectAll('.split')
@@ -233,8 +233,51 @@ var barChart = function() {
         .attr('class','split')
         .attr('stroke', 'black');
 
-      var r;
+      var dragLeftRight = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          d.x += d3.event.dx
+          d.y += 0
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
 
+      var dragUpDown = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          d.x += 0
+          d.y += d3.event.dy
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      function lineCreator(x1, x2, y1, y2, direction) {
+        var line = g
+          .append('line')
+          .attr("x1", x1)
+          .attr("x2", x2)
+          .attr("y1", y1)
+          .attr("y2", y2)
+          .attr("stroke-width", 6)
+          .attr("stroke", "blue")
+          .data([ {"x":1, "y":1} ])
+          .attr("id", 'lines')
+          .call(direction);
+
+      }
+      //x axis top
+      lineCreator(59.5, 1000, -7, -7, dragUpDown);
+
+      //x axis bottom
+      lineCreator(59.5, 1000, 430, 430, dragUpDown);
+
+      //y axis left
+      lineCreator(63, 63, -10.5, 430, dragLeftRight);
+
+      //y axis right
+      lineCreator(697, 697, -10.5, 430, dragLeftRight);
+
+      var r;
       var propTooltip = d3.select('body')
         .append('div')
         .style('z-index', '10')
@@ -244,7 +287,7 @@ var barChart = function() {
         .style('font-size', '18px')
         .style('width', '32em')
         .text('');
-      
+
       r = split
         .append('rect')
         .on('mouseover', function(d) {
@@ -339,8 +382,6 @@ var barChart = function() {
           return w;
         });
 
-
-
       split.append('text')
         .attr('id', 'box')
         .style('fill', 'DarkMagenta')
@@ -395,7 +436,7 @@ var barChart = function() {
           for(var i = 0; i < displayedProps.length; i++) {
             if(displayedProps[i] === str) {
               alreadyInGraph = true;
-            } 
+            }
           }
           if(alreadyInGraph === false) {
             displayedProps.push(str);
@@ -409,8 +450,8 @@ var barChart = function() {
 
     function path(object, fullPath) {
       var selection = object;
-      fullPath.split('.').forEach(function(path) { 
-        selection = selection[path]; 
+      fullPath.split('.').forEach(function(path) {
+        selection = selection[path];
       });
       return selection;
     }

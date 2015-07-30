@@ -129,6 +129,7 @@ $('#dropdown').change(function()
     $('#numDocs').empty();
     document.getElementById("valDropdown").selectedIndex = 0;
     document.getElementById("sysDropdown").selectedIndex = 0;
+    $('#dragInstruct').css({'visibility': 'hidden'});
   }
 );
 
@@ -141,9 +142,12 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
       success: function(response, textStatus)
       {
         var data = [];
-
         if(dataToDisplay !== null) {
           data = createCorrData(dataToDisplay);
+        }
+
+        if(data.length <= 0) {
+          $('#dragInstruct').css({'visibility': 'hidden'});
         }
         var times = response;
         var timeRanges = {
