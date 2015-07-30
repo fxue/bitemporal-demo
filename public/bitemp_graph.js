@@ -396,8 +396,6 @@ var barChart = function() {
           return w;
         });
 
-
-
       split.append('text')
         .attr('id', 'box')
         .style('fill', 'DarkMagenta')
