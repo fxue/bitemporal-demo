@@ -192,7 +192,7 @@ var barChart = function() {
     function getLastDoc() {
       return lastDoc;
     }
-
+    
     function addBarChartData() {
 
       split = g.selectAll('.split')
@@ -201,31 +201,32 @@ var barChart = function() {
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
-      var r;
       
-      r = split
-        .append('rect')
+      var r;
+      r = split.append('rect')
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
           document.getElementById('deleteErrMessage').innerHTML = '';
-
+          
           if (!chart.getEditing() && !chart.getViewing()) {
             chart.setCurrentURI(datum.uri);
             showCurrURI(datum.uri);
-            //Selection of a box in graph visualization
-            $(this).attr('stroke', 'black');
+              
+            //Selection of a box in graph visualization            
+            
             $(this).attr('stroke-width', '4');
+            $(this).attr('stroke', 'black');
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
-              $(getLastDoc()).attr('stroke-width', '0');
+              $(getLastDoc()).attr('stroke-width', '1');
             }
             setLastDoc(this);
           }
         })
         .attr('stroke', 'grey')
-        .attr('stroke-width', '2')
+        .attr('stroke-width', '1')
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
@@ -240,8 +241,6 @@ var barChart = function() {
           var bary = yScale(moment(d.content.valEnd).toDate());
           return bary;
         })
-        .attr('height', 0)
-        .attr('width', 0)
         .style('opacity', 0)
         .transition()
         .duration(1500)
@@ -302,9 +301,8 @@ var barChart = function() {
 
           return d.content[displayProperty];
         });
-
     }
-
+    
     setDimensions();
     setupXAxis();
     setupYAxis();
