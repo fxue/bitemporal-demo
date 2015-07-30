@@ -73,20 +73,30 @@
         line-height: 18px;
         font-weight: bold;
       }
+      
+      .xaxis .tick {
+        stroke: black;
+        stroke-width: 1;
+      }
 
+      .yaxis .tick {
+        stroke: black;
+        stroke-width: 1;
+      }
+      
       .axis-label {
         font-family: Helvetica;
         font-size: 17px;
-        font-weight: bold;
+        stroke: black;
       }
 
-      .yaxis {
+      .svg-chart .yaxis text{
         font-size: 14px;
+        stroke-width: 0;
       }
-      .svg-chart .xaxis .tick text {
-        transform: rotate(-45deg);
-        text-anchor: end !important;
+      .svg-chart .xaxis text{
         font-size: 15px;
+        stroke-width: 0;
       }
 
       #uriEntered {

@@ -34,17 +34,13 @@ var barChart = function() {
 
   var chart = function(container) {
 
-    for (var prop in container) {
-      if (container.hasOwnProperty(prop))
-        console.log(prop);
-    }
-
     function setDimensions() {
-      axisLabelMargin = 60;
+      axisLabelMargin = 0;
     }
 
     function setupXAxis() {
       var mindate, maxdate;
+      
       if (xMin) {
         mindate = xMin;
       }
@@ -61,26 +57,27 @@ var barChart = function() {
         maxdate =
           moment.max(data.map(function(d){
             return moment(d.content.sysStart);
-          })).add(10, 'y').toDate();
-      }
-
+          })).add(10,'y').toDate(); 
+      } //Adds 10 years to the highest sysStart date date, ('y' is for years)
+      
       xScale = d3.time.scale()
         .domain([mindate, maxdate])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
-
+      
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
       } else {
         xAxisCssClass = '';
       }
 
+      console.log('xScale = ' + xScale);
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
-        .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-        .outerTickSize(0)
-        .orient('bottom')
-        .tickFormat(d3.time.format('%Y-%m-%d'));
+        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickSize(8,0)
+        .orient('end');
+        
     }
 
     function setupYAxis() {
@@ -120,10 +117,9 @@ var barChart = function() {
       yAxis = d3.svg.axis()
         .scale(yScale)
         .ticks(15)
-        .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-        .outerTickSize(0)
         .orient('left')
-        .tickFormat(d3.time.format('%Y-%m-%d'));
+        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickSize(10,0);
     }
 
     function setupBarChartLayout() {
@@ -147,14 +143,16 @@ var barChart = function() {
 
       g.append('g')
         .attr('class', 'xaxis ' + xAxisCssClass)
-        .attr('transform', 'translate(' + axisLabelMargin + ',' +
+        .attr('transform', 'translate(0,' +
           (height - axisLabelMargin - margin.top - margin.bottom) + ')')
-        .call(xAxis)
-        .append('text')
-        .attr('class', 'axis-label')
-        .attr('y', margin.bottom)
-        .attr('x', (width-margin.left)/2)
-        .text(xAxisLabel);
+        .call(xAxis)  
+        .selectAll('text')
+          .style('text-anchor', 'end')
+          .attr('dx', '-0.9em')
+          .attr('transform', 'rotate(-60)');
+          
+      //g.append('g').call(xAxis).tickSize(5,5,5);
+        
     }
 
     function addYAxisLabel() {
@@ -228,7 +226,6 @@ var barChart = function() {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-          console.log('Using ' + displayProperty);
           return color(d.content[displayProperty]);
         })
         .attr('x', function(d) {
