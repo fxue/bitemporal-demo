@@ -280,7 +280,7 @@ var barChart = function() {
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
- 
+
       var r;
       var propTooltip = d3.select('body')
         .append('div')
@@ -693,10 +693,7 @@ var barChart = function() {
     }
 
     function addBackground() { 
-<<<<<<< HEAD
       var format = d3.time.format('%Y-%m-%d');
-=======
->>>>>>> added draggable bars in d3
       var background = g.append('svg')
         .style("stroke", 'red')
         .style("stroke-width", '5')
@@ -707,17 +704,11 @@ var barChart = function() {
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
 
-<<<<<<< HEAD
       var dragRight = d3.behavior.drag()
         .on("drag", function(d,i) {
           var scale = xScale.invert( d.x );
           $('#startSysBox').val(format(scale));
           if (d.x+d3.event.dx <= 0) {
-=======
-      var dragLeftRight = d3.behavior.drag()
-        .on("drag", function(d,i) {
-          if (d.x+d3.event.dx < 0) {
->>>>>>> added draggable bars in d3
             d.x = 0;
           }
           else if(d.x + d3.event.dx >= width - axisLabelMargin - margin.left - margin.right-15){
@@ -732,17 +723,11 @@ var barChart = function() {
         })
       });
 
-<<<<<<< HEAD
       var dragDown = d3.behavior.drag()
         .on("drag", function(d,i) {
           var scale = xScale.invert( -d.y + height-margin.bottom-margin.bottom );
           $('#endValBox').val(format(scale));
           if(d.y+d3.event.dy <= 0 ) {
-=======
-      var dragUpDown = d3.behavior.drag()
-        .on("drag", function(d,i) {
-          if(d.y+d3.event.dy < 0 ) {
->>>>>>> added draggable bars in d3
             d.y = 0;
           }
           else if(d.y+d3.event.dy >= 415) {
@@ -757,7 +742,6 @@ var barChart = function() {
         })
       });
 
-<<<<<<< HEAD
       var dragLeft = d3.behavior.drag()
         .on("drag", function(d,i) {
           var scale = xScale.invert( d.x + width - axisLabelMargin - margin.left - margin.right );
@@ -796,8 +780,6 @@ var barChart = function() {
         })
       });
 
-=======
->>>>>>> added draggable bars in d3
       function lineCreator(x1, x2, y1, y2, direction) {
         var line = background
           .append('line')
