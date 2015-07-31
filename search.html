@@ -22,6 +22,67 @@
         font-size: 23px;
       }
 
+      #startSysBox {
+        resize: none;
+        position: absolute;
+        left: 700px;
+        top: 148px;
+      }
+
+      #endSysBox {
+        resize: none;
+        position: absolute;
+        left: 700px;
+        top: 180px;
+      }
+
+      #startValBox {
+        resize: none;
+        position: absolute;
+        left: 222px;
+        top: 148px;
+      }
+
+      #endValBox {
+        resize: none;
+        position: absolute;
+        left: 222px;
+        top: 180px;
+      }
+
+      #vertBar1 {
+        position: absolute;
+        left: 635px;
+        top: 140px;
+      }
+
+      #vertBar2 {
+        position: absolute;
+        left: 635px;
+        top: 170px;
+      }
+
+      #horzBar1 {
+        position: absolute;
+        left: 158px;
+        top: 140px;
+      }
+
+      #horzBar2 {
+        position: absolute;
+        left: 158px;
+        top: 170px;
+      }
+
+      #searchQueryButton {
+        position: absolute;
+        left: 425px;
+        top: 160px;
+        height: 30px;
+        width: 90px;
+        font-size: 1.2em;
+      }
+
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -72,7 +133,7 @@
       #bar-chart-large {
         position: absolute;
         left: -25px;
-        top: 230px;
+        top: 290px;
       }
 
       #ctsQuery {
@@ -321,6 +382,15 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
+    <p id='vertBar1'>Start Time:</p>
+    <textarea rows='1' cols='10' color='blue' id='startSysBox'></textarea>
+    <p id='vertBar2'>End Time:</p>
+    <textarea rows='1' cols='10' color='blue' id='endSysBox'></textarea>
+    <p id='horzBar1'>Start Time:</p>
+    <textarea rows='1' cols='10' color='blue' id='startValBox'></textarea>
+    <p id='horzBar2'>End Time:</p>
+    <textarea rows='1' cols='10' color='blue' id='endValBox'></textarea> 
+    <button id='searchQueryButton'>Run Query</button>
     <div id='searchPage'>
     <p id='ops' title='Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps.' class='definition'>Operators</p>
     <div id='valTimes'>
