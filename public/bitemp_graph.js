@@ -15,6 +15,7 @@ var barChart = function() {
   var yMax = null;
   var displayProperty = '';
   var lastDoc;
+  var data;
 
   var margin = {
     top: 10,
@@ -42,8 +43,8 @@ var barChart = function() {
       // minStart: earliest sysStart
       // maxEnd: latest non-infinty sysEnd
       // maxStart: max sysStart time
-      var minDate, maxDate, maxStart;
-      
+      var minStart, maxEnd, maxStart;
+
       if (xMin) {
         minStart = xMin;
       }
@@ -53,38 +54,38 @@ var barChart = function() {
             return moment(d.content.sysStart);
           })).toDate();
       }
-      
-      var MIN_MOMENT = moment('0000-00-00T00:00:00');
-      
+
+      var MIN_MOMENT = moment('1600-01-01T00:00:00');
+
       if (xMax) {
         maxEnd = xMax;
       }
       else {
         maxEnd =
           moment.max(data.map(function(d){
-            if (!d.content.sysEnd.includes('9999')) { 
-              return moment(d.content.sysEnd);
+            if (d.content.valEnd.startsWith('9999')) {
+              return MIN_MOMENT;
             }
             else {
-              return MIN_MOMENT;
+              return moment(d.content.valEnd);
             }
             return moment(d.content.sysStart);
           })).toDate();
       }
-      
+
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.start);
         })).toDate();
-        
-      if (maxEnd.getFullYear() == 0000) { // All end dates are infinty
+
+      if (maxEnd.getFullYear() === 0) { // All end dates are infinty
         maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
-      
+
       xScale = d3.time.scale()
         .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
-      
+
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
       } else {
@@ -97,15 +98,15 @@ var barChart = function() {
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(8,0)
         .orient('end');
-        
+
     }
 
     function setupYAxis() {
       // minStart: earliest sysStart
       // maxEnd: latest non-infinty sysEnd
       // maxStart: max sysStart time
-      var minDate, maxDate, maxStart;
-      
+      var minStart, maxEnd, maxStart;
+
       if (yMin) {
         minStart = yMin;
       }
@@ -115,31 +116,31 @@ var barChart = function() {
             return moment(d.content.valStart);
           })).toDate();
       }
-      
-      var MIN_MOMENT = moment('0000-00-00T00:00:00');
-      
+
+      var MIN_MOMENT = moment('1600-01-01T00:00:00');
+
       if (yMax) {
         maxEnd = yMax;
       }
       else {
         maxEnd =
           moment.max(data.map(function(d){
-            if (!d.content.valEnd.includes('9999')) { 
-              return moment(d.content.valEnd);
+            if (d.content.valEnd.startsWith('9999')) {
+              return MIN_MOMENT;
             }
             else {
-              return MIN_MOMENT;
+              return moment(d.content.valEnd);
             }
             return moment(d.content.valStart);
           })).toDate();
       }
-      
+
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.valStart);
         })).toDate();
-        
-      if (maxEnd.getFullYear() == 0000) { // All end dates are infinty
+
+      if (maxEnd.getFullYear() === 0) { // All end dates are infinty
         maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
 
@@ -190,8 +191,8 @@ var barChart = function() {
           .style('text-anchor', 'end')
           .attr('dx', '-0.9em')
           .attr('transform', 'rotate(-60)');
-        
-      //Add x axis label  
+
+      //Add x axis label
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
@@ -201,7 +202,7 @@ var barChart = function() {
     }
 
     function addYAxisLabel() {
-      
+
       g.append('g')
         .attr('class', 'yaxis ')
         .attr('transform', 'translate('+axisLabelMargin+', 0)')
@@ -209,7 +210,7 @@ var barChart = function() {
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -margin.left) 
+        .attr('y', -margin.left)
         .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin) / 2)
         .style('text-anchor', 'left')
         .text(yAxisLabel);
@@ -233,16 +234,16 @@ var barChart = function() {
     function getLastDoc() {
       return lastDoc;
     }
-    
+
     function addBarChartData() {
 
-      split = g.selectAll('.split')
+      var split = g.selectAll('.split')
         .data(data)
         .enter()
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
-      
+
       var r;
       r = split.append('rect')
         .on('click', function(datum, index) {
@@ -250,13 +251,11 @@ var barChart = function() {
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
           document.getElementById('deleteErrMessage').innerHTML = '';
-          
+
           if (!chart.getEditing() && !chart.getViewing()) {
             chart.setCurrentURI(datum.uri);
             showCurrURI(datum.uri);
-              
-            //Selection of a box in graph visualization            
-            
+
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             if (getLastDoc() !== this) {
@@ -343,7 +342,7 @@ var barChart = function() {
           return d.content[displayProperty];
         });
     }
-    
+
     setDimensions();
     setupXAxis();
     setupYAxis();
@@ -467,14 +466,14 @@ var barChart = function() {
   chart.getDisplayProperty = function() {
     return displayProperty;
   };
-  
+
   chart.setLogicalURI = function(str) {
     logicURI = str;
-  }
-  
+  };
+
   chart.getLogicalURI = function() {
     return logicURI;
-  }
+  };
 
   chart.setDisplayProperty = function(str) {
     if(!str) {

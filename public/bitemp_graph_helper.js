@@ -19,7 +19,7 @@ var drawChart = function(params, docProp) {
       .height(params.height)
       .setDisplayProperty(docProp);
   }
- 
+
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
   d3.select(selector).append('div').classed('chart', true).call(chart);
@@ -60,7 +60,7 @@ function fillText(data, isEditing) {
   textArea.readOnly = !isEditing;
 }
 
-function cancel(chart) { 
+function cancel(chart) {
   clearTextArea();
   $('#editButton').show();
   $('#viewButton').show();
@@ -111,7 +111,6 @@ function setupTextArea(uri, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    console.log('Calling fill text, data = ' + data);
     fillText(data, isEditing);
   };
   $.ajax({
@@ -154,7 +153,7 @@ function getDocColl(uri) {
     },
     async: false,
   });
- 
+
  return JSON.parse(docColl.responseText);
 }
 
@@ -167,7 +166,7 @@ var deleteDoc = function (chart) {
   var collection = getDocColl(uri);
   var url = '/v1/documents?uri=' + uri + '&temporal-collection='+collection.collections[0];
   var currDate = new Date();
-  
+
   $.ajax(
   {
     url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+collection.collections[0],
@@ -180,17 +179,17 @@ var deleteDoc = function (chart) {
       console.log('problem');
     }
   });
-  
+
   var succFunc = function(response) {
     var sysBoxDate;
     var tempDate = new Date(response.sysEnd);
-    
+
     //Add a system time to ajax request if specified
     if (document.getElementById('sysStartBox').value !== '') {
       url += '&system-time='+document.getElementById('sysStartBox').value;
       sysBoxDate = new Date(document.getElementById('sysStartBox').value);
-    } 
-    
+    }
+
     if (!sysBoxDate) {
       if (tempDate.valueOf() > currDate.valueOf()) {
         ajax = false;
@@ -201,7 +200,7 @@ var deleteDoc = function (chart) {
       document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
       ajax = false;
     }
-    
+
     if (ajax) {
       $.ajax({
         url: url,
@@ -267,7 +266,6 @@ function changeTextInGraph(chart, params) {
 
 function addDataToMenu(chart, params) {
   if (!params.timeRanges){
-    console.log('DoesNOThaveTimeRanges');
     $('#select-prop').empty();
     var propsInGraph = {};
     propsInGraph['Choose a property'] = true;
@@ -345,11 +343,11 @@ var getBarChart = function (params, docProp) {
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
-  
+
   $('#deleteOKButton').click(function() {
     deleteDoc(chart);
   });
-  
+
   $('#deleteCancelButton').click(function() {
     cancel(chart);
   });

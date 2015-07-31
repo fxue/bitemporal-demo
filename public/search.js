@@ -80,7 +80,7 @@ function displayAxis(times)
     if (times.hasOwnProperty(prop))
       console.log('times property = ' + prop+ ' value = ' + times[prop]);
   }
-  
+
   var timeRanges = {
     valStart: toReturnDate(times.valStart),
     valEnd: toReturnDate(times.valEnd),
