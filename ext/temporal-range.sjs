@@ -11,7 +11,7 @@ function get(context, params) {
     cts.collectionQuery(params.collection)
   );
 
-  result.sysEnd = cts.values ( 
+  result.sysEnd = cts.values (
     cts.elementReference(xs.QName('sysEnd')),
     ltInfinity,
     ["descending","limit=1"],
@@ -35,6 +35,5 @@ function get(context, params) {
 
 }
 
-exports.GET = get;
 
-//http://localhost:8000/v1/resources/temporal-range?rs:collection=myTemporal 
+exports.GET = get;

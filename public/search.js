@@ -42,7 +42,6 @@ $('#dropdown').change(function()
     lastDoc = 10;
     $('#next').css({'visibility': 'visible'});
     $('#prev').css({'visibility': 'visible'});
-    displayDocs(firstDoc, lastDoc);
 
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -153,7 +152,7 @@ function displayDocs( start, end)
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   var docs = $.ajax(
   {
-    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22"+selectedColl+"%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
+    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22'+selectedColl+'%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
     headers:
     {
       'Accept': 'multipart/mixed'

@@ -197,7 +197,7 @@ function changeTextInGraph(chart, params) {
 }
 
 function addDataToMenu(chart, params) {
-  if(params.timeRanges === null && params.data.length <= 0) {
+  if(!params.timeRanges) {
     console.log('DoesNOThaveTimeRanges');
     $('#select-prop').empty();
     var propsInGraph = {};
