@@ -27,9 +27,11 @@
         stroke: #ccc;
         fill: #fdfdfd;
         stroke-width: 1px;
-        z-index: 2;
       }
-      .svg-chart .g { fill: #4682B4; }
+
+      .svg-chart .g {
+        fill: #4682B4;
+      }
 
       .tooltip-txt {
         margin: 0;
@@ -45,13 +47,26 @@
         font-weight: bold;
       }
 
-      .yaxis {
-        font-size: 14px;
+      .yaxis .tick {
+        stroke: black;
+        stroke-width: 1;
       }
-      .svg-chart .xaxis .tick text {
+
+      .xaxis .tick {
+        stroke: black;
+        stroke-width: 1;
+      }
+
+      .yaxis text {
+        font-size: 14px;
+        stroke-width: 0;
+      }
+
+      .xaxis .tick text {
         transform: rotate(-45deg);
         text-anchor: end !important;
         font-size: 15px;
+        stroke-width: 0;
       }
 
       #bar-chart-large {
@@ -276,15 +291,6 @@
         cursor: pointer;
       }
 
-      #dragArea {
-        height: 435px;
-        width: 635px;
-        border: solid;
-        position: absolute;
-        left: 134px;
-        top: 230px;
-      }
-
       #ops {
         position: absolute;
         left: 38px;
@@ -296,6 +302,14 @@
         position: absolute;
         left: 20px;
         top: -75px;
+      }
+
+      #lines {
+        visibility: visible;
+      }
+
+      #ruler {
+        visibility: visible;
       }
 
     </style>
@@ -328,6 +342,11 @@
         <ul id="bulletList"></ul>
       </div>
 
+    <div id='ctsQuery'>
+      <p class='definition' title='cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges'>cts:query</p>
+      <textarea rows='15' cols='50' color='blue' id='queryText'></textarea>
+    </div>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -339,52 +358,5 @@
     <div id="bar-chart-large"></div>
 
   </body>
-</html>
-
-  <style>
-    .dragValBar {
-      cursor: pointer;
-      height: 5px;
-      margin-bottom: 0px;
-      margin-top: 0px;
-    }
-
-    #valBar1 {
-      position: relative;
-    }
-
-    #valBar2 {
-      position: relative;
-      top: 425px;
-    }
-
-  </style>
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  <script>
-  $(function() {
-    $( ".dragValBar" ).draggable(
-      {
-        axis: 'y',
-        containment: 'parent'
-      });
-  });
-  </script>
-
-  <div id='dragArea'>
-    <hr noshade class='dragValBar' id='valBar1' width='100%' color='blue'></hr>
-    <hr noshade class='dragValBar' id='valBar2' width='100%' color='blue'></hr>
-  </div>
-  <div id='ctsQuery'>
-    <p class='definition' title='cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges'>cts:query</p>
-    <textarea rows='15' cols='50' color='blue' id='queryText'></textarea>
-  </div>
-</div>
-
-</head>
-<body>
-
-
-</body>
 </html>
 

@@ -160,7 +160,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
         getBarChart({
           data: data,
           width: 800,
-          height: 600,
+          height: 500,
           xAxisLabel: 'System',
           yAxisLabel: 'Valid',
           timeRanges: timeRanges,

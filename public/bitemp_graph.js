@@ -19,9 +19,9 @@ var barChart = function() {
   var displayedProps = [];
 
   var margin = {
-    top: 10,
+    top: 0,
     right: 0,
-    bottom: 100,
+    bottom: 70,
     left: 100
   };
   var xAxisLabel = 'System Time';
@@ -37,7 +37,7 @@ var barChart = function() {
   var chart = function(container) {
 
     function setDimensions() {
-      axisLabelMargin = 60;
+      axisLabelMargin =70;
     }
 
     function setupXAxis() {
@@ -76,8 +76,8 @@ var barChart = function() {
       }
 
       xScale = d3.time.scale()
-        .domain([minStart, maxEnd])
-        .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
+        .domain([mindate, maxdate])
+        .range([axisLabelMargin-30,width-margin.left-margin.right-axisLabelMargin-10]);
 
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
@@ -88,10 +88,9 @@ var barChart = function() {
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
-        .tickFormat(d3.time.format('%Y-%m-%d'))
-        .tickSize(8,0)
-        .orient('end');
-
+        .tickSize(10,0)
+        .orient('end')
+        .tickFormat(d3.time.format('%Y-%m-%d'));
     }
 
     function setupYAxis() {
@@ -130,8 +129,8 @@ var barChart = function() {
       }
 
       yScale = d3.time.scale()
-        .domain([minStart, maxEnd])
-        .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
+        .domain([mindate, maxdate])
+        .range([height-margin.bottom-margin.bottom-3,-85]);
 
       var yAxisCssClass;
       if (data.length > 12 && width < 500) {
@@ -143,19 +142,19 @@ var barChart = function() {
       yAxis = d3.svg.axis()
         .scale(yScale)
         .ticks(15)
+        .tickSize(10,0)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0);
     }
 
     function setupBarChartLayout() {
-
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
-        .attr('height', height)
+        .attr('height', height+100)
         .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('transform', 'translate(' + margin.left + ',' + margin.bottom+ ')');
 
       var colorDomain = [];
       data.map(function(d){
@@ -181,37 +180,39 @@ var barChart = function() {
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', height - margin.bottom + axisLabelMargin)
-        .attr('x', width/2 - axisLabelMargin/2)
+        .attr('y', margin.bottom+30)
+        .attr('x', ((width-margin.left)/2)-80)
         .text(xAxisLabel);
     }
 
     function addYAxisLabel() {
 
       g.append('g')
-        .attr('class', 'yaxis ')
-        .attr('transform', 'translate('+axisLabelMargin+', 0)')
+        .attr('class', 'yaxis')
+        .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
         .call(yAxis)
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
         .attr('y', -margin.left)
-        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin) / 2)
-        .style('text-anchor', 'left')
+        .attr('x', -(height - margin.top - margin.bottom - axisLabelMargin-70) / 2)
+        .style('text-anchor', 'middle')
         .text(yAxisLabel);
 
     }
 
-    function addBackground() {
-
+    function addRectangle() {
       g.append('rect')
+        .style("stroke", 'black')
+        .style("stroke-width", '5')
+        .style('fill', 'white')
         .attr('class', 'background')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
-
     }
+
     function setLastDoc(ld) {
       lastDoc = ld;
     }
@@ -232,50 +233,6 @@ var barChart = function() {
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
-
-      var dragLeftRight = d3.behavior.drag()
-        .on("drag", function(d,i) {
-          d.x += d3.event.dx
-          d.y += 0
-          d3.select(this).attr("transform", function(d,i){
-            return "translate(" + [ d.x,d.y ] + ")"
-        })
-      });
-
-      var dragUpDown = d3.behavior.drag()
-        .on("drag", function(d,i) {
-          d.x += 0
-          d.y += d3.event.dy
-          d3.select(this).attr("transform", function(d,i){
-            return "translate(" + [ d.x,d.y ] + ")"
-        })
-      });
-
-      function lineCreator(x1, x2, y1, y2, direction) {
-        var line = g
-          .append('line')
-          .attr("x1", x1)
-          .attr("x2", x2)
-          .attr("y1", y1)
-          .attr("y2", y2)
-          .attr("stroke-width", 6)
-          .attr("stroke", "blue")
-          .data([ {"x":1, "y":1} ])
-          .attr("id", 'lines')
-          .call(direction);
-
-      }
-      //x axis top
-      lineCreator(59.5, 1000, -7, -7, dragUpDown);
-
-      //x axis bottom
-      lineCreator(59.5, 1000, 430, 430, dragUpDown);
-
-      //y axis left
-      lineCreator(63, 63, -10.5, 430, dragLeftRight);
-
-      //y axis right
-      lineCreator(697, 697, -10.5, 430, dragLeftRight);
 
       var r;
       var propTooltip = d3.select('body')
@@ -339,8 +296,11 @@ var barChart = function() {
           }
         })
         .attr('stroke', 'grey')
-        .attr('stroke-width', '1')
-        .attr('fill', function(d) {
+        .style('position', 'relative')
+        .style('z-index', '-1')
+        .style('opacity', '.99')
+        .attr('stroke-width', '2')
+        .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
           }
@@ -456,23 +416,92 @@ var barChart = function() {
       return selection;
     }
 
-    /*
-      var x = { foo: { bar: { stuff: 'something' } } }
-      var path = 'foo.bar.stuff'
-      var selected = x;
-      path.split('.').forEach(function(path) { selected = selected[path]; });
-      selected
-    */
+    function addBackground() {
+      var background = g.append('svg')
+        .style("stroke", 'red')
+        .style("stroke-width", '5')
+        .style('fill', 'white')
+        .attr('class', 'background')
+        .attr('x', axisLabelMargin)
+        .attr('y', -axisLabelMargin)
+        .attr('width', width - axisLabelMargin - margin.left - margin.right)
+        .attr('height', height - margin.top - margin.bottom);
+
+      var dragLeftRight = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          if (d.x+d3.event.dx < 0) {
+            d.x = 0;
+          }
+          else if(d.x + d3.event.dx >= width - axisLabelMargin - margin.left - margin.right-15){
+            d.x = width - axisLabelMargin - margin.left - margin.right-15;
+          }
+          else {
+            d.x+=d3.event.dx;
+          }
+            d.y += 0;
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      var dragUpDown = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          if(d.y+d3.event.dy < 0 ) {
+            d.y = 0;
+          }
+          else if(d.y+d3.event.dy >= 415) {
+            d.y = 415;
+          }
+          else {
+            d.y += d3.event.dy;
+          }
+          d.x += 0
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      function lineCreator(x1, x2, y1, y2, direction) {
+        var line = background
+          .append('line')
+          .attr("x1", x1)
+          .attr("x2", x2)
+          .attr("y1", y1)
+          .attr("y2", y2)
+          .style('opacity', '.99')
+          .style('position', 'relative')
+          .style('cursor', 'pointer')
+          .style('z-index', '1')
+          .attr("stroke-width", 6)
+          .attr("stroke", "blue")
+          .data([ {"x":1, "y":1} ])
+          .attr("id", 'lines')
+          .call(direction);
+      }
+      //x axis top
+      lineCreator(3, 1000, 3, 3, dragUpDown);
+      lineCreator(3, 1000, 12, 12, dragUpDown);
+
+      // //x axis bottom
+      // lineCreator(3, 1000, 427, 427, dragUpDown);
+
+      //y axis left
+      lineCreator(3, 3, -10.5, 430, dragLeftRight);
+      lineCreator(12, 12, -10.5, 430, dragLeftRight);
+
+      // //y axis right
+      // lineCreator(621, 621, 3, 427, dragLeftRight);
+    }
 
     setDimensions();
     setupXAxis();
     setupYAxis();
     setupBarChartLayout();
-    addBackground();
+    addRectangle();
     addXAxisLabel();
     addYAxisLabel();
     addBarChartData();
-
+    addBackground();
 };
   d3.selection.prototype.size = function() {
     var n = 0;
