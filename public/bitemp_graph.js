@@ -108,7 +108,6 @@ var barChart = function() {
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0)
         .orient('end');
- 
     }
  
     function setupYAxis() {
