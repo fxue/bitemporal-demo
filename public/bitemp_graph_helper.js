@@ -194,11 +194,11 @@ var deleteDoc = function (chart) {
     if (!sysBoxDate) {
       if (tempDate.valueOf() > currDate.valueOf()) {
         ajax = false;
-        document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward'.bold();
+        document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
       }
     }
     else if (tempDate.valueOf() > sysBoxDate.valueOf()) {
-      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward'.bold();
+      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
       ajax = false;
     }
     
