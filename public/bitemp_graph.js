@@ -175,13 +175,12 @@ var barChart = function() {
     }
 
     function setupBarChartLayout() {
-
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
-        .attr('height', height)
+        .attr('height', height+100)
         .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('transform', 'translate(' + margin.left + ',' + margin.bottom+ ')');
 
       var colorDomain = [];
       data.map(function(d){
@@ -211,7 +210,7 @@ var barChart = function() {
         .attr('y', height - 20)
         .attr('x', (width - margin.left)/2)
         .text(xAxisLabel);
-    }
+    } 
 
     function addYAxisLabel() {
 
@@ -690,6 +689,83 @@ var barChart = function() {
           document.getElementById('uriEntered').innerHTML = 'No data found in document.';
         }
       }
+    }
+
+    function addBackground() { 
+      var background = g.append('svg')
+        .style("stroke", 'red')
+        .style("stroke-width", '5')
+        .style('fill', 'white')
+        .attr('class', 'background')
+        .attr('x', axisLabelMargin)
+        .attr('y', -axisLabelMargin)
+        .attr('width', width - axisLabelMargin - margin.left - margin.right)
+        .attr('height', height - margin.top - margin.bottom);
+
+      var dragLeftRight = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          if (d.x+d3.event.dx < 0) {
+            d.x = 0;
+          }
+          else if(d.x + d3.event.dx >= width - axisLabelMargin - margin.left - margin.right-15){
+            d.x = width - axisLabelMargin - margin.left - margin.right-15;
+          }
+          else {
+            d.x+=d3.event.dx;
+          }
+            d.y += 0;
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      var dragUpDown = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          if(d.y+d3.event.dy < 0 ) {
+            d.y = 0;
+          }
+          else if(d.y+d3.event.dy >= 415) {
+            d.y = 415;
+          }
+          else {
+            d.y += d3.event.dy;
+          }
+          d.x += 0
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      function lineCreator(x1, x2, y1, y2, direction) {
+        var line = background
+          .append('line')
+          .attr("x1", x1)
+          .attr("x2", x2)
+          .attr("y1", y1)
+          .attr("y2", y2)
+          .style('opacity', '.99')
+          .style('position', 'relative')
+          .style('cursor', 'pointer')
+          .style('z-index', '1')
+          .attr("stroke-width", 6)
+          .attr("stroke", "blue")
+          .data([ {"x":1, "y":1} ])
+          .attr("id", 'lines')
+          .call(direction);
+      }  
+      //x axis top
+      lineCreator(3, 1000, 3, 3, dragUpDown);       
+      lineCreator(3, 1000, 12, 12, dragUpDown);     
+
+      // //x axis bottom
+      // lineCreator(3, 1000, 427, 427, dragUpDown);
+
+      //y axis left
+      lineCreator(3, 3, -10.5, 430, dragLeftRight);
+      lineCreator(12, 12, -10.5, 430, dragLeftRight);
+
+      // //y axis right
+      // lineCreator(621, 621, 3, 427, dragLeftRight);
     }
 
     setDimensions();
