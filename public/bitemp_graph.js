@@ -179,7 +179,7 @@ var barChart = function() {
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
-        .attr('height', height)
+        .attr('height', height+100)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  
@@ -226,7 +226,7 @@ var barChart = function() {
         .attr('transform', 'rotate(-90)')
         .attr('y', -margin.left+65)
         .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin-190) / 2)
-        .style('text-anchor', 'left')
+        .style('text-anchor', 'left')  
         .text(yAxisLabel);
  
     }
@@ -693,7 +693,10 @@ var barChart = function() {
     }
 
     function addBackground() { 
+<<<<<<< HEAD
       var format = d3.time.format('%Y-%m-%d');
+=======
+>>>>>>> added draggable bars in d3
       var background = g.append('svg')
         .style("stroke", 'red')
         .style("stroke-width", '5')
@@ -704,11 +707,17 @@ var barChart = function() {
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
 
+<<<<<<< HEAD
       var dragRight = d3.behavior.drag()
         .on("drag", function(d,i) {
           var scale = xScale.invert( d.x );
           $('#startSysBox').val(format(scale));
           if (d.x+d3.event.dx <= 0) {
+=======
+      var dragLeftRight = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          if (d.x+d3.event.dx < 0) {
+>>>>>>> added draggable bars in d3
             d.x = 0;
           }
           else if(d.x + d3.event.dx >= width - axisLabelMargin - margin.left - margin.right-15){
@@ -723,11 +732,17 @@ var barChart = function() {
         })
       });
 
+<<<<<<< HEAD
       var dragDown = d3.behavior.drag()
         .on("drag", function(d,i) {
           var scale = xScale.invert( -d.y + height-margin.bottom-margin.bottom );
           $('#endValBox').val(format(scale));
           if(d.y+d3.event.dy <= 0 ) {
+=======
+      var dragUpDown = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          if(d.y+d3.event.dy < 0 ) {
+>>>>>>> added draggable bars in d3
             d.y = 0;
           }
           else if(d.y+d3.event.dy >= 415) {
@@ -742,6 +757,7 @@ var barChart = function() {
         })
       });
 
+<<<<<<< HEAD
       var dragLeft = d3.behavior.drag()
         .on("drag", function(d,i) {
           var scale = xScale.invert( d.x + width - axisLabelMargin - margin.left - margin.right );
@@ -780,6 +796,8 @@ var barChart = function() {
         })
       });
 
+=======
+>>>>>>> added draggable bars in d3
       function lineCreator(x1, x2, y1, y2, direction) {
         var line = background
           .append('line')
