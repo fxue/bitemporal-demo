@@ -60,13 +60,7 @@ function fillText(data, isEditing) {
   textArea.readOnly = !isEditing;
 }
 
-function cancel(chart) {
-  d = new Date('2018-01-01T00:00:00Z');
-  console.log(d);
-  sysDate = new Date();
-  if (d.valueOf() > sysDate.valueOf())
-    console.log('Date has larger time');
-  
+function cancel(chart) { 
   clearTextArea();
   $('#editButton').show();
   $('#viewButton').show();
@@ -160,12 +154,6 @@ function getDocColl(uri) {
     },
     async: false,
   });
- 
-  for (var prop in docColl) {
-    if (docColl.hasOwnProperty(prop)) {
-      console.log('prop: ' + prop + ', docColl[prop]: ' + docColl[prop]);
-    }
-  }
  
  return JSON.parse(docColl.responseText);
 }

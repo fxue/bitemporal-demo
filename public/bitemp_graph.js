@@ -39,29 +39,50 @@ var barChart = function() {
     }
 
     function setupXAxis() {
-      var mindate, maxdate;
+      // minStart: earliest sysStart
+      // maxEnd: latest non-infinty sysEnd
+      // maxStart: max sysStart time
+      var minDate, maxDate, maxStart;
       
       if (xMin) {
-        mindate = xMin;
+        minStart = xMin;
       }
       else {
-        mindate =
+        minStart =
           moment.min(data.map(function(d){
             return moment(d.content.sysStart);
           })).toDate();
       }
+      
+      var MIN_MOMENT = moment('0000-00-00T00:00:00');
+      
       if (xMax) {
-        maxdate = xMax;
+        maxEnd = xMax;
       }
       else {
-        maxdate =
+        maxEnd =
           moment.max(data.map(function(d){
+            if (!d.content.sysEnd.includes('9999')) { 
+              return moment(d.content.sysEnd);
+            }
+            else {
+              return MIN_MOMENT;
+            }
             return moment(d.content.sysStart);
-          })).add(10,'y').toDate(); 
-      } //Adds 10 years to the highest sysStart date date, ('y' is for years)
+          })).toDate();
+      }
+      
+      maxStart =
+        moment.max(data.map(function(d){
+          return moment(d.content.start);
+        })).toDate();
+        
+      if (maxEnd.getFullYear() == 0000) { // All end dates are infinty
+        maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
+      }
       
       xScale = d3.time.scale()
-        .domain([mindate, maxdate])
+        .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
       
       if (data.length > 12 && width < 500) {
@@ -80,30 +101,50 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-      var mindate, maxdate;
+      // minStart: earliest sysStart
+      // maxEnd: latest non-infinty sysEnd
+      // maxStart: max sysStart time
+      var minDate, maxDate, maxStart;
+      
       if (yMin) {
-        mindate = yMin;
+        minStart = yMin;
       }
       else {
-        mindate =
+        minStart =
           moment.min(data.map(function(d){
             return moment(d.content.valStart);
           })).toDate();
       }
+      
+      var MIN_MOMENT = moment('0000-00-00T00:00:00');
+      
       if (yMax) {
-        maxdate = yMax;
+        maxEnd = yMax;
       }
       else {
-        maxdate =
+        maxEnd =
           moment.max(data.map(function(d){
+            if (!d.content.valEnd.includes('9999')) { 
+              return moment(d.content.valEnd);
+            }
+            else {
+              return MIN_MOMENT;
+            }
             return moment(d.content.valStart);
-          })).add(5, 'y').toDate();
+          })).toDate();
+      }
+      
+      maxStart =
+        moment.max(data.map(function(d){
+          return moment(d.content.valStart);
+        })).toDate();
+        
+      if (maxEnd.getFullYear() == 0000) { // All end dates are infinty
+        maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
 
-      console.log('ymin='+mindate,' ymax='+maxdate);
-
       yScale = d3.time.scale()
-        .domain([mindate, maxdate])
+        .domain([minStart, maxEnd])
         .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
 
       var yAxisCssClass;
@@ -272,7 +313,7 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2;
+            return barx1;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
