@@ -11,7 +11,7 @@ function get(context, params) {
     cts.collectionQuery(params.collection)
   );
 
-  result.sysEnd = cts.values ( 
+  result.sysEnd = cts.values (
     cts.elementReference(xs.QName('sysEnd')),
     ltInfinity,
     ["descending","limit=1"],
@@ -35,4 +35,8 @@ function get(context, params) {
 
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> added some changes
 exports.GET = get;
