@@ -278,7 +278,15 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split')
-        .attr('stroke', 'black');
+        .attr('stroke', 'black')
+        
+
+      split.append('title')
+         .text(function(d) {
+          console.log(d.content);
+          console.log(d.data);
+           return 'System Start time is ' + d.content.sysStart;
+    });
 
       var r;
       var propTooltip = d3.select('body')
@@ -692,6 +700,7 @@ var barChart = function() {
     }
 
     function addBackground() { 
+      var format = d3.time.format('%Y-%m-%d');
       var background = g.append('svg')
         .style("stroke", 'red')
         .style("stroke-width", '5')
@@ -702,9 +711,11 @@ var barChart = function() {
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
 
-      var dragLeftRight = d3.behavior.drag()
+      var dragRight = d3.behavior.drag()
         .on("drag", function(d,i) {
-          if (d.x+d3.event.dx < 0) {
+          var scale = xScale.invert( d.x );
+          $('#startSysBox').val(format(scale));
+          if (d.x+d3.event.dx <= 0) {
             d.x = 0;
           }
           else if(d.x + d3.event.dx >= width - axisLabelMargin - margin.left - margin.right-15){
@@ -719,13 +730,53 @@ var barChart = function() {
         })
       });
 
-      var dragUpDown = d3.behavior.drag()
+      var dragDown = d3.behavior.drag()
         .on("drag", function(d,i) {
-          if(d.y+d3.event.dy < 0 ) {
+          var scale = xScale.invert( -d.y + height-margin.bottom-margin.bottom );
+          $('#endValBox').val(format(scale));
+          if(d.y+d3.event.dy <= 0 ) {
             d.y = 0;
           }
           else if(d.y+d3.event.dy >= 415) {
             d.y = 415;
+          }
+          else {
+            d.y += d3.event.dy;
+          }
+          d.x += 0
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      var dragLeft = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          var scale = xScale.invert( d.x + width - axisLabelMargin - margin.left - margin.right );
+          $('#endSysBox').val(format(scale));
+          if (d.x+d3.event.dx >= 0) {
+            d.x = 0;
+          }
+          else if(d.x + d3.event.dx <= -1*(width - axisLabelMargin - margin.left - margin.right-15)){
+            d.x = -1*(width - axisLabelMargin - margin.left - margin.right-15);
+          }
+          else {
+            d.x+=d3.event.dx;
+          }
+            d.y += 0;
+          d3.select(this).attr("transform", function(d,i){
+            return "translate(" + [ d.x,d.y ] + ")"
+        })
+      });
+
+      var dragUp = d3.behavior.drag()
+        .on("drag", function(d,i) {
+          var scale = xScale.invert( -d.y );
+          $('#startValBox').val(format(scale));
+          if(d.y+d3.event.dy >= 0 ) {
+            d.y = 0;
+          }
+          else if(d.y+d3.event.dy <= -415) {
+            d.y = -415;
           }
           else {
             d.y += d3.event.dy;
@@ -747,25 +798,23 @@ var barChart = function() {
           .style('position', 'relative')
           .style('cursor', 'pointer')
           .style('z-index', '1')
-          .attr("stroke-width", 6)
-          .attr("stroke", "blue")
+          .attr("stroke-width", 3)
+          .attr("stroke", "red")
           .data([ {"x":1, "y":1} ])
           .attr("id", 'lines')
           .call(direction);
       }  
       //x axis top
-      lineCreator(3, 1000, 3, 3, dragUpDown);       
-      lineCreator(3, 1000, 12, 12, dragUpDown);     
+      lineCreator(0, 1000, 3, 3, dragDown);       
 
       // //x axis bottom
-      // lineCreator(3, 1000, 427, 427, dragUpDown);
+      lineCreator(0, 1000, 427, 427, dragUp);
 
       //y axis left
-      lineCreator(3, 3, -10.5, 430, dragLeftRight);
-      lineCreator(12, 12, -10.5, 430, dragLeftRight);
+      lineCreator(3, 3, -10.5, 430, dragRight);
 
       // //y axis right
-      // lineCreator(621, 621, 3, 427, dragLeftRight);
+      lineCreator(627, 627, 0, 427, dragLeft);
     }
 
     setDimensions();
