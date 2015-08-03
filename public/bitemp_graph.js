@@ -526,7 +526,7 @@ var barChart = function() {
           .style('position', 'relative')
           .style('cursor', 'pointer')
           .style('z-index', '1')
-          .attr("stroke-width", 3)
+          .attr("stroke-width", 8)
           .attr("stroke", "red")
           .data([ {"x":1, "y":1} ])
           .attr("id", 'lines')

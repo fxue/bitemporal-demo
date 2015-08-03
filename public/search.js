@@ -13,15 +13,14 @@ function getSelected(id) {
   return dropDownList.options[dropDownList.selectedIndex].value;
 }
 
-$('#valDropdown').change(function() {
-  operatorChange();
+//
+
+
+$('#searchQueryButton').click(function() {
+  runSearchQuery();
 });
 
-$('#sysDropdown').change(function() {
-  operatorChange();
-});
-
-function operatorChange() {
+function runSearchQuery() {
   $('#dragInstruct').css({'visibility': 'visible'});
   var selectedColl = getSelected('dropdown');
 
@@ -31,14 +30,26 @@ function operatorChange() {
   var valAxis = '';
   var sysAxis = '';
 
+  var valStart = '';
+  var valEnd = '';
+
   if(valSelectedOp !== 'None') {
     valAxis = 'myValid';
-    $('#dragInstruct').css({'visibility': 'visible'});
+    valStart = document.getElementById('startValBox').value;
+    valEnd = document.getElementById('endValBox').value;
+    valStart = new Date(valStart).toISOString();
+    valEnd = new Date(valEnd).toISOString();
   }
+
+  var sysStart = '';
+  var sysEnd = '';
 
   if(sysSelectedOp !== 'None') {
     sysAxis = 'mySystem';
-    $('#dragInstruct').css({'visibility': 'visible'});
+    sysStart = document.getElementById('startSysBox').value;
+    sysEnd = document.getElementById('endSysBox').value;
+    sysStart = new Date(sysStart).toISOString();
+    sysEnd = new Date(sysEnd).toISOString();
   }
 
   if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
@@ -46,10 +57,6 @@ function operatorChange() {
      ajaxTimesCall(selectedColl, null);
     return;
   }
-  var valStart = '9997-12-31T23:59:59.99Z';
-  var valEnd = '9998-12-31T23:59:59.99Z';
-  var sysStart = '9998-12-31T23:59:59.99Z';
-  var sysEnd = '9999-12-31T23:59:59.99Z';
 
   $.ajax(
     {

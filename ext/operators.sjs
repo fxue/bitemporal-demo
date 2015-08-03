@@ -2,8 +2,8 @@ function get (context, params) {
 
   var collection = params.collection;
 
-  var valPeriod = cts.period(params.valStart, params.valEnd);
-  var sysPeriod = cts.period(params.sysStart, params.sysEnd);
+  var valPeriod;
+  var sysPeriod;
 
   var valAxis = params.valAxis;
   var valOperator = params.valSelectedOp;
@@ -13,6 +13,8 @@ function get (context, params) {
 
   var result;
   if(valAxis.length>0 && sysAxis.length>0) {
+  	valPeriod = cts.period(params.valStart, params.valEnd);
+    sysPeriod = cts.period(params.sysStart, params.sysEnd);
 	result = {
 	  values: cts.search(
 		cts.andQuery([
@@ -26,6 +28,7 @@ function get (context, params) {
 	}
   }
   else if(valAxis.length>0) {
+  	valPeriod = cts.period(params.valStart, params.valEnd);
   	result = {
 	  values: cts.search(
 		cts.andQuery([
@@ -37,6 +40,7 @@ function get (context, params) {
 	}
   }
   else if(sysAxis.length>0) {
+    sysPeriod = cts.period(params.sysStart, params.sysEnd);
   	result = {
 	  values: 
 	  cts.search(
