@@ -70,6 +70,7 @@ function cancel(chart) {
   $('#saveButton').hide();
   chart.setEditing(false);
   chart.setViewing(false);
+  chart.setDeleting(false);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
 }
@@ -141,13 +142,27 @@ function edit(uri) {
   }
 }
 
-function getDocColl(uri) {
-  console.log('Getting docColl');
+function getTemporalColl(uri) {
+  
   var docColl = $.ajax({
-    url: "/v1/documents?uri="+uri+"&category=collections&format=json",
+    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+    uri: uri,
     success: function(data, textStatus) {
-     console.log('got collections: ' + data);
+     console.log('Success');
     },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('Problem');
+    },
+    async: false,
+  });
+
+ return JSON.parse(docColl.responseText);
+}
+
+function getDocColls(uri) {
+  var docColl = $.ajax({
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
+    success: function(data, textStatus) {},
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem');
     },
@@ -157,50 +172,79 @@ function getDocColl(uri) {
  return JSON.parse(docColl.responseText);
 }
 
+/*
+@params: 
+collArr is an array of strings of collection names
+tempCollArr is an array of objects with 'nameref' properties
+*/
+function findCommonColl(collArr, tempCollArr) {
+  var response;
+  while (!response) {
+    for (var i in collArr) {
+      for (var j in tempCollArr) {
+        if (collArr[i] === tempCollArr[j]['nameref']) {
+          console.log('Match: ' + collArr[i]);
+          response = collArr[i];
+        }
+      }
+    }
+  }
+  return response;
+}
+
 var deleteDoc = function (chart) {
+//var checkTimeRanges = function (chart) {
   var uri = chart.getLogicalURI();
   var ajax = true;
   if (!uri) {
     return;
   }
-  var collection = getDocColl(uri);
-  var url = '/v1/documents?uri=' + uri + '&temporal-collection='+collection.collections[0];
-  var currDate = new Date();
-
-  $.ajax(
+  var collArr = getDocColls(uri);
+  var tempCollections = getTemporalColl(uri);
+  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
+  
+  var tempColl;
+  if (collArr && tempCollArr) {
+    collArr = collArr['collections'];
+    tempColl = findCommonColl(collArr, tempCollArr);
+  }
+  
+  $.ajax( //Gets a temporal collection
   {
-    url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+collection.collections[0],
+    url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+tempColl,
     success: function(response, textStatus)
     {
-      succFunc(response);
+      succFunc(response, tempColl, chart);
     },
     error: function(jqXHR, textStatus, errorThrown)
     {
       console.log('problem');
+      cancel(chart);
     }
   });
 
-  var succFunc = function(response) {
+  var succFunc = function(response, tempColl, chart) {
     var sysBoxDate;
     var tempDate = new Date(response.sysEnd);
+    var ajax = true;
+    var currDate = new Date();
+    
+    var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
     //Add a system time to ajax request if specified
-    if (document.getElementById('sysStartBox').value !== '') {
-      url += '&system-time='+document.getElementById('sysStartBox').value;
-      sysBoxDate = new Date(document.getElementById('sysStartBox').value);
-    }
-
-    if (!sysBoxDate) {
-      if (tempDate.valueOf() > currDate.valueOf()) {
-        ajax = false;
+    sysBoxDate = document.getElementById('sysStartBox').value
+    if (sysBoxDate) {
+      url += '&system-time='+sysBoxDate; 
+      console.log('temporal date: ' + tempDate + ', specified date: ' + sysBoxDate);
+      if (tempDate.valueOf() > sysBoxDate.valueOf()){
         document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
+        ajax=false;
       }
     }
-    else if (tempDate.valueOf() > sysBoxDate.valueOf()) {
-      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
+    else if (currDate.valueOf() < tempDate.valueOf()) {
       ajax = false;
     }
-
+      
     if (ajax) {
       $.ajax({
         url: url,
@@ -208,11 +252,16 @@ var deleteDoc = function (chart) {
         success: function(data) {
           loadData(uri);
         },
-        error: function(jqXHR) {
-          window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+        error: function(jqXHR, textStatus) {
+          cancel(chart);
+          window.alert('Delete didn\'t work, error code: ' + jqXHR.status);   
         },
         format: 'json'
       });
+    }
+    else {
+      cancel(chart);
+      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time for temporal collection is ' + tempDate;
     }
     $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
     $('#sysTimeDiv').addClass('hideSysTimeBoxes');
@@ -233,6 +282,9 @@ function setupDelete(chart) {
     }
   }
   chart.setLogicalURI(uri);
+  $('#editButton').hide();
+  $('#viewButton').hide();
+  $('#deleteButton').hide();
   $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').removeClass('hideSysTimeBoxes');
 }
@@ -255,7 +307,6 @@ function changeTextInGraph(chart, params) {
   }
   if(propExists) {
     drawChart(params, docProp);
-    //getBarChart(params, docProp); //drawChart calls this same function with same parameters
   }
   else {
     if(docProp !== '')	{
@@ -325,6 +376,7 @@ var getBarChart = function (params, docProp) {
 
   $('#deleteButton').click(function() {
     setupDelete(chart);
+    chart.setDeleting(true);
   });
 
   $('#cancelButton').click(function() {
@@ -354,7 +406,6 @@ var getBarChart = function (params, docProp) {
 
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
-    //drawChart(params, selectedText); getBarChart calls drawChart
     getBarChart(params, selectedText);
   });
 };

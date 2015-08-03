@@ -8,7 +8,7 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var uri, isEditing, isViewing, logicURI;
+  var uri, isEditing, isViewing, isDeleting, logicURI;
   var xMin = null;
   var xMax = null;
   var yMin = null;
@@ -63,11 +63,11 @@ var barChart = function() {
       else {
         maxEnd =
           moment.max(data.map(function(d){
-            if (d.content.valEnd.startsWith('9999')) {
+            if (d.content.sysEnd.startsWith('9999')) {
               return MIN_MOMENT;
             }
             else {
-              return moment(d.content.valEnd);
+              return moment(d.content.sysEnd);
             }
             return moment(d.content.sysStart);
           })).toDate();
@@ -78,7 +78,7 @@ var barChart = function() {
           return moment(d.content.start);
         })).toDate();
 
-      if (maxEnd.getFullYear() === 0) { // All end dates are infinty
+      if (maxEnd.getFullYear() === 1600) { // All end dates are infinty
         maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
 
@@ -140,7 +140,7 @@ var barChart = function() {
           return moment(d.content.valStart);
         })).toDate();
 
-      if (maxEnd.getFullYear() === 0) { // All end dates are infinty
+      if (maxEnd.getFullYear() === 1600) { // All end dates are infinty
         maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
 
@@ -252,7 +252,7 @@ var barChart = function() {
           document.getElementById('viewButton').disabled = false;
           document.getElementById('deleteErrMessage').innerHTML = '';
 
-          if (!chart.getEditing() && !chart.getViewing()) {
+          if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
             showCurrURI(datum.uri);
 
@@ -421,6 +421,14 @@ var barChart = function() {
     }
     margin = value;
     return chart;
+  };
+  
+  chart.getDeleting = function() {
+    return isDeleting;
+  };
+
+  chart.setDeleting = function(bool) {
+    isDeleting = bool;
   };
 
   chart.getEditing = function() {
