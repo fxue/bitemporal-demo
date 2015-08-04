@@ -12,8 +12,8 @@ $('#dropdown').change(function()
     ajaxTimesCall(selectedColl, true);
   }
 );
-  
-  
+
+
 //function when search button is clicked
 $('#search').click(function()
   {
