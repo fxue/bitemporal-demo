@@ -92,6 +92,12 @@
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
+        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+         box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+         -moz-transition: all 0.15s linear;
+         -ms-transition: all 0.15s linear;
+         -o-transition: all 0.15s linear;
+         transition: all 0.15s linear;
       }
 
       #bold {
@@ -233,7 +239,7 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
-
+    <script> addTempColls('dropdown', false); </script>
     <div id="bar-chart-large"></div>
 
   </body>

@@ -94,6 +94,7 @@ function loadData(collection) {
     headers: {
       Accept: 'multipart/mixed'
     },
+    async: false,
     success: function(data) {
       var arrData = parseData(data, collection, 1);
       getBarChart({

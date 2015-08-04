@@ -1,4 +1,124 @@
-/*globals d3, jQuery, loadData, barChart, ajaxTimesCall */
+/*globals d3, jQuery, loadData, barChart */
+//function to make ajax call to get min and max times
+var firstDoc, lastDoc;
+function ajaxTimesCall(selectedColl, search) {
+  $.ajax(
+  {
+    url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
+    success: function(response, textStatus)
+    {
+      if (search) {
+        displayAxis(response); //don't want to call this if not on search page, clears graph otherwise.
+        respTimes = response;
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
+}
+
+//function to display axis
+function displayAxis(times) {
+  var showAlertBox = false;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart),
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+var getDocColl = function(uri) {
+  $.ajax({
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
+    success: function(data, textStatus) {
+      console.log('got collections: ' + data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem');
+    },
+    async: false,
+  });
+}
+
+function toReturnDate(time) {
+  if(time) {
+    return new Date(time);
+  }
+  else {
+    return null;
+  }
+}
+
+var addTempColls = function(id, search) {
+  var rtnVal = $.ajax(
+    {
+      url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+      success: function(response, textStatus)
+      {
+        //adds names of the collections to the drop down list
+        var addToDrop = $('#' + id);
+        //endpoint is the number of collections
+        var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
+
+        //dropArray is the array containing all the temporal Collections
+        var dropArray = [];
+        for (var j = 0; j < endpoint; j++)
+        {
+          dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
+        }
+        //sorts the array (alphabetically) containing the temporal collections
+        dropArray.sort();
+
+        //Clear the drop down menu before adding new elements
+        var select = document.getElementById(id);
+        addToDrop.empty();
+
+        //this for loop appends the collection names to the drop down list
+        for (var k = 0; k < dropArray.length; k++)
+        {
+          addToDrop.append($('<option>').text(dropArray[k])) ;
+          if( k === 0 ) {
+            ajaxTimesCall(dropArray[k], search);
+          }
+        }
+        if (search) {
+          firstDoc = 1;
+          lastDoc = 10;
+          $('#next').css({'visibility': 'visible'});
+          $('#prev').css({'visibility': 'visible'});
+          console.log('displaying docs');
+          displayDocs(firstDoc, lastDoc);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+        console.log('problem');
+      }
+    });
+  return rtnVal;
+}
+
 var drawChart = function(params, docProp) {
   var chart;
   if( params.timeRanges ) {
@@ -142,8 +262,8 @@ function edit(uri) {
   }
 }
 
+//Gets all temporal collections the uri belongs to.
 function getTemporalColl(uri) {
-  
   var docColl = $.ajax({
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
     uri: uri,
@@ -159,6 +279,7 @@ function getTemporalColl(uri) {
  return JSON.parse(docColl.responseText);
 }
 
+//Gets all collections the uri belongs to.
 function getDocColls(uri) {
   var docColl = $.ajax({
     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
@@ -173,7 +294,7 @@ function getDocColls(uri) {
 }
 
 /*
-@params: 
+@params:
 collArr is an array of strings of collection names
 tempCollArr is an array of objects with 'nameref' properties
 */
@@ -193,7 +314,6 @@ function findCommonColl(collArr, tempCollArr) {
 }
 
 var deleteDoc = function (chart) {
-//var checkTimeRanges = function (chart) {
   var uri = chart.getLogicalURI();
   var ajax = true;
   if (!uri) {
@@ -202,70 +322,71 @@ var deleteDoc = function (chart) {
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
   var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
-  
+
   var tempColl;
   if (collArr && tempCollArr) {
     collArr = collArr['collections'];
     tempColl = findCommonColl(collArr, tempCollArr);
   }
-  
-  $.ajax( //Gets a temporal collection
-  {
-    url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+tempColl,
-    success: function(response, textStatus)
-    {
-      succFunc(response, tempColl, chart);
-    },
-    error: function(jqXHR, textStatus, errorThrown)
-    {
-      console.log('problem');
-      cancel(chart);
-    }
-  });
 
-  var succFunc = function(response, tempColl, chart) {
-    var sysBoxDate;
-    var tempDate = new Date(response.sysEnd);
-    var ajax = true;
-    var currDate = new Date();
-    
-    var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
-
-    //Add a system time to ajax request if specified
-    sysBoxDate = document.getElementById('sysStartBox').value
-    if (sysBoxDate) {
-      url += '&system-time='+sysBoxDate; 
-      console.log('temporal date: ' + tempDate + ', specified date: ' + sysBoxDate);
-      if (tempDate.valueOf() > sysBoxDate.valueOf()){
-        document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
-        ajax=false;
+  if (tempColl) {
+    $.ajax( //Gets a temporal collection
+    {
+      url: '/v1/resources/temporal-range?rs:collection='+tempColl,
+      success: function(response, textStatus)
+      {
+        deleteSuccess(response, tempColl, chart);
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+        console.log('problem');
+        cancel(chart);
       }
-    }
-    else if (currDate.valueOf() < tempDate.valueOf()) {
-      ajax = false;
-    }
-      
-    if (ajax) {
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        success: function(data) {
-          loadData(uri);
-        },
-        error: function(jqXHR, textStatus) {
-          cancel(chart);
-          window.alert('Delete didn\'t work, error code: ' + jqXHR.status);   
-        },
-        format: 'json'
-      });
-    }
-    else {
-      cancel(chart);
-      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time for temporal collection is ' + tempDate;
-    }
-    $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
-    $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+    });
   }
+}
+function deleteSuccess(response, tempColl, chart) {
+  var sysBoxDate;
+  var tempDate = new Date(response.sysEnd);
+  var ajax = true;
+  var currDate = new Date();
+
+  var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
+
+  //Add a system time to ajax request if specified
+  sysBoxDate = document.getElementById('sysStartBox').value
+  if (sysBoxDate) {
+    url += '&system-time='+sysBoxDate;
+    console.log('temporal date: ' + tempDate + ', specified date: ' + sysBoxDate);
+    if (tempDate.valueOf() > sysBoxDate.valueOf()){
+      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
+      ajax=false;
+    }
+  }
+  else if (currDate.valueOf() < tempDate.valueOf()) {
+    ajax = false;
+  }
+
+  if (ajax) {
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      success: function(data) {
+        loadData(uri);
+      },
+      error: function(jqXHR, textStatus) {
+        cancel(chart);
+        window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+      },
+      format: 'json'
+    });
+  }
+  else {
+    cancel(chart);
+    document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time for temporal collection is ' + tempDate;
+  }
+  $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
+  $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
 
 function setupDelete(chart) {
@@ -308,10 +429,8 @@ function changeTextInGraph(chart, params) {
   if(propExists) {
     drawChart(params, docProp);
   }
-  else {
-    if(docProp !== '')	{
-      window.alert('Sorry. That property does not exist in any document in the collection');
-    }
+  else if (docProp !== '') {
+    window.alert('Sorry. That property does not exist in any document in the collection');
   }
 }
 
@@ -370,6 +489,7 @@ var getBarChart = function (params, docProp) {
   }
 
   $('#editButton').click(function() {
+    document.getElementById('deleteErrMessage').innerHTML = '';
     edit(chart.getCurrentURI());
     chart.setEditing(true);
   });
@@ -384,6 +504,7 @@ var getBarChart = function (params, docProp) {
   });
 
   $('#viewButton').click(function() {
+    document.getElementById('deleteErrMessage').innerHTML = '';
     view(chart.getCurrentURI());
     chart.setViewing(true);
   });
@@ -396,8 +517,29 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
+  addTempColls('selectTempColl', false);
+  $('#createDoc').click(function() {
+    $('#createDocStuff').show();
+
+    $("#dialogCreateDoc").dialog({
+      autoOpen: true,
+      modal: true,
+      appendTo: false,
+      buttons: {
+        Save: function() {
+          $(this).dialog('close');
+        },
+        Cancel: function() {
+          $(this).dialog('close');
+        }
+      },
+    });
+  });
+
   $('#deleteOKButton').click(function() {
+    document.body.style.cursor = 'wait';
     deleteDoc(chart);
+    document.body.style.cursor = 'auto';
   });
 
   $('#deleteCancelButton').click(function() {

@@ -1,41 +1,4 @@
-var firstDoc, lastDoc;
 /* global displayAxis, parseData */
-//call to get the list of temporal collection
-$.ajax(
-  {
-    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-    success: function(response, textStatus)
-    {
-      //console.log('got collections: ' + JSON.stringify(response));
-      //adds names of the collections to the drop down list
-      var addToDrop = $('#dropdown');
-      //endpoint is the number of collections
-      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
-
-      //dropArray is the array containing all the temporal Collections
-      var dropArray = [];
-      for (var j = 0; j < endpoint; j++)
-      {
-        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
-      }
-      //sorts the array (alphabetically) containing the temporal collections
-      dropArray.sort();
-
-      //this for loop appends the collection names to the drop down list
-      for (var k = 0; k < dropArray.length; k++)
-      {
-        addToDrop.append($('<option>').text(dropArray[k])) ;
-        if( k === 0 ) {
-          ajaxTimesCall(dropArray[k]);
-        }
-      }
-    },
-    error: function(jqXHR, textStatus, errorThrown)
-    {
-      console.log('problem');
-    }
-  });
-
 $('#dropdown').change(function()
   {
     firstDoc = 1;
@@ -46,93 +9,15 @@ $('#dropdown').change(function()
 
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    ajaxTimesCall(selectedColl);
+    ajaxTimesCall(selectedColl, true);
   }
 );
-
-//function to make ajax call to get min and max times
-var ajaxTimesCall = function(selectedColl)
-{
-  $.ajax(
-  {
-    url: 'http://localhost:3000/v1/resources/temporal-range?rs:collection='+selectedColl,
-    success: function(response, textStatus)
-    {
-      displayAxis(response);
-      respTimes = response;
-    },
-    error: function(jqXHR, textStatus, errorThrown)
-    {
-      console.log('problem');
-    }
-  });
-}
-
-//function to display axis
-function displayAxis(times)
-{
-  var showAlertBox;
-  if( !times.valStart ) {
-    showAlertBox = true;
-  }
-
-  for (var prop in times) {
-    if (times.hasOwnProperty(prop))
-      console.log('times property = ' + prop+ ' value = ' + times[prop]);
-  }
-
-  var timeRanges = {
-    valStart: toReturnDate(times.valStart),
-    valEnd: toReturnDate(times.valEnd),
-    sysStart: toReturnDate(times.sysStart),
-    sysEnd: toReturnDate(times.sysEnd)
-  }
-
-  getBarChart({
-    data: [],
-    width: 800,
-    height: 600,
-    xAxisLabel: 'System',
-    yAxisLabel: 'Valid',
-    timeRanges: timeRanges,
-    containerId: 'bar-chart-large'
-  }, null);
-
-  if (showAlertBox) {
-    alert('There are no documents in this collection. Please select another.');
-  }
-}
-
-var getDocColl = function(uri) {
-  $.ajax({
-    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
-    success: function(data, textStatus) {
-      console.log('got collections: ' + data);
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.log('problem');
-    },
-    async: false,
-  });
-}
-
-function toReturnDate(time) {
-  if( time ) {
-    return new Date(time);
-  }
-  else {
-    return null;
-  }
-}
-
+  
+  
 //function when search button is clicked
 $('#search').click(function()
   {
-    firstDoc = 1;
-    lastDoc = 10;
-    $('#next').css({'visibility': 'visible'});
-    $('#prev').css({'visibility': 'visible'});
-    displayDocs(firstDoc, lastDoc);
+    addTempColls('dropdown', true); //Only need to call this once?
   }
 );
 
@@ -189,9 +74,20 @@ function displayDocs(start, end)
     var docs;
     //console.log('got collections: ' + data);
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
-    if( totalDocLen > 0 )
+    if( totalDocLen > 10 )
     {
       docs = parseData(data, null, 2);
+      document.getElementById('search').disabled = false;
+      document.getElementById('next').disabled = false;
+      document.getElementById('prev').disabled = false;
+    }
+    else if( totalDocLen > 0 )
+    {
+      docs = parseData(data, null, 2);
+      document.getElementById('search').disabled = false;
+    }
+    else {
+      document.getElementById('search').disabled = true;
     }
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
@@ -210,7 +106,7 @@ function displayDocs(start, end)
 
     if (parseInt(totalDocLen) === 0)
     {
-      document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
+      document.getElementById('numDocs').innerHTML = '0 documents in collection';
     }
     else
     {

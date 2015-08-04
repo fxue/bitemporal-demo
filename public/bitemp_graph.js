@@ -422,7 +422,7 @@ var barChart = function() {
     margin = value;
     return chart;
   };
-  
+
   chart.getDeleting = function() {
     return isDeleting;
   };
