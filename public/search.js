@@ -13,15 +13,25 @@ function getSelected(id) {
   return dropDownList.options[dropDownList.selectedIndex].value;
 }
 
-//
+$('#valDropdown').change(function() {
+  $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay').css({'visibility': 'hidden'});
+  if (getSelected('valDropdown') !== 'None') {
+    $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay').css({'visibility': 'visible'});
+  }
+});
 
+$('#sysDropdown').change(function() {
+  $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay').css({'visibility': 'hidden'});
+  if (getSelected('sysDropdown') !== 'None') {
+    $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay').css({'visibility': 'visible'});
+  }
+});
 
 $('#searchQueryButton').click(function() {
   runSearchQuery();
 });
 
 function runSearchQuery() {
-  $('#dragInstruct').css({'visibility': 'visible'});
   var selectedColl = getSelected('dropdown');
 
   var valSelectedOp = getSelected('valDropdown');
@@ -53,8 +63,7 @@ function runSearchQuery() {
   }
 
   if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
-     $('#dragInstruct').css({'visibility': 'hidden'});
-     ajaxTimesCall(selectedColl, null);
+    ajaxTimesCall(selectedColl, null);
     return;
   }
 
@@ -134,9 +143,9 @@ $('#dropdown').change(function()
     ajaxTimesCall(selectedColl, null);
     $('#bulletList').empty();
     $('#numDocs').empty();
+    $('.hide').css({'visibility': 'hidden'});
     document.getElementById("valDropdown").selectedIndex = 0;
     document.getElementById("sysDropdown").selectedIndex = 0;
-    $('#dragInstruct').css({'visibility': 'hidden'});
   }
 );
 
@@ -153,9 +162,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
           data = createCorrData(dataToDisplay);
         }
 
-        if(data.length <= 0) {
-          $('#dragInstruct').css({'visibility': 'hidden'});
-        }
         var times = response;
         var timeRanges = {
           valStart: toReturnDate(times.valStart),

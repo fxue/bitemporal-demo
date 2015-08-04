@@ -76,11 +76,10 @@
 
       #searchQueryButton {
         position: absolute;
-        visibility: visible;
         left: 425px;
         top: 160px;
-        height: 30px;
-        width: 90px;
+        height: 22px;
+        width: 85px;
         font-size: 1.2em;
       }
 
@@ -140,12 +139,13 @@
       #ctsQuery {
         position: absolute;
         left: 140px;
-        top: 790px;
+        top: 830px;
         font-size: 14px;
       }
 
       #queryText {
         font-size: 14px;
+        resize: none;
       }
 
       #logo {
@@ -161,6 +161,7 @@
         left: 5px;
         top: 4px;
         font-size: 13px;
+        z-index: 1;
       }
 
       #dropdown {
@@ -190,7 +191,8 @@
       #valDropdown {
         height: 20px;
         display: block;
-        padding: 13px 16px;
+        padding: 0;
+        margin: 0;
         width: 160px;
         cursor: pointer;
         border-left: 4px solid #739cda;
@@ -214,19 +216,19 @@
         position: absolute;
         left: 330px;
         top: 170px;
+        font-size: 13px;
         text-wrap: normal;
         display: block;
         width: 240px;
         text-align: center;
         color: #708090;
-        visibility: hidden;
       }
 
       #sysDropdown {
         height: 20px;
         display: block;
-        padding: 13px 16px;
-        width: 160px;
+        padding: 0;
+        margin: 0;
         cursor: pointer;
         border-left: 4px solid #739cda;
         background: #fff;
@@ -366,12 +368,8 @@
         top: -75px;
       }
 
-      #lines {
-        visibility: visible;
-      }
-
-      #ruler {
-        visibility: visible;
+      .hide {
+        visibility: hidden;
       }
 
     </style>
@@ -383,22 +381,26 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <p id='vertBar1'>Start Time:</p>
-    <textarea rows='1' cols='10' color='blue' id='startSysBox'></textarea>
-    <p id='vertBar2'>End Time:</p>
-    <textarea rows='1' cols='10' color='blue' id='endSysBox'></textarea>
-    <p id='horzBar1'>Start Time:</p>
-    <textarea rows='1' cols='10' color='blue' id='startValBox'></textarea>
-    <p id='horzBar2'>End Time:</p>
-    <textarea rows='1' cols='10' color='blue' id='endValBox'></textarea> 
-    <button id='searchQueryButton'>Run Query</button>
+    <div class='hide sysTimesDisplay'>
+      <p id='vertBar1'>Start Time:</p>
+      <textarea rows='1' cols='10' color='blue' id='startSysBox' style="border:solid 1px black;"></textarea>
+      <p id='vertBar2'>End Time:</p>
+      <textarea rows='1' cols='10' color='blue' id='endSysBox' style="border:solid 1px black;"></textarea>
+    </div>
+    <div class='hide valTimesDisplay'>
+      <p id='horzBar1'>Start Time:</p>
+      <textarea rows='1' cols='10' color='blue' id='startValBox' style="border:solid 1px black;"></textarea>
+      <p id='horzBar2'>End Time:</p>
+      <textarea rows='1' cols='10' color='blue' id='endValBox' style="border:solid 1px black;"></textarea>
+    </div>
+    <button id='searchQueryButton' class='hide'>Run Query</button>
     <div id='searchPage'>
     <p id='ops' title='Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps.' class='definition'>Operators</p>
     <div id='valTimes'>
       <p><b>Valid Time</b></p>
       <select id="valDropdown"></select>
     </div>
-    <p id='dragInstruct'>*Drag the blue bars on the sides of each axis to create your selected time range*</p>
+    <p id='dragInstruct'>*Select an operator and drag the red bars to create your selected time range*</p>
     <div id='sysTimes'>
       <p><b>System Time</b></p>
       <select id="sysDropdown"></select>
@@ -413,11 +415,6 @@
         <ul id="bulletList"></ul>
       </div>
 
-    <div id='ctsQuery'>
-      <p class='definition' title='cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges'>cts:query</p>
-      <textarea rows='15' cols='50' color='blue' id='queryText'></textarea>
-    </div>
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -427,6 +424,11 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script> addTempColls('dropdown', true); </script>
     <div id="bar-chart-large"></div>
+
+    <div id='ctsQuery'>
+      <p class="definition" title='cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges'>cts:query</p>
+      <textarea rows='15' cols='50' color='blue' id='queryText' readonly></textarea>
+    </div>
 
   </body>
 </html>
