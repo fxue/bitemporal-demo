@@ -213,7 +213,7 @@ function save(chart) {
   $.ajax({
     type: 'PUT',
     contentType: 'application/json',
-    url: 'http://localhost:3000/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
+    url: '/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
     processData: false,
     data: JSON.stringify(data),
     success: success,
@@ -235,7 +235,7 @@ function setupTextArea(uri, isEditing) {
     fillText(data, isEditing);
   };
   $.ajax({
-    url: 'http://localhost:3000/v1/documents/?uri=' + uri,
+    url: '/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
   });

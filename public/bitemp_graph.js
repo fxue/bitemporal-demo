@@ -54,7 +54,11 @@ var barChart = function() {
             return moment(d.content.sysStart);
           })).toDate();
       }
-
+      maxStart =
+        moment.max(data.map(function(d){
+          return moment(d.content.start);
+        })).toDate();
+      
       var MIN_MOMENT = moment('1600-01-01T00:00:00');
 
       if (xMax) {
@@ -72,11 +76,6 @@ var barChart = function() {
             return moment(d.content.sysStart);
           })).toDate();
       }
-
-      maxStart =
-        moment.max(data.map(function(d){
-          return moment(d.content.start);
-        })).toDate();
 
       if (maxEnd.getFullYear() === 1600) { // All end dates are infinty
         maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
