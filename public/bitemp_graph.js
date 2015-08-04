@@ -1,4 +1,4 @@
-/*global d3, moment */
+/*global d3, d3plus, moment */
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
@@ -222,6 +222,7 @@ var barChart = function() {
       return lastDoc;
     }
 
+    
     function addBarChartData() {
 
       var split = g.selectAll('.split')
@@ -236,9 +237,40 @@ var barChart = function() {
 
       var r;
 
+      var propTooltip = d3.select('body')
+        .append('div')
+        .style('position', 'relative')
+        .style('left', '810px')
+        .style('top', '-340px')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .style('word-wrap', 'break-word')
+        .style('font-weight', 'bold')
+        .style('width', '32em')
+        .text('');
       
       r = split
         .append('rect')
+        .on('mouseover', function(d) {
+          var str = '';
+          if(!displayProperty) {
+            displayProperty = 'data';
+          }
+          if (displayProperty.indexOf('.') === -1) {
+            str = d.content[displayProperty];
+          }
+          else {
+            str = path(d, 'content.' + displayProperty);
+          }
+          if(str.length > 15) {
+            propTooltip.text('Full Property: ' + str);
+          } 
+          return propTooltip.style('visibility', 'visible');
+        })
+        .on('mouseout', function() {
+          propTooltip.text('');
+          return propTooltip.style('visibility', 'hidden');
+        })
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -255,6 +287,11 @@ var barChart = function() {
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
+            $(this).attr('fill-opacity', 0.6);
+            if (getLastDoc() !== this) {
+              $(getLastDoc()).attr('stroke', 'grey');
+              $(getLastDoc()).attr('stroke-width', '0');
+              $(getLastDoc()).attr('fill-opacity', 0.9);
             }
             setLastDoc(this);
           }
@@ -304,6 +341,8 @@ var barChart = function() {
         });
 
       split.append('text')
+        .attr('id', 'box')
+        .style('fill', 'DarkMagenta')
         .attr('class','tooltip-txt')
         .style('opacity', 0)
         .transition()
@@ -318,11 +357,11 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2 + 60;
+            return (barx1+barx2)/2;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
-            return (barx1+barx2)/2 + 60;
+            return (barx1+barx2)/2;
           }
         })
         .attr('y', function(d) {
@@ -364,10 +403,17 @@ var barChart = function() {
           }
           if(alreadyInGraph === false) {
             displayedProps.push(str);
+            if(str && str.length > 15) {
+              str = str.substring(0, 15) + '...';
+            }
             return str;
           }
         })
     }
+
+      };
+
+
 
 
     function path(object, fullPath) {
@@ -528,7 +574,7 @@ var barChart = function() {
 
   chart.setDisplayProperty = function(str) {
     if(!str) {
-      displayProperty = 'data';
+      displayProperty = 'about';
     }
     else {
       displayProperty = str;

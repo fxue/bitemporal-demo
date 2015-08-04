@@ -137,7 +137,7 @@ var drawChart = function(params, docProp) {
       .width(params.width)
       .height(params.height)
       .setDisplayProperty(docProp);
-    
+
   }
   
   var selector = '#' + params.containerId;
@@ -441,9 +441,9 @@ function findProperties(obj, path, properties) {
       if (obj.hasOwnProperty(prop)) {
         newPath = path ? path + '.' + prop : prop;
         if (Array.isArray(obj[prop])) {
-          // for (var item in obj[prop]) {
-          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          // }
+          for (var item in obj[prop]) {
+            findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+          }
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
         } else {
