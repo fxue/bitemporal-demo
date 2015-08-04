@@ -574,7 +574,7 @@ var barChart = function() {
 
   chart.setDisplayProperty = function(str) {
     if(!str) {
-      displayProperty = 'about';
+      displayProperty = 'data';
     }
     else {
       displayProperty = str;
