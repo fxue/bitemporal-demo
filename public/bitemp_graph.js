@@ -57,10 +57,8 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.start);
-        })).toDate();
+        })).add('y', 10);
       
-      var MIN_MOMENT = moment('1600-01-01T00:00:00');
-
       if (xMax) {
         maxEnd = xMax;
       }
@@ -68,17 +66,12 @@ var barChart = function() {
         maxEnd =
           moment.max(data.map(function(d){
             if (d.content.sysEnd.startsWith('9999')) {
-              return MIN_MOMENT;
+              return maxStart;
             }
             else {
               return moment(d.content.sysEnd);
             }
-            return moment(d.content.sysStart);
           })).toDate();
-      }
-
-      if (maxEnd.getFullYear() === 1600) { // All end dates are infinty
-        maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
 
       xScale = d3.time.scale()
@@ -106,6 +99,8 @@ var barChart = function() {
       // maxStart: max sysStart time
       var minStart, maxEnd, maxStart;
 
+      var minStart, maxEnd, maxStart;
+
       if (yMin) {
         minStart = yMin;
       }
@@ -115,9 +110,11 @@ var barChart = function() {
             return moment(d.content.valStart);
           })).toDate();
       }
-
-      var MIN_MOMENT = moment('1600-01-01T00:00:00');
-
+      maxStart =
+        moment.max(data.map(function(d){
+          return moment(d.content.valStart);
+        })).add('y', 10);
+      
       if (yMax) {
         maxEnd = yMax;
       }
@@ -125,22 +122,12 @@ var barChart = function() {
         maxEnd =
           moment.max(data.map(function(d){
             if (d.content.valEnd.startsWith('9999')) {
-              return MIN_MOMENT;
+              return maxStart;
             }
             else {
               return moment(d.content.valEnd);
             }
-            return moment(d.content.valStart);
           })).toDate();
-      }
-
-      maxStart =
-        moment.max(data.map(function(d){
-          return moment(d.content.valStart);
-        })).toDate();
-
-      if (maxEnd.getFullYear() === 1600) { // All end dates are infinty
-        maxEnd = maxStart.setFullYear(maxStart.getFullYear() + 10);
       }
 
       yScale = d3.time.scale()
