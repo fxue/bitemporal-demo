@@ -139,8 +139,6 @@ var drawChart = function(params, docProp) {
       .setDisplayProperty(docProp);
     
   }
-
-  }
   
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
@@ -456,9 +454,6 @@ function findProperties(obj, path, properties) {
   }
 }
 
-
-function addDataToMenu(chart, params) {
-  if (!params.timeRanges){
 /*
  * @param obj
  * @param path 
