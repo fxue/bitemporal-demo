@@ -1,23 +1,32 @@
 /* global displayAxis, parseData */
 $('#dropdown').change(function()
   {
-    firstDoc = 1;
-    lastDoc = 10;
-    $('#next').css({'visibility': 'visible'});
-    $('#prev').css({'visibility': 'visible'});
-    displayDocs(firstDoc, lastDoc);
-
+    
+    $('#next').css({'visibility': 'hidden'});
+    $('#prev').css({'visibility': 'hidden'});
+    
     var dropDownList = document.getElementById('dropdown');
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
     ajaxTimesCall(selectedColl, true);
+    addTempColls(selectedColl, true); // Don't need in change function
+    $('#bulletList').empty();
   }
 );
 
 
 //function when search button is clicked
 $('#search').click(function()
-  {
-    addTempColls('dropdown', true); //Only need to call this once?
+  { 
+    firstDoc = 1;
+    lastDoc = 10;
+    displayDocs(firstDoc, lastDoc);
+    var dropDownList = document.getElementById('dropdown');
+    
+    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+    //ajaxTimesCall(selectedColl, true);
+    addTempColls(selectedColl, true);
+    $('#next').css({'visibility': 'visible'});
+    $('#prev').css({'visibility': 'visible'});
   }
 );
 
@@ -72,7 +81,6 @@ function displayDocs(start, end)
   function onDisplayDocs(data, textStatus, response )
   {
     var docs;
-    //console.log('got collections: ' + data);
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if( totalDocLen > 10 )
     {
@@ -103,14 +111,11 @@ function displayDocs(start, end)
     {
       document.getElementById('next').disabled = false;
     }
-
-    if (parseInt(totalDocLen) === 0)
-    {
-      document.getElementById('numDocs').innerHTML = '0 documents in collection';
-    }
-    else
-    {
+    if (totalDocLen > 0) {
       document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
+    }
+    else {
+      document.getElementById('numDocs').innerHTML = '0 to 0 of 0';
     }
 
     //Loops through the documents to get the URI and the valid and system times

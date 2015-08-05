@@ -105,9 +105,8 @@ var addTempColls = function(id, search) {
         if (search) {
           firstDoc = 1;
           lastDoc = 10;
-          $('#next').css({'visibility': 'visible'});
-          $('#prev').css({'visibility': 'visible'});
-          console.log('displaying docs');
+         // $('#next').css({'visibility': 'visible'});
+         // $('#prev').css({'visibility': 'visible'});
           displayDocs(firstDoc, lastDoc);
         }
       },
