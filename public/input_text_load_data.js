@@ -75,7 +75,7 @@ function parseData(data, collection, numParts) {
 }
 
 
-function loadData(collection) {
+function loadData(collection) { //Called from top-level code
   var url = '';
   if (collection !== undefined) {
     url += '/' + collection;
@@ -83,6 +83,7 @@ function loadData(collection) {
   else {
     collection = 'addr.json';
   }
+  
 
   $.ajax({
     url: '/v1/search?pageLength=1000',
@@ -94,6 +95,7 @@ function loadData(collection) {
     headers: {
       Accept: 'multipart/mixed'
     },
+    async: false,
     success: function(data) {
       var arrData = parseData(data, collection, 1);
       getBarChart({
@@ -126,7 +128,8 @@ $('#pick-doc').click( function() {
   }
   else {
     document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
-    window.location = "/?collection="+uriCollection;
+    window.history.pushState('', 'Title', '/?collection='+uriCollection);
+    console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
 });

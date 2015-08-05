@@ -8,13 +8,14 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var uri, isEditing, isViewing;
+  var uri, isEditing, isViewing, isDeleting, logicURI;
   var xMin = null;
   var xMax = null;
   var yMin = null;
   var yMax = null;
   var displayProperty = '';
   var lastDoc;
+  var data;
 
   var margin = {
     top: 10,
@@ -34,38 +35,47 @@ var barChart = function() {
 
   var chart = function(container) {
 
-    for (var prop in container) {
-      if (container.hasOwnProperty(prop))
-        console.log(prop);
-    }
-
     function setDimensions() {
       axisLabelMargin = 60;
     }
 
     function setupXAxis() {
-      var mindate, maxdate;
+      // minStart: earliest sysStart
+      // maxEnd: latest non-infinty sysEnd
+      // maxStart: max sysStart time
+      var minStart, maxEnd, maxStart;
+
       if (xMin) {
-        mindate = xMin;
+        minStart = xMin;
       }
       else {
-        mindate =
+        minStart =
           moment.min(data.map(function(d){
             return moment(d.content.sysStart);
           })).toDate();
       }
+      maxStart =
+        moment.max(data.map(function(d){
+          return moment(d.content.start);
+        })).add('y', 10);
+      
       if (xMax) {
-        maxdate = xMax;
+        maxEnd = xMax;
       }
       else {
-        maxdate =
+        maxEnd =
           moment.max(data.map(function(d){
-            return moment(d.content.sysStart);
-          })).add(10, 'y').toDate();
+            if (d.content.sysEnd.startsWith('9999')) {
+              return maxStart;
+            }
+            else {
+              return moment(d.content.sysEnd);
+            }
+          })).toDate();
       }
 
       xScale = d3.time.scale()
-        .domain([mindate, maxdate])
+        .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
 
       if (data.length > 12 && width < 500) {
@@ -77,37 +87,51 @@ var barChart = function() {
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
-        .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-        .outerTickSize(0)
-        .orient('bottom')
-        .tickFormat(d3.time.format('%Y-%m-%d'));
+        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickSize(8,0)
+        .orient('end');
+
     }
 
     function setupYAxis() {
-      var mindate, maxdate;
+      // minStart: earliest sysStart
+      // maxEnd: latest non-infinty sysEnd
+      // maxStart: max sysStart time
+      var minStart, maxEnd, maxStart;
+
+      var minStart, maxEnd, maxStart;
+
       if (yMin) {
-        mindate = yMin;
+        minStart = yMin;
       }
       else {
-        mindate =
+        minStart =
           moment.min(data.map(function(d){
             return moment(d.content.valStart);
           })).toDate();
       }
+      maxStart =
+        moment.max(data.map(function(d){
+          return moment(d.content.valStart);
+        })).add('y', 10);
+      
       if (yMax) {
-        maxdate = yMax;
+        maxEnd = yMax;
       }
       else {
-        maxdate =
+        maxEnd =
           moment.max(data.map(function(d){
-            return moment(d.content.valStart);
-          })).add(5, 'y').toDate();
+            if (d.content.valEnd.startsWith('9999')) {
+              return maxStart;
+            }
+            else {
+              return moment(d.content.valEnd);
+            }
+          })).toDate();
       }
 
-      console.log('ymin='+mindate,' ymax='+maxdate);
-
       yScale = d3.time.scale()
-        .domain([mindate, maxdate])
+        .domain([minStart, maxEnd])
         .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
 
       var yAxisCssClass;
@@ -120,10 +144,9 @@ var barChart = function() {
       yAxis = d3.svg.axis()
         .scale(yScale)
         .ticks(15)
-        .innerTickSize(-width + axisLabelMargin + margin.left + margin.right)
-        .outerTickSize(0)
         .orient('left')
-        .tickFormat(d3.time.format('%Y-%m-%d'));
+        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickSize(10,0);
     }
 
     function setupBarChartLayout() {
@@ -144,16 +167,23 @@ var barChart = function() {
     }
 
     function addXAxisLabel() {
-
+      //Rotate ticks
       g.append('g')
         .attr('class', 'xaxis ' + xAxisCssClass)
-        .attr('transform', 'translate(' + axisLabelMargin + ',' +
+        .attr('transform', 'translate(0,' +
           (height - axisLabelMargin - margin.top - margin.bottom) + ')')
         .call(xAxis)
+        .selectAll('text')
+          .style('text-anchor', 'end')
+          .attr('dx', '-0.9em')
+          .attr('transform', 'rotate(-60)');
+
+      //Add x axis label
+      g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', margin.bottom)
-        .attr('x', (width-margin.left)/2)
+        .attr('y', height - margin.bottom + axisLabelMargin)
+        .attr('x', width/2 - axisLabelMargin/2)
         .text(xAxisLabel);
     }
 
@@ -161,14 +191,14 @@ var barChart = function() {
 
       g.append('g')
         .attr('class', 'yaxis ')
-        .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
+        .attr('transform', 'translate('+axisLabelMargin+', 0)')
         .call(yAxis)
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
         .attr('y', -margin.left)
-        .attr('x', -(height - margin.top - margin.bottom - axisLabelMargin) / 2)
-        .style('text-anchor', 'middle')
+        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin) / 2)
+        .style('text-anchor', 'left')
         .text(yAxisLabel);
 
     }
@@ -193,35 +223,36 @@ var barChart = function() {
 
     function addBarChartData() {
 
-      split = g.selectAll('.split')
+      var split = g.selectAll('.split')
         .data(data)
         .enter()
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
+
       var r;
-      r = split
-        .append('rect')
+      r = split.append('rect')
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
           document.getElementById('viewButton').disabled = false;
+          document.getElementById('deleteErrMessage').innerHTML = '';
 
-          if (!chart.getEditing() && !chart.getViewing()) {
+          if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
             showCurrURI(datum.uri);
-            //Selection of a box in graph visualization
-            $(this).attr('stroke', 'black');
+
             $(this).attr('stroke-width', '4');
+            $(this).attr('stroke', 'black');
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
-              $(getLastDoc()).attr('stroke-width', '0');
+              $(getLastDoc()).attr('stroke-width', '1');
             }
             setLastDoc(this);
           }
         })
         .attr('stroke', 'grey')
-        .attr('stroke-width', '2')
+        .attr('stroke-width', '1')
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
@@ -236,8 +267,6 @@ var barChart = function() {
           var bary = yScale(moment(d.content.valEnd).toDate());
           return bary;
         })
-        .attr('height', 0)
-        .attr('width', 0)
         .style('opacity', 0)
         .transition()
         .duration(1500)
@@ -269,7 +298,7 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2;
+            return barx1;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
@@ -298,7 +327,6 @@ var barChart = function() {
 
           return d.content[displayProperty];
         });
-
     }
 
     setDimensions();
@@ -381,6 +409,14 @@ var barChart = function() {
     return chart;
   };
 
+  chart.getDeleting = function() {
+    return isDeleting;
+  };
+
+  chart.setDeleting = function(bool) {
+    isDeleting = bool;
+  };
+
   chart.getEditing = function() {
     return isEditing;
   };
@@ -423,6 +459,14 @@ var barChart = function() {
 
   chart.getDisplayProperty = function() {
     return displayProperty;
+  };
+
+  chart.setLogicalURI = function(str) {
+    logicURI = str;
+  };
+
+  chart.getLogicalURI = function() {
+    return logicURI;
   };
 
   chart.setDisplayProperty = function(str) {
