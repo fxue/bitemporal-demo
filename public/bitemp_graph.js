@@ -1,4 +1,4 @@
-/*global d3, moment */
+/*global d3, d3plus, moment */
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
@@ -16,6 +16,7 @@ var barChart = function() {
   var displayProperty = '';
   var lastDoc;
   var data;
+  var displayedProps = [];
 
   var margin = {
     top: 10,
@@ -97,8 +98,6 @@ var barChart = function() {
       // minStart: earliest sysStart
       // maxEnd: latest non-infinty sysEnd
       // maxStart: max sysStart time
-      var minStart, maxEnd, maxStart;
-
       var minStart, maxEnd, maxStart;
 
       if (yMin) {
@@ -221,9 +220,13 @@ var barChart = function() {
       return lastDoc;
     }
 
+    
     function addBarChartData() {
 
       var split = g.selectAll('.split')
+      var arr = [];
+
+      split = g.selectAll('.split')
         .data(data)
         .enter()
         .append('g')
@@ -231,7 +234,46 @@ var barChart = function() {
         .attr('stroke', 'black');
 
       var r;
-      r = split.append('rect')
+
+      var propTooltip = d3.select('body')
+        .append('div')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .style('word-wrap', 'break-word')
+        .style('font-weight', 'bold')
+        .style('font-size', '18px')
+        .style('width', '32em')
+        .text('');
+      
+      r = split
+        .append('rect')
+        .on('mouseover', function(d) {
+          var str = '';
+          if(!displayProperty) {
+            displayProperty = 'data';
+          }
+          if (displayProperty.indexOf('.') === -1) {
+            str = d.content[displayProperty];
+          }
+          else {
+            str = path(d, 'content.' + displayProperty);
+          }
+         // if(str && str.length > 15) {  //if you want all mouseovers to work, comment out
+            propTooltip.text(str);
+         // }
+          return propTooltip.style('visibility', 'visible');
+        })
+        .on('mouseout', function() {
+          propTooltip.text('');
+          return propTooltip.style('visibility', 'hidden');
+        })
+        .on('mousemove', function() {
+          var coordinates = [0, 0];
+          coordinates = d3.mouse(this);
+          propTooltip.style('position', 'absolute')
+            .style('top', coordinates[1] + 115 + 'px')
+            .style('left', coordinates[0] + 110 + 'px');
+        })
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -244,20 +286,30 @@ var barChart = function() {
 
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
+            $(this).attr('fill-opacity', 0.7);
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
+              $(getLastDoc()).attr('fill-opacity', 0.9);
             }
             setLastDoc(this);
           }
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '1')
-        .attr('fill',function(d) {
+        .attr('fill', function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
           }
-          return color(d.content[displayProperty]);
+          else {
+            if (displayProperty.indexOf('.') === -1) {
+              return color(d.content[displayProperty]);
+            }
+            else {
+              str = path(d, 'content.' + displayProperty);
+              return color(str);
+            }
+          }
         })
         .attr('x', function(d) {
           var barx = xScale(moment(d.content.sysStart).toDate());
@@ -270,7 +322,7 @@ var barChart = function() {
         .style('opacity', 0)
         .transition()
         .duration(1500)
-        .style('opacity', 1)
+        .style('opacity', 0.9)
         .attr('height', function(d) {
           var bValStart = yScale(moment(d.content.valStart).toDate());
           var bValEnd = yScale(moment(d.content.valEnd).toDate());
@@ -288,17 +340,23 @@ var barChart = function() {
         });
 
       split.append('text')
+        .attr('id', 'box')
+        .style('fill', 'DarkMagenta')
         .attr('class','tooltip-txt')
+        .style('opacity', 0)
+        .transition()
+        .duration(1500)
+        .style('opacity', 1)
         .style('text-anchor', 'middle')
         .attr('x', function(d) {
           var barx1 = xScale(moment(d.content.sysStart).toDate());
           var barx2;
           if (!d.content.sysEnd) {
-            return 0;
+            return 75;
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return barx1;
+            return (barx1+barx2)/2;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
@@ -321,13 +379,47 @@ var barChart = function() {
           }
         })
         .text(function(d) {
+          var str = '';
           if(!displayProperty) {
             displayProperty = 'data';
           }
+          if (displayProperty.indexOf('.') === -1) {
+            str = d.content[displayProperty];
+          }
+          else {
+            str = path(d, 'content.' + displayProperty);
+          }
+          var alreadyInGraph = false;
+          for(var i = 0; i < displayedProps.length; i++) {
+            if(displayedProps[i] === str) {
+              alreadyInGraph = true;
+            } 
+          }
+          if(alreadyInGraph === false) {
+            displayedProps.push(str);
+            if(str && str.length > 15) {
+              str = str.substring(0, 15) + '...';
+            }
+            return str;
+          }
+        })
+      };
 
-          return d.content[displayProperty];
-        });
+    function path(object, fullPath) {
+      var selection = object;
+      fullPath.split('.').forEach(function(path) { 
+        selection = selection[path]; 
+      });
+      return selection;
     }
+
+    /*
+      var x = { foo: { bar: { stuff: 'something' } } }
+      var path = 'foo.bar.stuff'
+      var selected = x;
+      path.split('.').forEach(function(path) { selected = selected[path]; });
+      selected
+    */
 
     setDimensions();
     setupXAxis();

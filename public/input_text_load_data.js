@@ -37,9 +37,47 @@ function parseData(data, collection, numParts) {
       item.contentLength = matches3[1];
     }
 
-    var matches4 = split[i+numParts-1].match(/({[^$]*})/);
-    if(matches4 && matches4[1]) {
-      item.content = JSON.parse(matches4[1]);
+    //Handles XML docs (converts to JSON, organizes timestamps)
+    if(item.contentType === 'application/xml') {
+   /*   var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
+      if(matches4[1]) {
+        matches4 = matches4[1].match(/^(?!.*xml version).*$/m);
+      }
+      if(matches4[0]) {
+        matches4 = matches4[0].match(/[^^^$^"]+/);
+        var itemContent = matches4[0];
+        itemContent = '{"xmlString":"' + itemContent + '"}';
+      }
+      item.content = JSON.parse(itemContent);*/
+      
+      var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
+      if(matches4[1]) {
+        matches4 = matches4[1].match(/^(?!.*version).*$/m);
+      }
+      if(matches4[0]) {
+        var xmlDoc = jQuery.parseXML(matches4[0]);
+        var itemContent = xmlToJson(xmlDoc);
+        //add timestamps to earlier layer of new JSON doc
+        for(var prop in itemContent) {
+          if (itemContent.hasOwnProperty(prop)) {
+            if(typeof itemContent[prop] === 'object') {
+              for(var property in itemContent[prop]) {
+                if(property === 'sysStart' || property === 'sysEnd' || property === 'valEnd' || property === 'valStart') {
+                  itemContent[property] = itemContent[prop][property];
+                }
+              }
+            }
+          }
+        }
+        item.content = itemContent;
+      }
+    }
+    //Handles JSON docs
+    else {
+      var matches4 = split[i+numParts-1].match(/({[^]*})/);
+      if(matches4 && matches4[1]) {
+        item.content = JSON.parse(matches4[1]);
+      }
     }
 
     if (parseInt(numParts) === 1 && item.content) {
@@ -121,7 +159,44 @@ function loadData(collection) { //Called from top-level code
   });
 }
 
-$('#pick-doc').click( function() {
+// Changes XML to JSON
+var xmlToJson = function(xml) {
+  var obj = {};
+  if (xml.nodeType == 1) {
+    if (xml.attributes.length > 0) {
+      obj["@attributes"] = {};
+      for (var j = 0; j < xml.attributes.length; j++) {
+        var attribute = xml.attributes.item(j);
+        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+      }
+    }
+  } else if (xml.nodeType == 3) {
+    obj = xml.nodeValue;
+  }
+  if (xml.hasChildNodes()) {
+    for (var i = 0; i < xml.childNodes.length; i++) {
+      var item = xml.childNodes.item(i);
+      var nodeName = item.nodeName;
+      if (typeof (obj[nodeName]) == "undefined") {
+        if(nodeName === 'sysStart' || nodeName === 'sysEnd' || nodeName === 'valStart' || nodeName === 'valEnd') {
+          obj[nodeName] = item.textContent;
+        }
+        else
+          obj[nodeName] = xmlToJson(item);
+      } else {
+        if (typeof (obj[nodeName].push) == "undefined") {
+          var old = obj[nodeName];
+          obj[nodeName] = [];
+          obj[nodeName].push(old);
+        }
+        obj[nodeName].push(xmlToJson(item));
+      }
+    }
+  }
+  return obj;
+}
+
+$('#pick-doc').click(function () {
   var uriCollection = $('input[name = collection]').val();
   if(uriCollection === '') {
     window.alert('Please enter a uri.');
@@ -132,4 +207,5 @@ $('#pick-doc').click( function() {
     console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
-});
+}); 
+

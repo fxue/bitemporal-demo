@@ -137,6 +137,7 @@ var drawChart = function(params, docProp) {
       .width(params.width)
       .height(params.height)
       .setDisplayProperty(docProp);
+    
   }
   
   var selector = '#' + params.containerId;
@@ -419,7 +420,7 @@ function changeTextInGraph(chart, params) {
   for(var i = 0; i < params.data.length && !propExists; i++) {
     for(var prop in params.data[i].content) {
       if (params.data[i].content.hasOwnProperty(prop)) {
-        if(prop === docProp) {
+        if(prop === docProp || docProp.substring(0, docProp.indexOf('.')) === prop) {
           propExists = true;
         }
       }
@@ -433,30 +434,75 @@ function changeTextInGraph(chart, params) {
   }
 }
 
+function findProperties(obj, path, properties) {
+  var newPath;
+  if (typeof obj === 'object') {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        newPath = path ? path + '.' + prop : prop;
+        if (Array.isArray(obj[prop])) {
+          for (var item in obj[prop]) {
+            findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+          }
+        } else if (typeof obj[prop] === 'object') {
+          findProperties(obj[prop], newPath, properties);
+        } else {
+          properties[newPath] = true;
+        }
+      }
+    }
+  }
+}
+
+/*
+ * @param obj
+ * @param path 
+ * @param properties -- modified as new properties are found
+ */
+function findProperties(obj, path, properties) {
+  var newPath;
+  if (typeof obj === 'object') {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        newPath = path ? path + '.' + prop : prop;
+        if (Array.isArray(obj[prop])) {
+          // for (var item in obj[prop]) {
+          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+          // }
+        } else if (typeof obj[prop] === 'object') {
+          findProperties(obj[prop], newPath, properties);
+        } else {
+          properties[newPath] = true;
+        }
+      }
+    }
+  }
+}
+
 function addDataToMenu(chart, params) {
-  if (!params.timeRanges){
+  if(!params.timeRanges) {
+    console.log('DoesNOThaveTimeRanges');
+
     $('#select-prop').empty();
     var propsInGraph = {};
     propsInGraph['Choose a property'] = true;
 
     for(var i = 0; i < params.data.length; i++) {
-      for(var prop in params.data[i].content) {
-        if (params.data[i].content.hasOwnProperty(prop)) {
-        	propsInGraph[prop] = true;
-        }
-      }
+      findProperties(params.data[i].content, null, propsInGraph);
     }
     var select = document.getElementById('select-prop');
-
-    for(var property in propsInGraph) {
-      var opt = property;
-      var el = document.createElement('option');
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
+    if(select) {
+      for(var property in propsInGraph) {
+        var opt = property;
+        var el = document.createElement('option');
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+      }
     }
   }
 }
+
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
@@ -483,8 +529,9 @@ var getBarChart = function (params, docProp) {
   if (params) {
     addDataToMenu(chart, params);
   }
-  if (params.timeRanges === null) {
+  if(params.timeRanges === null) {
     initButtons();
+    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
   }
 
   $('#editButton').click(function() {
