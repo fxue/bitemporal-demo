@@ -446,8 +446,9 @@ function addDataToMenu(chart, params) {
         }
       }
     }
-    var select = document.getElementById('select-prop');
-
+  }
+  var select = document.getElementById('select-prop');  
+  if(select) {
     for(var property in propsInGraph) {
       var opt = property;
       var el = document.createElement('option');
@@ -549,4 +550,18 @@ var getBarChart = function (params, docProp) {
     var selectedText = $(this).find('option:selected').text();
     getBarChart(params, selectedText);
   });
+};
+
+var drawChart = function (params, docProp) {
+  var chart = barChart()
+    .data(params.data)
+    .width(params.width)
+    .height(params.height)
+    .setDisplayProperty(docProp);
+
+  var selector = '#' + params.containerId;
+  d3.select(selector + ' .chart').remove();
+  var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+
+  return chart;
 };
