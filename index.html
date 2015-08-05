@@ -203,6 +203,7 @@
         }
       };
 
+
       var uri = $.urlParam('collection');
       if (uri !== null) {
         loadData(uri);
@@ -212,6 +213,38 @@
         loadData('addr.json');
       }
 
+      $("input[name='insert']").serialize(function() {
+        var col = $("input[name='tempcol']").val();
+        var uri = $("input[name='uri']").val();
+        var vs = $("input[name='validstart']").val();
+        var ve = $("input[name='validend']").val();
+        var sys = $("input[name='systemstart']").val();
+        var d = $("input[name='content']").val();
+        $.get(
+          "/update?collection"+col+"&uri="+uri+
+          "&validstart="+vs+"&validend="+ve+
+          "&system="+sys+"&content="+d);
+        });
     </script>
+
+    </script>
+    <div id='editDocDiv'>
+      <br><br><br>
+      <p id='selectedURI'> Selected URI: <b> null </b></p>
+      <button id="editButton" > Edit </button>
+      <button id="viewButton"> View </button>
+      <button id="deleteButton"> Delete </button>
+      <button id="saveButton" hidden="true"> Save </button>
+      <button id='cancelButton' hidden='true'> Cancel </button>
+      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
+      <div id='sysTimeDiv'>
+        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
+        <br> <br>
+        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
+        <script>
+          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+        </script>
+      </div>
+    </div>
   </body>
 </html>
