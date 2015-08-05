@@ -405,44 +405,6 @@ var barChart = function() {
         })
       };
 
-
-
-
-            return str;
-          }
-        })
-      .call(wrapText, 225);
-    }
-
-//Generic text wrap D3 function for long text. 
-  function wrapText(text, width) {
-    text.each(function () {
-      var textEl = d3.select(this),
-        words = textEl.text().split(/\s+|-+/).reverse(),
-        word,
-        line = [],
-        linenumber = 0,
-        lineHeight = 1.1, // ems
-        x = textEl.attr('x'),
-        y = textEl.attr('y'),
-        dx = parseFloat(textEl.attr('dx') || 0), 
-        dy = parseFloat(textEl.attr('dy') || 0),
-        tspan = textEl.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
-
-      while (word = words.pop()) {
-        line.push(word);
-        tspan.text(line.join(' '));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(' '));
-          line = [word];
-          tspan = textEl.append('tspan').attr('x', x).attr('y', y).attr('dx', dx).attr('dy', ++linenumber * lineHeight + dy + 'em').text(word);
-        }
-      }
-    });
-  }
-
-
     function path(object, fullPath) {
       var selection = object;
       fullPath.split('.').forEach(function(path) { 
