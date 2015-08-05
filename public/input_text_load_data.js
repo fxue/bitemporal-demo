@@ -39,7 +39,7 @@ function parseData(data, collection, numParts) {
 
     //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
-      var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
+   /*   var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
       if(matches4[1]) {
         matches4 = matches4[1].match(/^(?!.*xml version).*$/m);
       }
@@ -48,7 +48,7 @@ function parseData(data, collection, numParts) {
         var itemContent = matches4[0];
         itemContent = '{"xmlString":"' + itemContent + '"}';
       }
-      item.content = JSON.parse(itemContent);
+      item.content = JSON.parse(itemContent);*/
       
     }
     //Handles JSON docs

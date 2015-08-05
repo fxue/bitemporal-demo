@@ -100,8 +100,6 @@ var barChart = function() {
       // maxStart: max sysStart time
       var minStart, maxEnd, maxStart;
 
-      var minStart, maxEnd, maxStart;
-
       if (yMin) {
         minStart = yMin;
       }
@@ -260,9 +258,9 @@ var barChart = function() {
           else {
             str = path(d, 'content.' + displayProperty);
           }
-          if(str && str.length > 15) {
+         // if(str && str.length > 15) {  //if you want all mouseovers to work, comment out
             propTooltip.text(str);
-          }
+         // }
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function() {
@@ -292,10 +290,6 @@ var barChart = function() {
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
-            $(this).attr('fill-opacity', 0.6);
-            if (getLastDoc() !== this) {
-              $(getLastDoc()).attr('stroke', 'grey');
-              $(getLastDoc()).attr('stroke-width', '0');
               $(getLastDoc()).attr('fill-opacity', 0.9);
             }
             setLastDoc(this);
@@ -303,7 +297,7 @@ var barChart = function() {
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '1')
-        .attr('fill',function(d) {
+        .attr('fill', function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
           }
@@ -385,19 +379,11 @@ var barChart = function() {
           }
         })
         .text(function(d) {
+          var str = '';
           if(!displayProperty) {
             displayProperty = 'data';
           }
           else {
-            if (displayProperty.indexOf('.') === -1) {
-              return d.content[displayProperty];
-            }
-            else {
-              str = path(d, 'content.' + displayProperty);
-              return str;
-            }   
-          }
-          
             str = path(d, 'content.' + displayProperty);
           }
           var alreadyInGraph = false;
@@ -414,8 +400,6 @@ var barChart = function() {
             return str;
           }
         })
-    }
-
       };
 
 
