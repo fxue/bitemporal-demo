@@ -121,7 +121,7 @@
       <input type="text" name="collection" value="">
       <input type="button" id="pick-doc" value="Submit">
 
-      <p>Enter a document property to display in the graph ie 'data' or 'sysStart'.</p>
+      <p>Enter a document property to display in the graph or choose one from the drop down menu.</p>
 
       <b>Enter Document Property:</b><br>
       <input type="text" name="documentProperty" value="">
@@ -129,6 +129,8 @@
       <input type="button" id="change-prop" value="Submit">
       <br><br>
 
+
+      
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
@@ -136,10 +138,7 @@
 
     <p id="uriEntered"></p>
     <br></br>
-<<<<<<< HEAD
-=======
 
->>>>>>> rebasing
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
@@ -197,16 +196,34 @@
         else {
           return results[1] || 0;
         }
-      }
+      };
 
       var uri = $.urlParam('collection');
       if (uri !== null) {
         loadData(uri);
         document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uri.bold();
       }
-      else { //default
+      else {
         loadData('addr.json');
       }
     </script>
+
+    <div id='editDocDiv'>
+      <br><br><br>
+      <button id="editButton" > Edit </button>
+      <button id="viewButton"> View </button>
+      <button id="deleteButton"> Delete </button>
+      <button id="saveButton" hidden="true"> Save </button>
+      <button id='cancelButton' hidden='true'> Cancel </button>
+      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
+      <div id='sysTimeDiv'>
+        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
+        <br> <br>
+        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
+        <script>
+          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+        </script>
+      </div>
+    </div>
   </body>
 </html>
