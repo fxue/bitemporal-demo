@@ -41,25 +41,15 @@ function parseData(data, collection, numParts) {
     if(item.contentType === 'application/xml') {
       var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
       if(matches4[1]) {
-        matches4 = matches4[1].match(/^(?!.*version).*$/m);
+        matches4 = matches4[1].match(/^(?!.*xml version).*$/m);
       }
       if(matches4[0]) {
-        var xmlDoc = jQuery.parseXML(matches4[0]);
-        var itemContent = xmlToJson(xmlDoc);
-        //add timestamps to earlier layer of new JSON doc
-        for(var prop in itemContent) {
-          if (itemContent.hasOwnProperty(prop)) {
-            if(typeof itemContent[prop] === 'object') {
-              for(var property in itemContent[prop]) {
-                if(property === 'sysStart' || property === 'sysEnd' || property === 'valEnd' || property === 'valStart') {
-                  itemContent[property] = itemContent[prop][property];
-                }
-              }
-            }
-          }
-        }
-        item.content = itemContent;
+        matches4 = matches4[0].match(/[^^^$^"]+/);
+        var itemContent = matches4[0];
+        itemContent = '{"xmlString":"' + itemContent + '"}';
       }
+      item.content = JSON.parse(itemContent);
+      
     }
     //Handles JSON docs
     else {
@@ -149,7 +139,7 @@ function loadData(collection) { //Called from top-level code
 }
 
 // Changes XML to JSON
-xmlToJson = function(xml) {
+var xmlToJson = function(xml) {
   var obj = {};
   if (xml.nodeType == 1) {
     if (xml.attributes.length > 0) {
@@ -184,8 +174,20 @@ xmlToJson = function(xml) {
   }
   return obj;
 }
+/*
+function onClickOrReturn() {
+  var uriCollection = $('input[name = collection]').val();
+  if(uriCollection === '') {
+    window.alert('Please enter a uri.');
+  }
+  else {
+    document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
+    window.location = "/?collection="+uriCollection;
+    loadData(uriCollection);
+  }
+}*/
 
-$('#pick-doc').click( function() {
+$('#pick-doc').click(function () {
   var uriCollection = $('input[name = collection]').val();
   if(uriCollection === '') {
     window.alert('Please enter a uri.');
@@ -196,4 +198,5 @@ $('#pick-doc').click( function() {
     console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
-});
+}); 
+

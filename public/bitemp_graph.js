@@ -239,13 +239,11 @@ var barChart = function() {
 
       var propTooltip = d3.select('body')
         .append('div')
-        .style('position', 'relative')
-        .style('left', '810px')
-        .style('top', '-340px')
         .style('z-index', '10')
         .style('visibility', 'hidden')
         .style('word-wrap', 'break-word')
         .style('font-weight', 'bold')
+        .style('font-size', '18px')
         .style('width', '32em')
         .text('');
       
@@ -262,14 +260,21 @@ var barChart = function() {
           else {
             str = path(d, 'content.' + displayProperty);
           }
-          if(str.length > 15) {
-            propTooltip.text('Full Property: ' + str);
-          } 
+          if(str && str.length > 15) {
+            propTooltip.text(str);
+          }
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function() {
           propTooltip.text('');
           return propTooltip.style('visibility', 'hidden');
+        })
+        .on('mousemove', function() {
+          var coordinates = [0, 0];
+          coordinates = d3.mouse(this);
+          propTooltip.style('position', 'absolute')
+            .style('top', coordinates[1] + 115 + 'px')
+            .style('left', coordinates[0] + 110 + 'px');
         })
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
