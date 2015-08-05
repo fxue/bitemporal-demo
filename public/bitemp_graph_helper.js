@@ -139,7 +139,7 @@ var drawChart = function(params, docProp) {
       .height(params.height)
       .setDisplayProperty(docProp);
   }
-
+  
   var selector = '#' + params.containerId;
   d3.select(selector + ' .chart').remove();
   d3.select(selector).append('div').classed('chart', true).call(chart);
@@ -235,7 +235,7 @@ function setupTextArea(uri, isEditing) {
     fillText(data, isEditing);
   };
   $.ajax({
-    url: '/v1/documents/?uri=' + uri,
+    url: 'http://localhost:3000/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
   });
@@ -478,12 +478,12 @@ function initButtons() {
 }
 
 var getBarChart = function (params, docProp) {
+  removeButtonEvents();
   var chart = drawChart(params, docProp);
 
   if (params) {
     addDataToMenu(chart, params);
   }
-  removeButtonEvents();
   if (params.timeRanges === null) {
     initButtons();
   }

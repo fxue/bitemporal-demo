@@ -75,15 +75,15 @@ function parseData(data, collection, numParts) {
 }
 
 
-function loadData(collection) {
+function loadData(collection) { //Called from top-level code
   var url = '';
-  console.log('Calling loadData');
   if (collection !== undefined) {
     url += '/' + collection;
   }
   else {
     collection = 'addr.json';
   }
+  
 
   $.ajax({
     url: '/v1/search?pageLength=1000',
@@ -128,8 +128,8 @@ $('#pick-doc').click( function() {
   }
   else {
     document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
-    window.location = "/?collection="+uriCollection;
-    console.log('Calling loadData from pick-doc click  event handler');
+    window.history.pushState('', 'Title', '/?collection='+uriCollection);
+    console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
 });
