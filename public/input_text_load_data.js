@@ -15,12 +15,12 @@ function parseData(data, collection, numParts) {
       collections: null
     };
 
-    var matches = split[ndx].match(/Content-Type: ([\w\/]+)/);
+    var matches = split[i+numParts-1].match(/Content-Type: ([\w\/]+)/);
     if(matches && matches[1]) {
       item.contentType = matches[1];
     }
 
-    var matches2 = split[ndx].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
+    var matches2 = split[i+numParts-1].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
     if(matches2) {
       if(matches2[2]) {
         item.uri = matches2[2];
@@ -33,32 +33,30 @@ function parseData(data, collection, numParts) {
       }
     }
 
-    var matches3 = split[ndx].match(/Content-Length: ([\d]+)/);
+    var matches3 = split[i+numParts-1].match(/Content-Length: ([\d]+)/);
     if(matches3 && matches3[1]) {
       item.contentLength = matches3[1];
     }
 
     //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
-      var matches4 = split[ndx].match(/(<[^]*>)/);
+      var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
+      var itemContent;
       var xml = itemContent = matches4[0];
-      var xmlDoc = $.parseXML(xml);
-      var $xml = $(xmlDoc);
+      var xmlDoc = $.parseXML(xml),
+        $xml = $(xmlDoc),
+        $sStart = $xml.find("sysStart"),
+        $sEnd = $xml.find("sysEnd"),
+        $vStart = $xml.find("valStart"),
+        $vEnd = $xml.find("valEnd");
 
-//http://www.itworld.com/article/2784456/development/using-regular-expressions-to-identify-xml-tags.html
-      var matchesArr = itemContent.match(/(<.[^(> <.)]+>)/g);
-      var itemContent = {
-        xmlString: itemContent
+      itemContent = {
+        xmlString: itemContent,
+        valStart: $vStart.text(),
+        sysStart: $sStart.text(),
+        valEnd: $vEnd.text(),
+        sysEnd: $sEnd.text()
       };
-      var propName;
-      for(var j = 0; j < matchesArr.length; j++) {
-        propName = matchesArr[j];
-        //tests that propName is of format <propName>, not </propName>
-        if(!propName.startsWith('</')) {
-          itemContent[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
-        }
-      }
-
       itemContent = JSON.stringify(itemContent);
       item.content = JSON.parse(itemContent);
     }
