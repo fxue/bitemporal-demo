@@ -14,12 +14,12 @@ function parseData(data, collection, numParts) {
       collections: null
     };
 
-    var matches = split[i].match(/Content-Type: ([\w\/]+)/);
+    var matches = split[i+numParts-1].match(/Content-Type: ([\w\/]+)/);
     if(matches && matches[1]) {
       item.contentType = matches[1];
     }
 
-    var matches2 = split[i].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
+    var matches2 = split[i+numParts-1].match(/Content-Disposition: ([\w\/]+); filename="([^"]+)"; category=([\w\/]+); format=([\w\/]+)/);
     if(matches2) {
       if(matches2[2]) {
         item.uri = matches2[2];
@@ -32,45 +32,32 @@ function parseData(data, collection, numParts) {
       }
     }
 
-    var matches3 = split[i].match(/Content-Length: ([\d]+)/);
+    var matches3 = split[i+numParts-1].match(/Content-Length: ([\d]+)/);
     if(matches3 && matches3[1]) {
       item.contentLength = matches3[1];
     }
 
     //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
-   /*   var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
-      if(matches4[1]) {
-        matches4 = matches4[1].match(/^(?!.*xml version).*$/m);
-      }
-      if(matches4[0]) {
-        matches4 = matches4[0].match(/[^^^$^"]+/);
-        var itemContent = matches4[0];
-        itemContent = '{"xmlString":"' + itemContent + '"}';
-      }
-      item.content = JSON.parse(itemContent);*/
-
       var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
-      if(matches4[1]) {
-        matches4 = matches4[1].match(/^(?!.*version).*$/m);
-      }
-      if(matches4[0]) {
-        var xmlDoc = jQuery.parseXML(matches4[0]);
-        var itemContent = xmlToJson(xmlDoc);
-        //add timestamps to earlier layer of new JSON doc
-        for(var prop in itemContent) {
-          if (itemContent.hasOwnProperty(prop)) {
-            if(typeof itemContent[prop] === 'object') {
-              for(var property in itemContent[prop]) {
-                if(property === 'sysStart' || property === 'sysEnd' || property === 'valEnd' || property === 'valStart') {
-                  itemContent[property] = itemContent[prop][property];
-                }
-              }
-            }
-          }
-        }
-        item.content = itemContent;
-      }
+      var itemContent;
+      var xml = itemContent = matches4[0];
+      var xmlDoc = $.parseXML(xml),
+        $xml = $(xmlDoc),
+        $sStart = $xml.find("sysStart"),
+        $sEnd = $xml.find("sysEnd"),
+        $vStart = $xml.find("valStart"),
+        $vEnd = $xml.find("valEnd");
+
+      itemContent = {
+        xmlString: itemContent,
+        valStart: $vStart.text(),
+        sysStart: $sStart.text(),
+        valEnd: $vEnd.text(),
+        sysEnd: $sEnd.text()
+      };
+      itemContent = JSON.stringify(itemContent);
+      item.content = JSON.parse(itemContent);
     }
     //Handles JSON docs
     else {
@@ -161,42 +148,6 @@ function loadData(collection) { //Called from top-level code
   });
 }
 
-// Changes XML to JSON
-var xmlToJson = function(xml) {
-  var obj = {};
-  if (xml.nodeType == 1) {
-    if (xml.attributes.length > 0) {
-      obj["@attributes"] = {};
-      for (var j = 0; j < xml.attributes.length; j++) {
-        var attribute = xml.attributes.item(j);
-        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-      }
-    }
-  } else if (xml.nodeType == 3) {
-    obj = xml.nodeValue;
-  }
-  if (xml.hasChildNodes()) {
-    for (var i = 0; i < xml.childNodes.length; i++) {
-      var item = xml.childNodes.item(i);
-      var nodeName = item.nodeName;
-      if (typeof (obj[nodeName]) == "undefined") {
-        if(nodeName === 'sysStart' || nodeName === 'sysEnd' || nodeName === 'valStart' || nodeName === 'valEnd') {
-          obj[nodeName] = item.textContent;
-        }
-        else
-          obj[nodeName] = xmlToJson(item);
-      } else {
-        if (typeof (obj[nodeName].push) == "undefined") {
-          var old = obj[nodeName];
-          obj[nodeName] = [];
-          obj[nodeName].push(old);
-        }
-        obj[nodeName].push(xmlToJson(item));
-      }
-    }
-  }
-  return obj;
-}
 
 $('#pick-doc').click(function () {
   var uriCollection = $('input[name = collection]').val();
@@ -204,9 +155,7 @@ $('#pick-doc').click(function () {
     window.alert('Please enter a uri.');
   }
   else {
-    document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
     window.history.pushState('', 'Title', '/?collection='+uriCollection);
-    console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
 });
