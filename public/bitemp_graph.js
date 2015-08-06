@@ -133,6 +133,7 @@ var barChart = function() {
           return moment(d.content.valStart);
         })).add('y', 10);
 
+      
       if (yMax) {
         maxEnd = yMax;
       }
@@ -278,8 +279,11 @@ var barChart = function() {
         .append('rect')
         .on('mouseover', function(d) {
           var str = '';
-          if(!displayProperty) {
+          if(!displayProperty || displayProperty === 'data') {
             displayProperty = 'data';
+            if(!d.content[displayProperty]) {
+              displayProperty = 'valStart';
+            }
           }
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -327,18 +331,19 @@ var barChart = function() {
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '1')
-        .attr('fill',function(d) {
-          if(!displayProperty) {
+        .attr('fill', function(d) {
+          if(!displayProperty || displayProperty === 'data') {
             displayProperty = 'data';
+            if(!d.content[displayProperty]) {
+              displayProperty = 'valStart';
+            }
+          }
+          if (displayProperty.indexOf('.') === -1) {
+            return color(d.content[displayProperty]);
           }
           else {
-            if (displayProperty.indexOf('.') === -1) {
-              return color(d.content[displayProperty]);
-            }
-            else {
-              var str = path(d, 'content.' + displayProperty);
-              return color(str);
-            }
+            str = path(d, 'content.' + displayProperty);
+            return color(str);
           }
         })
         .attr('x', function(d) {
@@ -410,8 +415,11 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(!displayProperty) {
+          if(!displayProperty || displayProperty === 'data') {
             displayProperty = 'data';
+            if(!d.content[displayProperty]) {
+              displayProperty = 'valStart';
+            }
           }
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -660,7 +668,31 @@ var barChart = function() {
     addDragBars();
   }
 
-};
+
+    if(document.getElementById('uriEntered')) {
+      $.urlParam = function(name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results === null) {
+          return null;
+        }
+        else {
+          return results[1] || 0;
+        }
+      };
+
+      var uriParameter = $.urlParam('collection');
+      if(!uriParameter) {
+        uriParameter = 'addr.json';
+      }
+      if(!displayProperty) {
+        displayProperty = 'data';
+      }
+      
+      document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriParameter.bold() + " with property " + displayProperty.bold();
+    }
+
+  };
+
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
@@ -796,6 +828,9 @@ var barChart = function() {
   };
 
   chart.getLogicalURI = function() {
+    if(!logicURI) {
+      return 'addr.json';
+    }
     return logicURI;
   };
 

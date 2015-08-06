@@ -465,25 +465,6 @@ function changeTextInGraph(chart, params) {
   }
 }
 
-function findProperties(obj, path, properties) {
-  var newPath;
-  if (typeof obj === 'object') {
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        newPath = path ? path + '.' + prop : prop;
-        if (Array.isArray(obj[prop])) {
-          for (var item in obj[prop]) {
-            findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          }
-        } else if (typeof obj[prop] === 'object') {
-          findProperties(obj[prop], newPath, properties);
-        } else {
-          properties[newPath] = true;
-        }
-      }
-    }
-  }
-}
 
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
@@ -546,12 +527,6 @@ var getBarChart = function (params, docProp) {
   }
   if (params.timeRanges === null) {
     initButtons();
-  }
-  if (params.timeRanges === null && uri) {
-    document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' +uri + ' with property ' + chart.getDisplayProperty().bold();
-  }
-  else {
-   // document.getElementById('uriEntered').innerHTML = 'There are no docs.';
   }
 
   $('#editButton').click(function() {
