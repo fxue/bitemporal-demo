@@ -286,9 +286,9 @@ var barChart = function() {
           else {
             str = path(d, 'content.' + displayProperty);
           }
-         // if(str && str.length > 15) {  //if you want all mouseovers to work, comment out
+          if(str && str.length > 15) {  //if you want all mouse overs to work, comment out
             propTooltip.text(str);
-         // }
+          }
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function() {

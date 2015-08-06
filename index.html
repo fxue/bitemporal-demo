@@ -111,9 +111,9 @@
   </head>
 
   <body>
-    <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
-    <a href="search" id="searchURL">Search</a>
-    <div id="instructions">
+    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different time lines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
+    <a href="search" id="searchURL">Click to go to search page</a>
+    <div id='instructions'>
       <p>Change the logical document display to the specified URI of a logical document.</p>
       <p>Don"t forget to include the "dot extension" ie .json.</p>
 
@@ -128,22 +128,17 @@
 
       <input type="button" id="change-prop" value="Submit">
       <br><br>
-
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
-
     </div>
 
     <p id="uriEntered"></p>
     <br></br>
 
-
     <div id="tooltip-txt" class="hidden">
       <p><span id="value"></span></p>
     </div>
-
-
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
@@ -160,10 +155,19 @@
     <div id="editDocDiv">
       <div id="dialogCreateDoc" title="Create a new document">
         <!-- Add contents of creating a document. -->
-        <div id="createDocStuff" hidden="true">
-          <select id="selectTempColl">
+        <div id='createDocStuff' hidden='true'>
+          <b> Select a temporal collection: </b>
+          <select id='selectTempColl'>
             <option>Choose a temporal collection</option>
           </select>
+          <p></p>
+          <p><b>Define a uri for the new document:  </b> 
+             <input type='text' id='newUri' value='A custom uri here'>
+          </p>
+          <p></p> 
+          <p> These will be the documents contents, choose to your liking! </p>
+          <p></p>
+          <textarea rows='14' cols='45' id='newDocContents'> </textarea>
         </div>
       </div>
       <button id="createDoc"> Create a Document </button>
@@ -201,7 +205,6 @@
           return results[1] || 0;
         }
       };
-
 
       var uri = $.urlParam('collection');
       if (uri !== null) {
