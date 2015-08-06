@@ -31,8 +31,24 @@ $('#searchQueryButton').click(function() {
   runSearchQuery();
 });
 
+$('#resetButton').click(function() {
+  var collection = getSelected('dropdown');
+  console.log(collection);
+  window.onload = function() {
+    window.location.reload();
+  //$('#dropdown:'+collection).prop('selected', true);
+  // $('#dropdown').val(collection);
+    $('#dropdown').find(collection).attr('selected', true);
+    console.log('hello');
+  }
+  window.onload();
+  //$('select>option:eq(3)').prop('selected', true);
+ // $('#dropdown').attr('selected', 'selected');
+})
+
 function runSearchQuery() {
   var selectedColl = getSelected('dropdown');
+
 
   var valSelectedOp = getSelected('valDropdown');
   var sysSelectedOp = getSelected('sysDropdown');
@@ -158,8 +174,10 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
       success: function(response, textStatus)
       {
         var data = [];
+        var drag = true;
         if(dataToDisplay !== null) {
           data = createCorrData(dataToDisplay);
+          drag = false;
         }
 
         var times = response;
@@ -170,15 +188,30 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
           sysEnd: toReturnDate(times.sysEnd)
         }
 
+        if(!drag) {
+          document.getElementById('vertBar1').innerHTML = "Start Time: " + $('#startSysBox').val().bold();
+          document.getElementById('vertBar2').innerHTML = "End Time: " + $('#endSysBox').val().bold();
+          document.getElementById('horzBar1').innerHTML = "Start Time: " + $('#startValBox').val().bold();
+          document.getElementById('horzBar2').innerHTML = "End Time: " + $('#endValBox').val().bold();
+          document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
+          $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton').css({'visibility': 'hidden'});
+          $('#resetButton').css({'visibility': 'visible'});
+          document.getElementById("dropdown").disabled=true;
+          document.getElementById("valDropdown").disabled=true;
+          document.getElementById("sysDropdown").disabled=true;
+        }
+
         getBarChart({
           data: data,
           width: 800,
-          height: 500,
+          height: 600,
           xAxisLabel: 'System',
           yAxisLabel: 'Valid',
           timeRanges: timeRanges,
+          //draggableBars: drag,
           containerId: 'bar-chart-large'
         }, null);
+
 
         if (!timeRanges.sysStart) {
           alert('There are no documents in this collection. Please select another.');

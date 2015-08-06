@@ -83,6 +83,17 @@
         font-size: 1.2em;
       }
 
+       #resetButton {
+        position: absolute;
+        left: 418px;
+        top: 160px;
+        height: 20px;
+        width: 100px;
+        font-size: 1.2em;
+        text-align: center;
+        visibility: hidden;
+      }
+
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
@@ -394,6 +405,7 @@
       <textarea rows='1' cols='10' color='blue' id='endValBox' style="border:solid 1px black;"></textarea>
     </div>
     <button id='searchQueryButton' class='hide'>Run Query</button>
+    <button id='resetButton'>Reset Graph</button>
     <div id='searchPage'>
     <p id='ops' title='Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps.' class='definition'>Operators</p>
     <div id='valTimes'>

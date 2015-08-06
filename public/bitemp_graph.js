@@ -13,16 +13,18 @@ var barChart = function() {
   var xMax = null;
   var yMin = null;
   var yMax = null;
+  //var draggableBars;
   var displayProperty = '';
   var lastDoc;
   var data;
   var displayedProps = [];
 
+
   var margin = {
     top: 0,
     right: 0,
-    bottom: 70,
-    left: 100
+    bottom: 150,
+    left: 170
   };
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
@@ -37,7 +39,7 @@ var barChart = function() {
   var chart = function(container) {
 
     function setDimensions() {
-      axisLabelMargin =70;
+      axisLabelMargin = 0;
     }
 
     function setupXAxis() {
@@ -77,7 +79,9 @@ var barChart = function() {
 
       xScale = d3.time.scale()
         .domain([mindate, maxdate])
-        .range([axisLabelMargin-30,width-margin.left-margin.right-axisLabelMargin-10]);
+        .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
+
+        console.log('SysMax: ' + maxdate + ', SysMin: ' + mindate);
 
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
@@ -88,9 +92,10 @@ var barChart = function() {
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
-        .tickSize(10,0)
-        .orient('end')
-        .tickFormat(d3.time.format('%Y-%m-%d'));
+        .tickFormat(d3.time.format('%Y-%m-%d'))
+        .tickSize(8,0)
+        .orient('end');
+
     }
 
     function setupYAxis() {
@@ -127,12 +132,11 @@ var barChart = function() {
             }
           })).toDate();
       }
+       console.log('ValMax: ' + maxdate + ', ValMin: ' + mindate);
 
       yScale = d3.time.scale()
         .domain([mindate, maxdate])
-        //.range([415,-10]);
-        .range([height-margin.bottom-margin.bottom-3,-50]);
-        // .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
+       .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
 
       var yAxisCssClass;
       if (data.length > 12 && width < 500) {
@@ -143,20 +147,20 @@ var barChart = function() {
 
       yAxis = d3.svg.axis()
         .scale(yScale)
-        .ticks(15)
-        .tickSize(10,0)
+        //ticks(15)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0);
     }
 
     function setupBarChartLayout() {
+
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
-        .attr('height', height+100)
+        .attr('height', height)
         .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.bottom+ ')');
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       var colorDomain = [];
       data.map(function(d){
@@ -182,23 +186,25 @@ var barChart = function() {
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', margin.bottom+30)
-        .attr('x', ((width-margin.left)/2)-80)
+        .attr('y', height - margin.bottom + axisLabelMargin +100)
+        .attr('x', width/2 - axisLabelMargin-300/2)
         .text(xAxisLabel);
     }
 
     function addYAxisLabel() {
 
       g.append('g')
-        .attr('class', 'yaxis')
-        .attr('transform', 'translate(' + axisLabelMargin + ', 0)')
-        .call(yAxis)
+        .attr('class', 'yaxis ')
+        .attr('transform', 'translate('+axisLabelMargin+', 0)')
+        .call(yAxis);
+
+      g.append('g')
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -margin.left)
-        .attr('x', -(height - margin.top - margin.bottom - axisLabelMargin-70) / 2)
-        .style('text-anchor', 'middle')
+        .attr('y', -margin.left+65)
+        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin-190) / 2)
+        .style('text-anchor', 'left')
         .text(yAxisLabel);
 
     }
@@ -234,15 +240,7 @@ var barChart = function() {
         .enter()
         .append('g')
         .attr('class','split')
-        .attr('stroke', 'black')
-
-
-      split.append('title')
-         .text(function(d) {
-          console.log(d.content);
-          console.log(d.data);
-           return 'System Start time is ' + d.content.sysStart;
-    });
+        .attr('stroke', 'black');
 
       var r;
       var propTooltip = d3.select('body')
@@ -284,6 +282,7 @@ var barChart = function() {
             .style('top', coordinates[1] + 115 + 'px')
             .style('left', coordinates[0] + 110 + 'px');
         })
+
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -306,9 +305,7 @@ var barChart = function() {
           }
         })
         .attr('stroke', 'grey')
-        .style('position', 'relative')
-        .style('opacity', '.99')
-        .attr('stroke-width', '2')
+        .attr('stroke-width', '1')
         .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
@@ -368,7 +365,7 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2;
+            return barx1;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
@@ -425,184 +422,190 @@ var barChart = function() {
       return selection;
     }
 
-    function addBackground() {
-      var format = d3.time.format('%Y-%m-%d');
-      var background = g.append('svg')
-        .style("stroke", 'red')
-        .style("stroke-width", '5')
-        .style('fill', 'white')
-        .attr('class', 'background')
-        .attr('x', axisLabelMargin)
-        .attr('y', -axisLabelMargin)
-        .attr('width', width - axisLabelMargin - margin.left - margin.right)
-        .attr('height', height - margin.top - margin.bottom);
+        function addBackground() {
+          var format = d3.time.format('%Y-%m-%d');
+          var background = g.append('svg')
+            .style("stroke", 'red')
+            .style("stroke-width", '5')
+            .style('fill', 'white')
+            .attr('class', 'background')
+            .attr('x', axisLabelMargin)
+            .attr('y', -axisLabelMargin)
+            .attr('width', width - axisLabelMargin - margin.left - margin.right)
+            .attr('height', height - margin.top - margin.bottom);
 
-      var dragRight = d3.behavior.drag()
-        .on('dragend', function(d,i) {
-          $('#startSysBox').css({'border': '1px solid black'});
-          $('#vertBar1').css({'font-weight': 'normal'});
-        })
-        .on("drag", function(d,i) {
-          $('#startSysBox').css({'border': '2px solid red'});
-          $('#vertBar1').css({'font-weight': 'bold'});
-          var scale = xScale.invert( d.x );
-          console.log('d.x: '+d.x);
-          $('#startSysBox').val(format(scale));
-          if (d.x+d3.event.dx <= 0) {
-            d.x = 0;
+
+          function lineCreator(x1, x2, y1, y2, direction, id) {
+            var line = background
+              .append('line')
+              .attr("x1", x1)
+              .attr("x2", x2)
+              .attr("y1", y1)
+              .attr("y2", y2)
+              .style('opacity', '.99')
+              .style('position', 'relative')
+              .style('cursor', 'pointer')
+              .style('z-index', '1')
+              .attr("stroke-width", 8)
+              .attr("stroke", "red")
+              .data([ {"x":0, "y":0} ])
+              .attr("class", 'hide')
+              .attr('id', id)
+              .call(direction);
           }
-          else if(d.x + d3.event.dx >= width - axisLabelMargin - margin.left - margin.right-15){
-            d.x = width - axisLabelMargin - margin.left - margin.right-15;
+
+          var dragLeft = d3.behavior.drag()
+            .on('dragend', function(d,i) {
+              $('#endSysBox').css({'border': '1px solid black'});
+              $('#vertBar2').css({'font-weight': 'normal'});
+            })
+            .on("drag", function(d,i) {
+              $('#endSysBox').css({'border': '2px solid red'});
+              $('#vertBar2').css({'font-weight': 'bold'});
+              console.log('d.x: ' +d.x);
+              var scale = xScale.invert( d.x + width - axisLabelMargin - margin.left - margin.right );
+              $('#endSysBox').val(format(scale));
+              if (d.x+d3.event.dx >= 0) {
+                d.x = 0;
+              }
+              else if(d.x + d3.event.dx <= -1*(width - axisLabelMargin - margin.left - margin.right)){
+                d.x = -1*(width - axisLabelMargin - margin.left - margin.right);
+              }
+              else {
+                d.x+=d3.event.dx;
+              }
+                d.y += 0;
+              d3.select(this).attr("transform", function(d,i){
+                return "translate(" + [ d.x,d.y ] + ")"
+            })
+          });
+
+          var dragRight = d3.behavior.drag()
+            .on('dragend', function(d,i) {
+              $('#startSysBox').css({'border': '1px solid black'});
+              $('#vertBar1').css({'font-weight': 'normal'});
+            })
+            .on("drag", function(d,i) {
+              $('#startSysBox').css({'border': '2px solid red'});
+              $('#vertBar1').css({'font-weight': 'bold'});
+              var scale = xScale.invert( d.x );
+              console.log('d.x: ' + d.x)
+              console.log('d.x + stuff: ' + (d.x + width - margin.left - margin.right));
+              $('#startSysBox').val(format(scale));
+              if (d.x+d3.event.dx <= 0) {
+                d.x = 0;
+              }
+              else if(d.x + d3.event.dx >= width - margin.left - margin.right){
+                d.x = width - margin.left - margin.right;
+              }
+              else {
+                d.x+=d3.event.dx;
+              }
+                d.y += 0;
+              d3.select(this).attr("transform", function(d,i){
+                return "translate(" + [ d.x,d.y ] + ")"
+              })
+          });
+
+          var dragUp = d3.behavior.drag()
+            .on('dragend', function(d,i) {
+              $('#startValBox').css({'border': '1px solid black'});
+              $('#horzBar1').css({'font-weight': 'normal'});
+            })
+            .on("drag", function(d,i) {
+              $('#startValBox').css({'border': '2px solid red'});
+              $('#horzBar1').css({'font-weight': 'bold'});
+              var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
+              console.log('d.y: '+d.y);
+              console.log('d3.event.dy: '+d3.event.dy);
+              $('#startValBox').val(format(scale));
+              if (d.y+d3.event.dy >= 0) {
+                  d.y = 0;
+              }
+              else if(d.y + d3.event.dy <= -1*(height-margin.top-margin.bottom -5)){
+                d.y = -1*(height-margin.top-margin.bottom -5);
+              }
+              else {
+                d.y+=d3.event.dy;
+              }
+              d.x += 0;
+              d3.select(this).attr("transform", function(d,i){
+                return "translate(" + [ d.x,d.y ] + ")"
+              })
+
+          });
+
+          var dragDown = d3.behavior.drag()
+            .on('dragend', function(d,i) {
+              $('#endValBox').css({'border': '1px solid black'});
+              $('#horzBar2').css({'font-weight': 'normal'});
+            })
+            .on("drag", function(d,i) {
+              $('#endValBox').css({'border': '2px solid red'});
+              $('#horzBar2').css({'font-weight': 'bold'});
+              console.log($('#dragDown').attr('x1'));
+              var scale = yScale.invert(d.y);
+              console.log('d.y: '+d.y);
+              $('#endValBox').val(format(scale));
+              if(d.y+d3.event.dy <= 0 ) {
+                d.y = 0;
+              }
+              else if(d.y+d3.event.dy >= (height-margin.top-margin.bottom)) {
+                d.y = height-margin.top-margin.bottom;
+              }
+              else {
+                d.y += d3.event.dy;
+              }
+              d.x += 0
+              d3.select(this).attr("transform", function(d,i){
+                return "translate(" + [ d.x,d.y ] + ")"
+            })
+          });
+
+          function lineShifter(textId, barId)  {
+          $('#'+textId).change(function(){
+            var input = $('#'+textId).val();
+            var date = new Date(input).toISOString();
+            if (textId.includes('Sys')) {
+              var dx = xScale(moment(date).toDate());
+               console.log('dx: '+dx);
+              if (textId.includes('end')) {
+                dx = -(width - margin.left - dx);
+              }
+              $('#'+barId).attr('transform', 'translate('+dx+', 0)');
+              console.log('hello');
+            }
+            else {
+              var dy = yScale(moment(date).toDate());
+              if (textId.includes('start')) {
+                dy = -(height-margin.top-margin.bottom-dy);
+              }
+              $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+              console.log('hi');
+            }
+          });
           }
-          else {
-            d.x+=d3.event.dx;
-          }
-            d.y += 0;
-          d3.select(this).attr("transform", function(d,i){
-            return "translate(" + [ d.x,d.y ] + ")"
-        })
-      });
 
-      var dragDown = d3.behavior.drag()
-        .on('dragend', function(d,i) {
-          $('#endValBox').css({'border': '1px solid black'});
-          $('#horzBar2').css({'font-weight': 'normal'});
-        })
-        .on("drag", function(d,i) {
-          $('#endValBox').css({'border': '2px solid red'});
-          $('#horzBar2').css({'font-weight': 'bold'});
-          var scale = yScale.invert(d.y);
-          console.log('d.y: '+d.y);
-          $('#endValBox').val(format(scale));
-          if(d.y+d3.event.dy <= 0 ) {
-            d.y = 0;
-          }
-          else if(d.y+d3.event.dy >= 415) {
-            d.y = 415;
-          }
-          else {
-            d.y += d3.event.dy;
-          }
-          d.x += 0
-          d3.select(this).attr("transform", function(d,i){
-            return "translate(" + [ d.x,d.y ] + ")"
-        })
-      });
+          lineShifter('startSysBox', 'dragRight');
+          lineShifter('endSysBox', 'dragLeft');
+          lineShifter('startValBox', 'dragUp');
+          lineShifter('endValBox', 'dragDown');
 
-      var dragLeft = d3.behavior.drag()
-        .on('dragend', function(d,i) {
-          $('#endSysBox').css({'border': '1px solid black'});
-          $('#vertBar2').css({'font-weight': 'normal'});
-        })
-        .on("drag", function(d,i) {
-          $('#endSysBox').css({'border': '2px solid red'});
-          $('#vertBar2').css({'font-weight': 'bold'});
-          console.log('d.x: ' +d.x);
-          var scale = xScale.invert( d.x + width - axisLabelMargin - margin.left - margin.right );
-          $('#endSysBox').val(format(scale));
-          if (d.x+d3.event.dx >= 0) {
-            d.x = 0;
-          }
-          else if(d.x + d3.event.dx <= -1*(width - axisLabelMargin - margin.left - margin.right-15)){
-            d.x = -1*(width - axisLabelMargin - margin.left - margin.right-15);
-          }
-          else {
-            d.x+=d3.event.dx;
-          }
-            d.y += 0;
-          d3.select(this).attr("transform", function(d,i){
-            return "translate(" + [ d.x,d.y ] + ")"
-        })
-      });
+          //right vertical line
+          lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
+          $('#endSysBox').val(format(xScale.invert(width - margin.left - margin.right)));
 
-      var dragUp = d3.behavior.drag()
-        .on('dragend', function(d,i) {
-          $('#startValBox').css({'border': '1px solid black'});
-          $('#horzBar1').css({'font-weight': 'normal'});
-        })
-        .on("drag", function(d,i) {
-          $('#startValBox').css({'border': '2px solid red'});
-          $('#horzBar1').css({'font-weight': 'bold'});
-          var scale = yScale.invert( -d.y );
-          $('#startValBox').val(format(scale));
-          if(d.y+d3.event.dy >= 0 ) {
-            d.y = 0;
-          }
-          else if(d.y+d3.event.dy <= -415) {
-            d.y = -415;
-          }
-          else {
-            d.y += d3.event.dy;
-          }
-          d.x += 0
-          d3.select(this).attr("transform", function(d,i){
-            return "translate(" + [ d.x,d.y ] + ")"
-        })
-      });
+          //left vertical line
+          lineCreator(3, 3, 3, height-margin.top-margin.bottom, dragRight, 'dragRight');
+          $('#startSysBox').val(format(xScale.invert(0)));
 
+          //bottom horizontal line
+          lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp');
+          $('#startValBox').val(format(yScale.invert(height -margin.top- margin.bottom)));
 
-      function lineShifter(textId, barId)  {
-      $('#'+textId).change(function(){
-        var input = $('#'+textId).val();
-        $('#'+textId).text(input );
-        var date = new Date(input).toISOString();
-        if (textId.includes('Sys')) {
-          var dx = xScale(moment(date).toDate());
-           console.log('dx: '+dx);
-          if (textId.includes('end')) {
-            dx = -(625 - dx);
-          }
-          $('#'+barId).attr('transform', 'translate('+dx+', 0)');
-          console.log('hello');
-        }
-        else {
-          var dy = yScale(moment(date).toDate());
-          $('#'+barId).attr('transform', 'translate(0,'+dy+')');
-          console.log('hi');
-        }
-      });
-      }
-
-      lineShifter('startSysBox', 'dragRight');
-      lineShifter('endSysBox', 'dragLeft');
-      // lineShifter('startValBox', 'dragUp');
-
-      function lineCreator(x1, x2, y1, y2, direction, id) {
-        var line = background
-          .append('line')
-          .attr("x1", x1)
-          .attr("x2", x2)
-          .attr("y1", y1)
-          .attr("y2", y2)
-          .style('opacity', '.99')
-          .style('position', 'relative')
-          .style('cursor', 'pointer')
-          .style('z-index', '1')
-          .attr("stroke-width", 8)
-          .attr("stroke", "red")
-          .data([ {"x":0, "y":0} ])
-          .attr("class", 'hide')
-          .attr('id', id)
-          .call(direction);
-      }
-
-      //x axis bottom
-      var valStart = lineCreator(0, 627, 427, 427, dragUp, 'dragUp');
-
-      $('#startValBox').val(format(xScale.invert(0)));
-
-       //x axis top
-      lineCreator(0, 627, 3, 3, dragDown, 'dragDown');
-
-      $('#endValBox').val(format(xScale.invert(360)));
-
-      //y axis left
-      lineCreator(3, 3, 3, 428, dragRight, 'dragRight');
-      $('#startSysBox').val(format(xScale.invert(0)));
-
-      //y axis right
-      lineCreator(627, 627, 1, 428, dragLeft, 'dragLeft');
-      $('#endSysBox').val(format(xScale.invert(630)));
+          //top horizontal line
+          lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
+          $('#endValBox').val(format(yScale.invert(0)));
     }
 
     setDimensions();
@@ -614,8 +617,12 @@ var barChart = function() {
     addYAxisLabel();
     addBarChartData();
     addBackground();
-};
+    // console.log('draggableBars' + draggableBars);
+    // if (draggableBars) {
+    //   addBackground();
+    // }
 
+};
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
@@ -677,6 +684,14 @@ var barChart = function() {
     yMax = value;
     return chart;
   };
+
+  // chart.draggableBars = function(value) {
+  //   if (!arguments.length) {
+  //     return draggableBars;
+  //   }
+  //   draggableBars = value;
+  //   return chart;
+  // };
 
   chart.margin = function(value) {
     if (!arguments.length) {

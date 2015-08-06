@@ -129,6 +129,7 @@ var drawChart = function(params, docProp) {
       .xMax(params.timeRanges.sysEnd)
       .yMin(params.timeRanges.valStart)
       .yMax(params.timeRanges.valEnd)
+      //.draggableBars(params.draggableBars)
       .setDisplayProperty(docProp);
   }
   else {
