@@ -90,7 +90,21 @@ function fillText(data, isEditing) {
         strToAdd += ',';
       }
       strToAdd += '\n\"' + property + '\": ';
-      if (data[property]) {
+      if (typeof data[property] === 'object') {
+        var propsInGraph = {};
+        findProperties(data[property], null, propsInGraph);
+        for(prop in propsInGraph) {
+          strToAdd += '\n   \"' + prop + '\": ';
+          if (prop.indexOf('.') === -1) {
+            var subStr = data[property][prop];
+          }
+          else {
+            var subStr = path(data, property + '.' + prop);
+          }
+          strToAdd += subStr;
+        }
+      }
+      else if(!property){
         strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
@@ -101,6 +115,14 @@ function fillText(data, isEditing) {
   }
   textArea.value += '\n}';
   textArea.readOnly = !isEditing;
+
+  function path(object, fullPath) {
+    var selection = object;
+    fullPath.split('.').forEach(function(path) { 
+      selection = selection[path]; 
+    });
+    return selection;
+  }
 }
 
 function cancel(chart) {
@@ -385,8 +407,6 @@ function findProperties(obj, path, properties) {
 
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
-    console.log('DoesNOThaveTimeRanges');
-
     $('#select-prop').empty();
     var propsInGraph = {};
     propsInGraph['Choose a property'] = true;

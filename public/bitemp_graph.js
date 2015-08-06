@@ -442,7 +442,7 @@ var barChart = function() {
             return str;
           }
         })
-      };
+    };
 
     function path(object, fullPath) {
       var selection = object;
@@ -588,7 +588,7 @@ var barChart = function() {
       });
 
       //shifts draggable bars when textboxes change
-      function lineShifter(textId, barId)  {
+      function lineShifter(textId, barId) {
       $('#'+textId).change(function(){
         var input = $('#'+textId).val();
         var date = new Date(input).toISOString();
@@ -654,43 +654,45 @@ var barChart = function() {
       //top horizontal line
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
-  }
-
-  setDimensions();
-  setupXAxis();
-  setupYAxis();
-  setupBarChartLayout();
-  addRectangle();
-  addXAxisLabel();
-  addYAxisLabel();
-  addBarChartData();
-  addBackground();
-  if (draggableBars) {
-    addDragBars();
-  }
-
-
-    if(document.getElementById('uriEntered')) {
-      $.urlParam = function(name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results === null) {
-          return null;
-        }
-        else {
-          return results[1] || 0;
-        }
-      };
-
-      var uriParameter = $.urlParam('collection');
-      if(!uriParameter) {
-        uriParameter = 'addr.json';
-      }
-      if(!displayProperty) {
-        displayProperty = 'data';
-      }
-      
-      document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriParameter.bold() + " with property " + displayProperty.bold();
     }
+
+    function addDisplayDocAndPropData() {
+      if(document.getElementById('uriEntered')) {
+        $.urlParam = function(name) {
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results === null) {
+            return null;
+          }
+          else {
+            return results[1] || 0;
+          }
+        };
+
+        var uriParameter = $.urlParam('collection');
+        if(!uriParameter) {
+          uriParameter = 'addr.json';
+        }
+        if(!displayProperty) {
+          displayProperty = 'data';
+        }
+        
+        document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriParameter.bold() + " with property " + displayProperty.bold();
+      }
+    }
+
+    setDimensions();
+    setupXAxis();
+    setupYAxis();
+    setupBarChartLayout();
+    addRectangle();
+    addXAxisLabel();
+    addYAxisLabel();
+    addBarChartData();
+    addBackground();
+    if (draggableBars) {
+      addDragBars();
+    }
+    addDisplayDocAndPropData();
 
   };
 
