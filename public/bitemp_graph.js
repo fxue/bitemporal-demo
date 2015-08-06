@@ -440,7 +440,7 @@ var barChart = function() {
             return str;
           }
         })
-      };
+    };
 
     function path(object, fullPath) {
       var selection = object;
@@ -586,24 +586,24 @@ var barChart = function() {
       });
 
       function lineShifter(textId, barId)  {
-      $('#'+textId).change(function(){
-        var input = $('#'+textId).val();
-        var date = new Date(input).toISOString();
-        if (textId.includes('Sys')) {
-          var dx = xScale(moment(date).toDate());
-          if (textId.includes('end')) {
-            dx = -(width - margin.left - dx);
+        $('#'+textId).change(function(){
+          var input = $('#'+textId).val();
+          var date = new Date(input).toISOString();
+          if (textId.includes('Sys')) {
+            var dx = xScale(moment(date).toDate());
+            if (textId.includes('end')) {
+              dx = -(width - margin.left - dx);
+            }
+            $('#'+barId).attr('transform', 'translate('+dx+', 0)');
           }
-          $('#'+barId).attr('transform', 'translate('+dx+', 0)');
-        }
-        else {
-          var dy = yScale(moment(date).toDate());
-          if (textId.includes('start')) {
-            dy = -(height-margin.top-margin.bottom-dy);
+          else {
+            var dy = yScale(moment(date).toDate());
+            if (textId.includes('start')) {
+              dy = -(height-margin.top-margin.bottom-dy);
+            }
+            $('#'+barId).attr('transform', 'translate(0,'+dy+')');
           }
-          $('#'+barId).attr('transform', 'translate(0,'+dy+')');
-        }
-      });
+        });
       }
 
       lineShifter('startSysBox', 'dragRight');
@@ -626,43 +626,45 @@ var barChart = function() {
       //top horizontal line
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
-  }
-
-  setDimensions();
-  setupXAxis();
-  setupYAxis();
-  setupBarChartLayout();
-  addRectangle();
-  addXAxisLabel();
-  addYAxisLabel();
-  addBarChartData();
-  addBackground();
-  if (draggableBars) {
-    addDragBars();
-  }
-
-
-    if(document.getElementById('uriEntered')) {
-      $.urlParam = function(name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results === null) {
-          return null;
-        }
-        else {
-          return results[1] || 0;
-        }
-      };
-
-      var uriParameter = $.urlParam('collection');
-      if(!uriParameter) {
-        uriParameter = 'addr.json';
-      }
-      if(!displayProperty) {
-        displayProperty = 'data';
-      }
-      
-      document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriParameter.bold() + " with property " + displayProperty.bold();
     }
+
+    function addDisplayDocAndPropData() {
+      if(document.getElementById('uriEntered')) {
+        $.urlParam = function(name) {
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results === null) {
+            return null;
+          }
+          else {
+            return results[1] || 0;
+          }
+        };
+
+        var uriParameter = $.urlParam('collection');
+        if(!uriParameter) {
+          uriParameter = 'addr.json';
+        }
+        if(!displayProperty) {
+          displayProperty = 'data';
+        }
+        
+        document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriParameter.bold() + " with property " + displayProperty.bold();
+      }
+    }
+
+    setDimensions();
+    setupXAxis();
+    setupYAxis();
+    setupBarChartLayout();
+    addRectangle();
+    addXAxisLabel();
+    addYAxisLabel();
+    addBarChartData();
+    addBackground();
+    if (draggableBars) {
+      addDragBars();
+    }
+    addDisplayDocAndPropData();
 
   };
 
