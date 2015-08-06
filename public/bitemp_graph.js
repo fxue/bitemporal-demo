@@ -13,12 +13,12 @@ var barChart = function() {
   var xMax = null;
   var yMin = null;
   var yMax = null;
-  //var draggableBars;
+  var draggableBars;
   var displayProperty = '';
   var lastDoc;
   var data;
   var displayedProps = [];
-
+  var background;
 
   var margin = {
     top: 0,
@@ -81,8 +81,6 @@ var barChart = function() {
         .domain([mindate, maxdate])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
 
-        console.log('SysMax: ' + maxdate + ', SysMin: ' + mindate);
-
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
       } else {
@@ -132,11 +130,10 @@ var barChart = function() {
             }
           })).toDate();
       }
-       console.log('ValMax: ' + maxdate + ', ValMin: ' + mindate);
 
       yScale = d3.time.scale()
         .domain([mindate, maxdate])
-       .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
+        .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
 
       var yAxisCssClass;
       if (data.length > 12 && width < 500) {
@@ -211,8 +208,8 @@ var barChart = function() {
 
     function addRectangle() {
       g.append('rect')
-        .style("stroke", 'black')
-        .style("stroke-width", '5')
+        .style('stroke', 'black')
+        .style('stroke-width', '5')
         .style('fill', 'white')
         .attr('class', 'background')
         .attr('x', axisLabelMargin)
@@ -423,33 +420,35 @@ var barChart = function() {
     }
 
         function addBackground() {
-          var format = d3.time.format('%Y-%m-%d');
-          var background = g.append('svg')
-            .style("stroke", 'red')
-            .style("stroke-width", '5')
+          background = g.append('svg')
+            .style('stroke', 'red')
+            .style('stroke-width', '5')
             .style('fill', 'white')
             .attr('class', 'background')
             .attr('x', axisLabelMargin)
             .attr('y', -axisLabelMargin)
             .attr('width', width - axisLabelMargin - margin.left - margin.right)
             .attr('height', height - margin.top - margin.bottom);
+        }
 
+        function addDragBars() {
+          var format = d3.time.format('%Y-%m-%d');
 
           function lineCreator(x1, x2, y1, y2, direction, id) {
-            var line = background
+            background
               .append('line')
-              .attr("x1", x1)
-              .attr("x2", x2)
-              .attr("y1", y1)
-              .attr("y2", y2)
+              .attr('x1', x1)
+              .attr('x2', x2)
+              .attr('y1', y1)
+              .attr('y2', y2)
               .style('opacity', '.99')
               .style('position', 'relative')
               .style('cursor', 'pointer')
               .style('z-index', '1')
-              .attr("stroke-width", 8)
-              .attr("stroke", "red")
-              .data([ {"x":0, "y":0} ])
-              .attr("class", 'hide')
+              .attr('stroke-width', '8')
+              .attr('stroke', 'red')
+              .data([ {'x':0, 'y':0} ])
+              .attr('class', 'hide')
               .attr('id', id)
               .call(direction);
           }
@@ -459,25 +458,24 @@ var barChart = function() {
               $('#endSysBox').css({'border': '1px solid black'});
               $('#vertBar2').css({'font-weight': 'normal'});
             })
-            .on("drag", function(d,i) {
+            .on('drag', function(d,i) {
               $('#endSysBox').css({'border': '2px solid red'});
               $('#vertBar2').css({'font-weight': 'bold'});
-              console.log('d.x: ' +d.x);
-              var scale = xScale.invert( d.x + width - axisLabelMargin - margin.left - margin.right );
+              var scale = xScale.invert( d.x + width - margin.left - margin.right );
               $('#endSysBox').val(format(scale));
               if (d.x+d3.event.dx >= 0) {
                 d.x = 0;
               }
-              else if(d.x + d3.event.dx <= -1*(width - axisLabelMargin - margin.left - margin.right)){
-                d.x = -1*(width - axisLabelMargin - margin.left - margin.right);
+              else if(d.x + d3.event.dx <= -1*(width - margin.left - margin.right)){
+                d.x = -1*(width - margin.left - margin.right);
               }
               else {
                 d.x+=d3.event.dx;
               }
                 d.y += 0;
-              d3.select(this).attr("transform", function(d,i){
-                return "translate(" + [ d.x,d.y ] + ")"
-            })
+              d3.select(this).attr('transform', function(d,i){
+                return 'translate(' + [ d.x,d.y ] + ')';
+            });
           });
 
           var dragRight = d3.behavior.drag()
@@ -485,12 +483,10 @@ var barChart = function() {
               $('#startSysBox').css({'border': '1px solid black'});
               $('#vertBar1').css({'font-weight': 'normal'});
             })
-            .on("drag", function(d,i) {
+            .on('drag', function(d,i) {
               $('#startSysBox').css({'border': '2px solid red'});
               $('#vertBar1').css({'font-weight': 'bold'});
               var scale = xScale.invert( d.x );
-              console.log('d.x: ' + d.x)
-              console.log('d.x + stuff: ' + (d.x + width - margin.left - margin.right));
               $('#startSysBox').val(format(scale));
               if (d.x+d3.event.dx <= 0) {
                 d.x = 0;
@@ -502,9 +498,9 @@ var barChart = function() {
                 d.x+=d3.event.dx;
               }
                 d.y += 0;
-              d3.select(this).attr("transform", function(d,i){
-                return "translate(" + [ d.x,d.y ] + ")"
-              })
+              d3.select(this).attr('transform', function(d,i){
+                return 'translate(' + [ d.x,d.y ] + ')';
+              });
           });
 
           var dragUp = d3.behavior.drag()
@@ -512,12 +508,10 @@ var barChart = function() {
               $('#startValBox').css({'border': '1px solid black'});
               $('#horzBar1').css({'font-weight': 'normal'});
             })
-            .on("drag", function(d,i) {
+            .on('drag', function(d,i) {
               $('#startValBox').css({'border': '2px solid red'});
               $('#horzBar1').css({'font-weight': 'bold'});
               var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
-              console.log('d.y: '+d.y);
-              console.log('d3.event.dy: '+d3.event.dy);
               $('#startValBox').val(format(scale));
               if (d.y+d3.event.dy >= 0) {
                   d.y = 0;
@@ -529,9 +523,9 @@ var barChart = function() {
                 d.y+=d3.event.dy;
               }
               d.x += 0;
-              d3.select(this).attr("transform", function(d,i){
-                return "translate(" + [ d.x,d.y ] + ")"
-              })
+              d3.select(this).attr('transform', function(d,i){
+                return 'translate(' + [ d.x,d.y ] + ')';
+              });
 
           });
 
@@ -540,12 +534,10 @@ var barChart = function() {
               $('#endValBox').css({'border': '1px solid black'});
               $('#horzBar2').css({'font-weight': 'normal'});
             })
-            .on("drag", function(d,i) {
+            .on('drag', function(d,i) {
               $('#endValBox').css({'border': '2px solid red'});
               $('#horzBar2').css({'font-weight': 'bold'});
-              console.log($('#dragDown').attr('x1'));
               var scale = yScale.invert(d.y);
-              console.log('d.y: '+d.y);
               $('#endValBox').val(format(scale));
               if(d.y+d3.event.dy <= 0 ) {
                 d.y = 0;
@@ -556,10 +548,10 @@ var barChart = function() {
               else {
                 d.y += d3.event.dy;
               }
-              d.x += 0
-              d3.select(this).attr("transform", function(d,i){
-                return "translate(" + [ d.x,d.y ] + ")"
-            })
+              d.x += 0;
+              d3.select(this).attr('transform', function(d,i){
+                return 'translate(' + [ d.x,d.y ] + ')';
+            });
           });
 
           function lineShifter(textId, barId)  {
@@ -568,12 +560,10 @@ var barChart = function() {
             var date = new Date(input).toISOString();
             if (textId.includes('Sys')) {
               var dx = xScale(moment(date).toDate());
-               console.log('dx: '+dx);
               if (textId.includes('end')) {
                 dx = -(width - margin.left - dx);
               }
               $('#'+barId).attr('transform', 'translate('+dx+', 0)');
-              console.log('hello');
             }
             else {
               var dy = yScale(moment(date).toDate());
@@ -581,7 +571,6 @@ var barChart = function() {
                 dy = -(height-margin.top-margin.bottom-dy);
               }
               $('#'+barId).attr('transform', 'translate(0,'+dy+')');
-              console.log('hi');
             }
           });
           }
@@ -606,7 +595,7 @@ var barChart = function() {
           //top horizontal line
           lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
           $('#endValBox').val(format(yScale.invert(0)));
-    }
+      }
 
     setDimensions();
     setupXAxis();
@@ -617,10 +606,9 @@ var barChart = function() {
     addYAxisLabel();
     addBarChartData();
     addBackground();
-    // console.log('draggableBars' + draggableBars);
-    // if (draggableBars) {
-    //   addBackground();
-    // }
+    if (draggableBars) {
+      addDragBars();
+    }
 
 };
   d3.selection.prototype.size = function() {
@@ -685,13 +673,13 @@ var barChart = function() {
     return chart;
   };
 
-  // chart.draggableBars = function(value) {
-  //   if (!arguments.length) {
-  //     return draggableBars;
-  //   }
-  //   draggableBars = value;
-  //   return chart;
-  // };
+  chart.draggableBars = function(value) {
+    if (!arguments.length) {
+      return draggableBars;
+    }
+    draggableBars = value;
+    return chart;
+  };
 
   chart.margin = function(value) {
     if (!arguments.length) {

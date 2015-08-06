@@ -32,24 +32,11 @@ $('#searchQueryButton').click(function() {
 });
 
 $('#resetButton').click(function() {
-  var collection = getSelected('dropdown');
-  console.log(collection);
-  window.onload = function() {
-    window.location.reload();
-  //$('#dropdown:'+collection).prop('selected', true);
-  // $('#dropdown').val(collection);
-    $('#dropdown').find(collection).attr('selected', true);
-    console.log('hello');
-  }
-  window.onload();
-  //$('select>option:eq(3)').prop('selected', true);
- // $('#dropdown').attr('selected', 'selected');
-})
+  window.location.reload();
+});
 
 function runSearchQuery() {
   var selectedColl = getSelected('dropdown');
-
-
   var valSelectedOp = getSelected('valDropdown');
   var sysSelectedOp = getSelected('sysDropdown');
 
@@ -63,6 +50,10 @@ function runSearchQuery() {
     valAxis = 'myValid';
     valStart = document.getElementById('startValBox').value;
     valEnd = document.getElementById('endValBox').value;
+    if (valStart >= valEnd) {
+      alert('Valid start time cannot be greater than or equal to valid end time');
+      return;
+    }
     valStart = new Date(valStart).toISOString();
     valEnd = new Date(valEnd).toISOString();
   }
@@ -74,6 +65,10 @@ function runSearchQuery() {
     sysAxis = 'mySystem';
     sysStart = document.getElementById('startSysBox').value;
     sysEnd = document.getElementById('endSysBox').value;
+    if (sysStart >= sysEnd) {
+      alert('System start time cannot be greater than or equal to system end time');
+      return;
+    }
     sysStart = new Date(sysStart).toISOString();
     sysEnd = new Date(sysEnd).toISOString();
   }
@@ -95,7 +90,8 @@ function runSearchQuery() {
       {
         console.log('problem');
       }
-    });
+    }
+  );
 }
 
 function displayQuery(response) {
@@ -113,7 +109,6 @@ function createCorrData(response) {
   }
   return result;
 }
-
 
 //call to get the list of temporal collection
 $.ajax(
@@ -149,25 +144,20 @@ $.ajax(
     {
       console.log('problem');
     }
-  });
-
-$('#dropdown').change(function()
-  {
-    $('#next').css({'visibility': 'hidden'});
-    $('#prev').css({'visibility': 'hidden'});
-    var selectedColl = getSelected('dropdown');
-    ajaxTimesCall(selectedColl, null);
-    $('#bulletList').empty();
-    $('#numDocs').empty();
-    $('.hide').css({'visibility': 'hidden'});
-    document.getElementById("valDropdown").selectedIndex = 0;
-    document.getElementById("sysDropdown").selectedIndex = 0;
   }
 );
 
+$('#dropdown').change(function() {
+  $('#next, #prev, .hide').css({'visibility': 'hidden'});
+  var selectedColl = getSelected('dropdown');
+  ajaxTimesCall(selectedColl, null);
+  $('#bulletList, #numDocs').empty();
+  document.getElementById('valDropdown').selectedIndex = 0;
+  document.getElementById('sysDropdown').selectedIndex = 0;
+});
+
 //function to make ajax call to get min and max times
-function ajaxTimesCall(selectedColl, dataToDisplay)
-{
+function ajaxTimesCall(selectedColl, dataToDisplay) {
   $.ajax(
     {
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
@@ -186,19 +176,19 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
           valEnd: toReturnDate(times.valEnd),
           sysStart: toReturnDate(times.sysStart),
           sysEnd: toReturnDate(times.sysEnd)
-        }
+        };
 
         if(!drag) {
-          document.getElementById('vertBar1').innerHTML = "Start Time: " + $('#startSysBox').val().bold();
-          document.getElementById('vertBar2').innerHTML = "End Time: " + $('#endSysBox').val().bold();
-          document.getElementById('horzBar1').innerHTML = "Start Time: " + $('#startValBox').val().bold();
-          document.getElementById('horzBar2').innerHTML = "End Time: " + $('#endValBox').val().bold();
+          document.getElementById('vertBar1').innerHTML = 'Start Time: ' + $('#startSysBox').val().bold();
+          document.getElementById('vertBar2').innerHTML = 'End Time: ' + $('#endSysBox').val().bold();
+          document.getElementById('horzBar1').innerHTML = 'Start Time: ' + $('#startValBox').val().bold();
+          document.getElementById('horzBar2').innerHTML = 'End Time: ' + $('#endValBox').val().bold();
           document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
           $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton').css({'visibility': 'hidden'});
           $('#resetButton').css({'visibility': 'visible'});
-          document.getElementById("dropdown").disabled=true;
-          document.getElementById("valDropdown").disabled=true;
-          document.getElementById("sysDropdown").disabled=true;
+          document.getElementById('dropdown').disabled=true;
+          document.getElementById('valDropdown').disabled=true;
+          document.getElementById('sysDropdown').disabled=true;
         }
 
         getBarChart({
@@ -208,7 +198,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
           xAxisLabel: 'System',
           yAxisLabel: 'Valid',
           timeRanges: timeRanges,
-          //draggableBars: drag,
+          draggableBars: drag,
           containerId: 'bar-chart-large'
         }, null);
 
@@ -221,7 +211,8 @@ function ajaxTimesCall(selectedColl, dataToDisplay)
       {
         console.log('problem');
       }
-    });
+    }
+  );
 }
 
 function toReturnDate(time) {
@@ -234,38 +225,31 @@ function toReturnDate(time) {
 }
 
 //function when search button is clicked
-$('#search').click(function()
-  {
-    firstDoc = 1;
-    lastDoc = 10;
-    displayDocs(firstDoc, lastDoc);
-    var dropDownList = document.getElementById('dropdown');
+$('#search').click(function() {
+  firstDoc = 1;
+  lastDoc = 10;
+  displayDocs(firstDoc, lastDoc);
+  var dropDownList = document.getElementById('dropdown');
 
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    //ajaxTimesCall(selectedColl, true);
-    addTempColls(selectedColl, true);
-    $('#next').css({'visibility': 'visible'});
-    $('#prev').css({'visibility': 'visible'});
-  }
-);
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  //ajaxTimesCall(selectedColl, true);
+  addTempColls(selectedColl, true);
+  $('#next, #prev').css({'visibility': 'visible'});
+});
 
 //function when the next button is clicked
-$('#next').click(function()
-  {
-    firstDoc+=10;
-    lastDoc+=10;
-    displayDocs(firstDoc, lastDoc);
-  }
-);
+$('#next').click(function() {
+  firstDoc+=10;
+  lastDoc+=10;
+  displayDocs(firstDoc, lastDoc);
+});
 
 //function when the prev button is clicked
-$('#prev').click(function()
-  {
-    firstDoc-=10;
-    lastDoc-=10;
-    displayDocs(firstDoc, lastDoc);
-  }
-);
+$('#prev').click(function() {
+  firstDoc-=10;
+  lastDoc-=10;
+  displayDocs(firstDoc, lastDoc);
+});
 
 /**
 * Display docs is a function that displays the physical and logcial documents
@@ -275,14 +259,13 @@ $('#prev').click(function()
 * @param start: the index of the first document you want to display
 * @param end: the index of the last document you want to display (will always be 9 greater than start)
 */
-function displayDocs(start, end)
-{
+function displayDocs(start, end) {
   var bullet = $('#bulletList');
   bullet.empty();
   var selectedColl = getSelected('dropdown');
 
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
-  var docs = $.ajax(
+  $.ajax(
   {
     url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22'+selectedColl+'%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
     headers:
@@ -296,8 +279,7 @@ function displayDocs(start, end)
     }
   });
 
-  function onDisplayDocs(data, textStatus, response )
-  {
+  function onDisplayDocs(data, textStatus, response ) {
     var docs;
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if( totalDocLen > 10 )
@@ -320,16 +302,18 @@ function displayDocs(start, end)
     // and disables or enables the next/previous buttons based on those indexes.
     document.getElementById('prev').disabled = start <= 1;
 
-    if (end >= totalDocLen)
-    {
+    if (end >= totalDocLen) {
       document.getElementById('next').disabled = true;
       end = totalDocLen;
     }
-    else
-    {
+    else {
       document.getElementById('next').disabled = false;
     }
-    if (totalDocLen > 0) {
+
+    if (parseInt(totalDocLen) === 0) {
+      document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
+    }
+    else {
       document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
     }
     else {
@@ -344,10 +328,8 @@ function displayDocs(start, end)
       var uri = docs[i].uri;
       var uriLogical;
       var collArr = docs[i].collections.collections;
-      for (var t = 0; t < collArr.length; t++)
-      {
-        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl))
-        {
+      for (var t = 0; t < collArr.length; t++) {
+        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
           uriLogical = collArr[t];
         }
       }
@@ -392,8 +374,7 @@ function displayDocs(start, end)
 * @param endate: the end date
 * @param label: either 'System Time' or 'Valid Time'
 */
-function buildDate( startDate, endDate, label )
-{
+function buildDate( startDate, endDate, label ) {
   var date = $('<div>').addClass('date');
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
