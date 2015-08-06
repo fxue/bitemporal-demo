@@ -150,6 +150,7 @@ var drawChart = function(params, docProp) {
 function clearTextArea() {
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
+  document.getElementById('newDocContents').value = '';
 }
 
 function fillText(data, isEditing) {
@@ -571,6 +572,8 @@ var getBarChart = function (params, docProp) {
       autoOpen: true,
       modal: true,
       appendTo: false,
+      width: 450,
+      height: 500,
       buttons: {
         Save: function() {
           $(this).dialog('close');

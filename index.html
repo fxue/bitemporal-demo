@@ -111,7 +111,7 @@
   </head>
 
   <body>
-    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
+    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different time lines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
     <a href="search" id="searchURL">Click to go to search page</a>
     <div id='instructions'>
       <p>Change the logical document display to the specified URI of a logical document.</p>
@@ -128,24 +128,18 @@
 
       <input type="button" id="change-prop" value="Submit">
       <br><br>
-
-
-      
+     
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
-
     </div>
 
     <p id="uriEntered"></p>
     <br></br>
 
-
     <div id="tooltip-txt" class="hidden">
       <p><span id="value"></span></p>
     </div>
-
-
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
@@ -163,9 +157,18 @@
       <div id="dialogCreateDoc" title="Create a new document">
         <!-- Add contents of creating a document. -->
         <div id='createDocStuff' hidden='true'>
+          <b> Select a temporal collection: </b>
           <select id='selectTempColl'>
             <option>Choose a temporal collection</option>
           </select>
+          <p></p>
+          <p><b>Define a uri for the new document:  </b> 
+             <input type='text' id='newUri' value='A custom uri here'>
+          </p>
+          <p></p> 
+          <p> These will be the documents contents, choose to your liking! </p>
+          <p></p>
+          <textarea rows='14' cols='45' id='newDocContents'> </textarea>
         </div>
       </div>
       <button id='createDoc'> Create a Document </button>
@@ -212,39 +215,6 @@
       else {
         loadData('addr.json');
       }
-
-      $("input[name='insert']").serialize(function() {
-        var col = $("input[name='tempcol']").val();
-        var uri = $("input[name='uri']").val();
-        var vs = $("input[name='validstart']").val();
-        var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemstart']").val();
-        var d = $("input[name='content']").val();
-        $.get(
-          "/update?collection"+col+"&uri="+uri+
-          "&validstart="+vs+"&validend="+ve+
-          "&system="+sys+"&content="+d);
-        });
     </script>
-
-    </script>
-    <div id='editDocDiv'>
-      <br><br><br>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id="editButton" > Edit </button>
-      <button id="viewButton"> View </button>
-      <button id="deleteButton"> Delete </button>
-      <button id="saveButton" hidden="true"> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
-        <br> <br>
-        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
-        <script>
-          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
-        </script>
-      </div>
-    </div>
   </body>
 </html>
