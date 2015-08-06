@@ -62,7 +62,7 @@ var getDocColl = function(uri) {
 function toReturnDate(time) {
   if (time) {
     return new Date(time);
-  } 
+  }
   else {
     return null;
   }
@@ -238,16 +238,16 @@ function initNewJSON() {
 
 function saveNewDoc() {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  
+
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
   var newURI = document.getElementById('newUri').value;
-  
+
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
   var docData;
   console.log(format);
-  
+
   if (format === 'JSON') {
     //docData = jQuery.parseJSON(data);
   } else {
@@ -269,7 +269,7 @@ function saveNewDoc() {
     },
     collection: selectedColl,
     format: format
-  });  
+  });
 }
 
 function setupTextArea(uri, isEditing) {
@@ -558,7 +558,7 @@ function formatCreateDocArea() {
   console.log('changing document format property');
   var dropDownList = document.getElementById('docFormat');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  
+
   if (selectedColl === 'XML')
     initNewXML();
   else {
@@ -630,7 +630,7 @@ var getBarChart = function (params, docProp) {
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
-  
+
   $('#docFormat').change(function() {
     console.log('changing format of new doc');
     formatCreateDocArea();
