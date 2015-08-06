@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
 
     <style>
       body {
         background: AliceBlue;
-        background-image: url('http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg');
+        background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
         background-size: 100px 100px;
         background-position: right top;
         background-repeat: no-repeat;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
 
@@ -387,44 +387,44 @@
 
   </head>
   <body>
-    <h1>MarkLogic <span class= 'definition' title= 'Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.'>Bitemporal</span> Search Page</h1>
-    <a href='/' id='homeURL'>Home</a>
-    <div id='tooltip' class='hidden'>
-      <p><span id='value'></span></p>
+    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
+    <a href="/" id="homeURL">Home</a>
+    <div id="tooltip" class="hidden">
+      <p><span id="value"></span></p>
     </div>
-    <div class='hide sysTimesDisplay'>
-      <p id='vertBar1'>Start Time:</p>
-      <textarea rows='1' cols='10' color='blue' id='startSysBox' style='border:solid 1px black;'></textarea>
-      <p id='vertBar2'>End Time:</p>
-      <textarea rows='1' cols='10' color='blue' id='endSysBox' style='border:solid 1px black;'></textarea>
+    <div class="hide sysTimesDisplay">
+      <p id="vertBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
+      <p id="vertBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
     </div>
-    <div class='hide valTimesDisplay'>
-      <p id='horzBar1'>Start Time:</p>
-      <textarea rows='1' cols='10' color='blue' id='startValBox' style='border:solid 1px black;'></textarea>
-      <p id='horzBar2'>End Time:</p>
-      <textarea rows='1' cols='10' color='blue' id='endValBox' style='border:solid 1px black;'></textarea>
+    <div class="hide valTimesDisplay">
+      <p id="horzBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
+      <p id="horzBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
     </div>
-    <button id='searchQueryButton' class='hide'>Run Query</button>
-    <button id='resetButton'>Reset Graph</button>
-    <div id='searchPage'>
-    <p id='ops' title='Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps.' class='definition'>Operators</p>
-    <div id='valTimes'>
+    <button id="searchQueryButton" class="hide">Run Query</button>
+    <button id="resetButton">Reset Graph</button>
+    <div id="searchPage">
+    <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps." class="definition">Operators</p>
+    <div id="valTimes">
       <p><b>Valid Time</b></p>
-      <select id='valDropdown'></select>
+      <select id="valDropdown"></select>
     </div>
-    <p id='dragInstruct'>*Select an operator and drag the red bars to create your selected time range*</p>
-    <div id='sysTimes'>
+    <p id="dragInstruct">*Select an operator and drag the red bars to create your selected time range*</p>
+    <div id="sysTimes">
       <p><b>System Time</b></p>
-      <select id='sysDropdown'></select>
+      <select id="sysDropdown"></select>
     </div>
-    <div id= 'page'>
-      <p id='instructSelect'>Select a <span class= 'definition' title= 'Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.'>Temporal Collection</span></p>
-      <select id='dropdown'></select>
-      <button type='button' id='search'>Search</button>
-      <button type='button' id='next'>Next</button>
-      <button type='button' id='prev'>Prev</button>
-      <p id='numDocs'></p>
-        <ul id='bulletList'></ul>
+    <div id= "page">
+      <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
+      <select id="dropdown"></select>
+      <button type="button" id="search">Search</button>
+      <button type="button" id="next">Next</button>
+      <button type="button" id="prev">Prev</button>
+      <p id="numDocs"></p>
+        <ul id="bulletList"></ul>
       </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -434,12 +434,12 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
-    <script> addTempColls('dropdown', true); </script>
+    <script> addTempColls("dropdown", true); </script>
     <div id="bar-chart-large"></div>
 
-    <div id='ctsQuery'>
-      <p class='definition' title='cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges'>cts:query</p>
-      <textarea rows='15' cols='50' color='blue' id='queryText' readonly></textarea>
+    <div id="ctsQuery">
+      <p class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
+      <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
     </div>
 
   </body>

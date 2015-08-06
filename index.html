@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 
-<html lang='en'>
+<html lang="en">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
 
     <style>
       body {
         background: AliceBlue;
-        background-image: url('http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg');
+        background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
         background-size: 100px 100px;
         background-position: right top;
         background-repeat: no-repeat;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
 
@@ -111,25 +111,25 @@
   </head>
 
   <body>
-    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
-    <a href='search' id='searchURL'>Search</a>
-    <div id='instructions'>
+    <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
+    <a href="search" id="searchURL">Search</a>
+    <div id="instructions">
       <p>Change the logical document display to the specified URI of a logical document.</p>
-      <p>Don't forget to include the 'dot extension' ie .json.</p>
+      <p>Don"t forget to include the "dot extension" ie .json.</p>
 
-      <b>Enter <span class= 'definition' title = 'URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource'>URI:</span></b><br>
-      <input type='text' name='collection' value=''>
-      <input type='button' id='pick-doc' value='Submit'>
+      <b>Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
+      <input type="text" name="collection" value="">
+      <input type="button" id="pick-doc" value="Submit">
 
       <p>Enter a document property to display in the graph or choose one from the drop down menu.</p>
 
       <b>Enter Document Property:</b><br>
-      <input type='text' name='documentProperty' value=''>
+      <input type="text" name="documentProperty" value="">
 
-      <input type='button' id='change-prop' value='Submit'>
+      <input type="button" id="change-prop" value="Submit">
       <br><br>
 
-      <select id='select-prop'>
+      <select id="select-prop">
         <option>Choose a property</option>
       </select>
 
@@ -157,35 +157,35 @@
 
 
     <div id="bar-chart-large"></div>
-    <div id='editDocDiv'>
+    <div id="editDocDiv">
       <div id="dialogCreateDoc" title="Create a new document">
         <!-- Add contents of creating a document. -->
-        <div id='createDocStuff' hidden='true'>
-          <select id='selectTempColl'>
+        <div id="createDocStuff" hidden="true">
+          <select id="selectTempColl">
             <option>Choose a temporal collection</option>
           </select>
         </div>
       </div>
-      <button id='createDoc'> Create a Document </button>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id='editButton' > Edit </button>
-      <button id='viewButton'> View </button>
-      <button id='deleteButton'> Delete </button>
-      <p id='deleteErrMessage'> </p>
-      <button id='saveButton' hidden='true'> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
+      <button id="createDoc"> Create a Document </button>
+      <p id="selectedURI"> Selected URI: <b> null </b></p>
+      <button id="editButton" > Edit </button>
+      <button id="viewButton"> View </button>
+      <button id="deleteButton"> Delete </button>
+      <p id="deleteErrMessage"> </p>
+      <button id="saveButton" hidden="true"> Save </button>
+      <button id="cancelButton" hidden="true"> Cancel </button>
+      <textarea rows="12" cols="40" id="contents" hidden = "true"> </textarea>
+      <div id="sysTimeDiv">
+        <p> <b> sysStart: </b> <input type="text" id="sysStartBox" value="">
         <script>
           $('#sysTimeDiv').addClass('hideSysTimeBoxes');
         </script>
       </div>
-      <div id='deleteButtonsDiv'>
-          <button id='deleteOKButton'> OK </button>
-          <button id='deleteCancelButton'> Cancel </button>
+      <div id="deleteButtonsDiv">
+          <button id="deleteOKButton"> OK </button>
+          <button id="deleteCancelButton"> Cancel </button>
           <script>
-            $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
+            $("#deleteButtonsDiv").addClass("hideSysTimeBoxes");
           </script>
       </div>
     </div>
