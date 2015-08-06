@@ -316,9 +316,6 @@ function displayDocs(start, end) {
     else {
       document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
     }
-    else {
-      document.getElementById('numDocs').innerHTML = '0 to 0 of 0';
-    }
 
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page

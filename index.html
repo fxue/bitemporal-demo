@@ -75,11 +75,6 @@
         pointer-events: none;
       }
 
-      .tick {
-        stroke: black;
-        stroke-width: 1;
-      }
-
       .tick text {
         font-size: 15px;
         stroke-width: 0;
@@ -88,10 +83,6 @@
       .axis-label {
         font-size: 20px;
         stroke-width: 1;
-      }
-
-      .xaxis .tick text{
-        transform: translateX(-90px);
       }
 
       .tick {
@@ -221,34 +212,6 @@
         loadData('addr.json');
       }
 
-      $("input[name='insert']").serialize(function() {
-        var col = $("input[name='tempcol']").val();
-        var uri = $("input[name='uri']").val();
-        var vs = $("input[name='validstart']").val();
-        var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemstart']").val();
-        var d = $("input[name='content']").val();
-        $.get(
-          "/update?collection"+col+"&uri="+uri+
-          "&validstart="+vs+"&validend="+ve+
-          "&system="+sys+"&content="+d);
-        });
     </script>
-
-    <div id='editDocDiv'>
-      <br><br><br>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id='editButton' > Edit </button>
-      <button id='viewButton'> View </button>
-      <button id='deleteButton'> Delete </button>
-      <button id='saveButton' hidden='true'> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv' class='hideSysTimeBoxes'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
-        <br> <br>
-        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
-      </div>
-    </div>
   </body>
 </html>
