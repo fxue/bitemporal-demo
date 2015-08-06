@@ -208,8 +208,8 @@ var barChart = function() {
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', height - margin.bottom + axisLabelMargin +110)
-        .attr('x', width/2 - axisLabelMargin-300/2)
+        .attr('y', height - 20)
+        .attr('x', (width - margin.left)/2)
         .text(xAxisLabel);
     }
 
@@ -288,9 +288,9 @@ var barChart = function() {
           else {
             str = path(d, 'content.' + displayProperty);
           }
-         // if(str && str.length > 15) {  //if you want all mouseovers to work, comment out
+          if(str && str.length > 15) {  //if you want all mouse overs to work, comment out
             propTooltip.text(str);
-         // }
+          }
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function() {
