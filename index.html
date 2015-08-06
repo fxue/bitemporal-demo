@@ -202,15 +202,11 @@
         }
       };
 
-
       var uri = $.urlParam('collection');
-      if (uri !== null) {
-        loadData(uri);
-        document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uri.bold();
+      if (uri === null) {
+        uri = 'addr.json';
       }
-      else {
-        loadData('addr.json');
-      }
+      loadData(uri);
 
     </script>
   </body>
