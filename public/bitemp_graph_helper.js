@@ -1,122 +1,44 @@
-// /*globals d3, jQuery, loadData, barChart */
-// //function to make ajax call to get min and max times
-// var firstDoc, lastDoc;
-// function ajaxTimesCall(selectedColl, search) {
-//   $.ajax(
-//   {
-//     url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
-//     success: function(response, textStatus)
-//     {
-//       if (search) {
-//         displayAxis(response); //don't want to call this if not on search page, clears graph otherwise.
-//         respTimes = response;
-//       }
-//     },
-//     error: function(jqXHR, textStatus, errorThrown)
-//     {
-//       console.log('problem');
-//     }
-//   });
-// }
+//call to get the list of temporal collection
+/* global loadData */
+function addTempColls(id, search) {
+  $.ajax(
+    {
+      url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+      success: function(response, textStatus)
+      {
+        if (search) {
+          generateOps();
+        }
+        //adds names of the collections to the drop down list
+        var addToDrop = $('#'+id);
+        //endpoint is the number of collections
+        var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
 
-// //function to display axis
-// function displayAxis(times) {
-//   var showAlertBox = false;
-//   if( !times.valStart ) {
-//     showAlertBox = true;
-//   }
+        //dropArray is the array containing all the temporal Collections
+        var dropArray = [];
+        for (var j = 0; j < endpoint; j++)
+        {
+          dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
+        }
+        //sorts the array (alphabetically) containing the temporal collections
+        dropArray.sort();
 
-//   var timeRanges = {
-//     valStart: toReturnDate(times.valStart),
-//     valEnd: toReturnDate(times.valEnd),
-//     sysStart: toReturnDate(times.sysStart),
-//     sysEnd: toReturnDate(times.sysEnd)
-//   }
-
-//   getBarChart({
-//     data: [],
-//     width: 800,
-//     height: 600,
-//     xAxisLabel: 'System',
-//     yAxisLabel: 'Valid',
-//     timeRanges: timeRanges,
-//     containerId: 'bar-chart-large'
-//   }, null);
-
-//   if (showAlertBox) {
-//     alert('There are no documents in this collection. Please select another.');
-//   }
-// }
-
-// var getDocColl = function(uri) {
-//   $.ajax({
-//     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
-//     success: function(data, textStatus) {
-//       console.log('got collections: ' + data);
-//     },
-//     error: function(jqXHR, textStatus, errorThrown) {
-//       console.log('problem');
-//     },
-//     async: false,
-//   });
-// }
-
-// function toReturnDate(time) {
-//   if(time) {
-//     return new Date(time);
-//   }
-//   else {
-//     return null;
-//   }
-// }
-
-// var addTempColls = function(id, search) {
-//   var rtnVal = $.ajax(
-//     {
-//       url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-//       success: function(response, textStatus)
-//       {
-//         //adds names of the collections to the drop down list
-//         var addToDrop = $('#' + id);
-//         //endpoint is the number of collections
-//         var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
-
-//         //dropArray is the array containing all the temporal Collections
-//         var dropArray = [];
-//         for (var j = 0; j < endpoint; j++)
-//         {
-//           dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
-//         }
-//         //sorts the array (alphabetically) containing the temporal collections
-//         dropArray.sort();
-
-//         //Clear the drop down menu before adding new elements
-//         var select = document.getElementById(id);
-//         addToDrop.empty();
-
-//         //this for loop appends the collection names to the drop down list
-//         for (var k = 0; k < dropArray.length; k++)
-//         {
-//           addToDrop.append($('<option>').text(dropArray[k])) ;
-//           if( k === 0 ) {
-//             ajaxTimesCall(dropArray[k], search);
-//           }
-//         }
-//         if (search) {
-//           firstDoc = 1;
-//           lastDoc = 10;
-//          // $('#next').css({'visibility': 'visible'});
-//          // $('#prev').css({'visibility': 'visible'});
-//           displayDocs(firstDoc, lastDoc);
-//         }
-//       },
-//       error: function(jqXHR, textStatus, errorThrown)
-//       {
-//         console.log('problem');
-//       }
-//     });
-//   return rtnVal;
-// }
+        //this for loop appends the collection names to the drop down list
+        for (var k = 0; k < dropArray.length; k++)
+        {
+          addToDrop.append($('<option>').text(dropArray[k])) ;
+          if( k === 0 && search) {
+            ajaxTimesCall(dropArray[k], null);
+          }
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown)
+      {
+        console.log('problem');
+      }
+    }
+  );
+}
 
 var drawChart = function(params, docProp) {
   var chart;
@@ -532,7 +454,12 @@ var getBarChart = function (params, docProp) {
   }
   if(params.timeRanges === null) {
     initButtons();
-    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
+    if (uri) {
+      document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
+    }
+    else {
+      document.getElementById('uriEntered').innerHTML = "There are no documents in this collection.";
+    }
   }
 
   $('#editButton').click(function() {
@@ -564,7 +491,7 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
-  // addTempColls('selectTempColl', false);
+  addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
 

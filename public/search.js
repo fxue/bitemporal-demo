@@ -110,43 +110,6 @@ function createCorrData(response) {
   return result;
 }
 
-//call to get the list of temporal collection
-$.ajax(
-  {
-    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-    success: function(response, textStatus)
-    {
-      generateOps();
-      //adds names of the collections to the drop down list
-      var addToDrop = $('#dropdown');
-      //endpoint is the number of collections
-      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
-
-      //dropArray is the array containing all the temporal Collections
-      var dropArray = [];
-      for (var j = 0; j < endpoint; j++)
-      {
-        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
-      }
-      //sorts the array (alphabetically) containing the temporal collections
-      dropArray.sort();
-
-      //this for loop appends the collection names to the drop down list
-      for (var k = 0; k < dropArray.length; k++)
-      {
-        addToDrop.append($('<option>').text(dropArray[k])) ;
-        if( k === 0 ) {
-          ajaxTimesCall(dropArray[k], null);
-        }
-      }
-    },
-    error: function(jqXHR, textStatus, errorThrown)
-    {
-      console.log('problem');
-    }
-  }
-);
-
 $('#dropdown').change(function() {
   $('#next, #prev, .hide').css({'visibility': 'hidden'});
   var selectedColl = getSelected('dropdown');
@@ -229,11 +192,6 @@ $('#search').click(function() {
   firstDoc = 1;
   lastDoc = 10;
   displayDocs(firstDoc, lastDoc);
-  var dropDownList = document.getElementById('dropdown');
-
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  //ajaxTimesCall(selectedColl, true);
-  addTempColls(selectedColl, true);
   $('#next, #prev').css({'visibility': 'visible'});
 });
 
@@ -285,17 +243,12 @@ function displayDocs(start, end) {
     if( totalDocLen > 10 )
     {
       docs = parseData(data, null, 2);
-      document.getElementById('search').disabled = false;
       document.getElementById('next').disabled = false;
       document.getElementById('prev').disabled = false;
     }
     else if( totalDocLen > 0 )
     {
       docs = parseData(data, null, 2);
-      document.getElementById('search').disabled = false;
-    }
-    else {
-      document.getElementById('search').disabled = true;
     }
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)

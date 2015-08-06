@@ -312,7 +312,7 @@ var barChart = function() {
               return color(d.content[displayProperty]);
             }
             else {
-              str = path(d, 'content.' + displayProperty);
+              var str = path(d, 'content.' + displayProperty);
               return color(str);
             }
           }
