@@ -584,7 +584,7 @@ var barChart = function() {
       });
 
       //shifts draggable bars when textboxes change
-      function lineShifter(textId, barId)  {
+      function lineShifter(textId, barId) {
       $('#'+textId).change(function(){
         var input = $('#'+textId).val();
         var date = new Date(input).toISOString();

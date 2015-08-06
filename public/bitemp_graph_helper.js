@@ -490,8 +490,6 @@ function changeTextInGraph(chart, params) {
 }
 
 
-<<<<<<< HEAD
-=======
 /*
  * @param obj
  * @param path
@@ -517,7 +515,6 @@ function findProperties(obj, path, properties) {
   }
 }
 
->>>>>>> minor fixes
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
 
