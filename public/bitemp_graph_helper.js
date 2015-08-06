@@ -140,7 +140,21 @@ function fillText(data, isEditing, id) {
         strToAdd += ',';
       }
       strToAdd += '\n\"' + property + '\": ';
-      if (data[property]) {
+      if (typeof data[property] === 'object') {
+        var propsInGraph = {};
+        findProperties(data[property], null, propsInGraph);
+        for(prop in propsInGraph) {
+          strToAdd += '\n   \"' + prop + '\": ';
+          if (prop.indexOf('.') === -1) {
+            var subStr = data[property][prop];
+          }
+          else {
+            var subStr = path(data, property + '.' + prop);
+          }
+          strToAdd += subStr;
+        }
+      }
+      else if(!property){
         strToAdd += '\"'+ data[property] + '\"';
       }
       else { // if the property has a null value then don't put quotes around it.
@@ -151,6 +165,14 @@ function fillText(data, isEditing, id) {
   }
   textArea.value += '\n}';
   textArea.readOnly = !isEditing;
+
+  function path(object, fullPath) {
+    var selection = object;
+    fullPath.split('.').forEach(function(path) { 
+      selection = selection[path]; 
+    });
+    return selection;
+  }
 }
 
 function cancel(chart) {
