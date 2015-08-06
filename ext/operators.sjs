@@ -58,10 +58,3 @@ function get (context, params) {
 }
 
 exports.GET = get;
-
-
-
-
-
-
-

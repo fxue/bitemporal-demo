@@ -98,7 +98,7 @@ function displayQuery(response) {
   document.getElementById('queryText').innerHTML = response.query;
 }
 
-function createCorrData(response) {
+function formatData(response) {
   var result = [];
   if(response.values) {
     for(var i = 0; i < response.values.length; i++) {
@@ -129,7 +129,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay) {
         var data = [];
         var drag = true;
         if(dataToDisplay !== null) {
-          data = createCorrData(dataToDisplay);
+          data = formatData(dataToDisplay);
           drag = false;
         }
 
