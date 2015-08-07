@@ -214,7 +214,7 @@
          <p align='center'> These will be the documents contents, choose to your liking! </p>
          <textarea rows='14' cols='45' id='newDocContents'> </textarea>
         </div>
-      </div>
+      </div> <!-- End editDocDiv -->
       
       <button id='createDoc'> Create a Document </button>
       <p id='selectedURI'> Selected URI: <b> null </b></p>
@@ -225,18 +225,12 @@
       <button id='saveButton' hidden='true'> Save </button>
       <button id='cancelButton' hidden='true'> Cancel </button>
       <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'>
+      <div id='sysTimeDiv' class='hideSysTimeBoxes'>
         <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
-        <script>
-          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
-        </script>
       </div>
-      <div id="deleteButtonsDiv">
-          <button id="deleteOKButton"> OK </button>
-          <button id="deleteCancelButton"> Cancel </button>
-          <script>
-            $("#deleteButtonsDiv").addClass("hideSysTimeBoxes");
-          </script>
+      <div id='deleteButtonsDiv' class='hideSysTimeBoxes'>
+          <button id='deleteOKButton'> OK </button>
+          <button id='deleteCancelButton'> Cancel </button>
       </div>
     </div>
     <script type="text/javascript">
