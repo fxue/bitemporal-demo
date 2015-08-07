@@ -84,6 +84,41 @@
         font-size: 20px;
         stroke-width: 1;
       }
+      
+      #dialogCreateDoc {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+      }
+      
+      #alignBoxes {
+        float: right; 
+        width: 250px;
+        height: 100px
+      }
+      
+      #alignText {
+        float: left;
+        width: 210px;
+        height: 100px;
+        text-align: right;
+      }
+      
+      #newDocContents {
+         display: block;
+         margin-left: auto;
+         margin-right: auto;
+         resize: none;
+      }
+      
+      #selectTempColl {
+        width: 160px;
+      }
+      
+      #docFormat {
+        width: 70px;
+      }
 
       .tick {
         stroke: black;
@@ -124,9 +159,9 @@
       <p>Enter a document property to display in the graph or choose one from the drop down menu.</p>
 
       <b>Enter Document Property:</b><br>
-      <input type="text" name="documentProperty" value="">
+      <input type='text' name='documentProperty' value=''>
 
-      <input type="button" id="change-prop" value="Submit">
+      <input type='button' id='change-prop' value='Submit'>
       <br><br>
       <select id="select-prop">
         <option>Choose a property</option>
@@ -150,37 +185,48 @@
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
-
     <div id="bar-chart-large"></div>
     <div id="editDocDiv">
       <div id="dialogCreateDoc" title="Create a new document">
         <!-- Add contents of creating a document. -->
         <div id='createDocStuff' hidden='true'>
-          <b> Select a temporal collection: </b>
-          <select id='selectTempColl'>
-            <option>Choose a temporal collection</option>
-          </select>
-          <p></p>
-          <p><b>Define a uri for the new document:  </b> 
-             <input type='text' id='newUri' value='A custom uri here'>
-          </p>
-          <p></p> 
-          <p> These will be the documents contents, choose to your liking! </p>
-          <p></p>
-          <textarea rows='14' cols='45' id='newDocContents'> </textarea>
+          <div id='alignText'>
+            <b> Temporal Collection: </b>
+            <br></br>
+            <p></p>
+            <b> URI: </b>
+            <br></br>
+            <b>Format: </b>
+            <p></p> 
+          </div>
+          <div id='alignBoxes'>
+            <select id='selectTempColl' class='dialogue'>
+              <option>Choose a temporal collection</option>
+            </select>
+            <br class='break'></br>
+            <input type='text' id='newUri' placeholder='A custom uri here' class='dialogue'>
+            <br class='break'></br>
+            <select id='docFormat' title='Format' class='dialogue'>
+              <option> JSON </option>
+              <option> XML </option>
+            </select>
+           </div>
+         <p align='center'> These will be the documents contents, choose to your liking! </p>
+         <textarea rows='14' cols='45' id='newDocContents'> </textarea>
         </div>
       </div>
-      <button id="createDoc"> Create a Document </button>
-      <p id="selectedURI"> Selected URI: <b> null </b></p>
-      <button id="editButton" > Edit </button>
-      <button id="viewButton"> View </button>
-      <button id="deleteButton"> Delete </button>
-      <p id="deleteErrMessage"> </p>
-      <button id="saveButton" hidden="true"> Save </button>
-      <button id="cancelButton" hidden="true"> Cancel </button>
-      <textarea rows="12" cols="40" id="contents" hidden = "true"> </textarea>
-      <div id="sysTimeDiv">
-        <p> <b> sysStart: </b> <input type="text" id="sysStartBox" value="">
+      
+      <button id='createDoc'> Create a Document </button>
+      <p id='selectedURI'> Selected URI: <b> null </b></p>
+      <button id='editButton' > Edit </button>
+      <button id='viewButton'> View </button>
+      <button id='deleteButton'> Delete </button>
+      <p id='deleteErrMessage'> </p>
+      <button id='saveButton' hidden='true'> Save </button>
+      <button id='cancelButton' hidden='true'> Cancel </button>
+      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
+      <div id='sysTimeDiv'>
+        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
         <script>
           $('#sysTimeDiv').addClass('hideSysTimeBoxes');
         </script>
