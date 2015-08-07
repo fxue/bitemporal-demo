@@ -14,14 +14,14 @@ function getSelected(id) {
 }
 
 $('#valDropdown').change(function() {
-  $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay').css({'visibility': 'hidden'});
+  $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
   if (getSelected('valDropdown') !== 'None') {
     $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
   }
 });
 
 $('#sysDropdown').change(function() {
-  $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay').css({'visibility': 'hidden'});
+  $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
@@ -38,6 +38,7 @@ $('#resetButton').click(function() {
   document.getElementById('sysDropdown').disabled = false;
   document.getElementById('dropdown').disabled = false;
   $('#valDropdown, #sysDropdown').val('None');
+  $('#queryText').empty();
   document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the red bars to create your selected time range*';
   $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage').css({'visibility': 'hidden'});
 });
@@ -323,8 +324,8 @@ function displayDocs(start, end) {
                 .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
                 .text('('+uriLogical+')')
             )
-            .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: ', false))
-            .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: ', true))
+            .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: '))
+            .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: '))
             .append('<br>')
         );
     }
