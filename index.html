@@ -84,38 +84,38 @@
         font-size: 20px;
         stroke-width: 1;
       }
-      
+
       #dialogCreateDoc {
         display: block;
         margin-left: auto;
         margin-right: auto;
         margin-top: 15px;
       }
-      
+
       #alignBoxes {
-        float: right; 
+        float: right;
         width: 250px;
         height: 100px
       }
-      
+
       #alignText {
         float: left;
         width: 210px;
         height: 100px;
         text-align: right;
       }
-      
+
       #newDocContents {
          display: block;
          margin-left: auto;
          margin-right: auto;
          resize: none;
       }
-      
+
       #selectTempColl {
         width: 160px;
       }
-      
+
       #docFormat {
         width: 70px;
       }
@@ -185,9 +185,9 @@
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
-    <div id="bar-chart-large"></div>
-    <div id="editDocDiv">
-      <div id="dialogCreateDoc" title="Create a new document">
+    <div id='bar-chart-large'></div>
+    <div id='editDocDiv'>
+      <div id='dialogCreateDoc' hidden title='Create a New Document'>
         <!-- Add contents of creating a document. -->
         <div id='createDocStuff' hidden='true'>
           <div id='alignText'>
@@ -197,7 +197,7 @@
             <b> URI: </b>
             <br></br>
             <b>Format: </b>
-            <p></p> 
+            <p></p>
           </div>
           <div id='alignBoxes'>
             <select id='selectTempColl' class='dialogue'>
@@ -215,7 +215,7 @@
          <textarea rows='14' cols='45' id='newDocContents'> </textarea>
         </div>
       </div> <!-- End editDocDiv -->
-      
+
       <button id='createDoc'> Create a Document </button>
       <p id='selectedURI'> Selected URI: <b> null </b></p>
       <button id='editButton' > Edit </button>
@@ -254,7 +254,6 @@
       else {
         loadData('addr.json');
       }
-
     </script>
   </body>
 </html>
