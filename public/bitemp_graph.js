@@ -67,7 +67,7 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.sysStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
       if (xMax) {
         maxEnd = xMax;
@@ -131,7 +131,7 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.valStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
       
       if (yMax) {
@@ -392,7 +392,7 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return barx1;
+            return (barx1+barx2)/2;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());

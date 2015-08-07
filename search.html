@@ -401,18 +401,6 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <div class="hide sysTimesDisplay">
-      <p id="vertBar1">Start Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
-      <p id="vertBar2">End Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
-    </div>
-    <div class="hide valTimesDisplay">
-      <p id="horzBar1">Start Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
-      <p id="horzBar2">End Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
-    </div>
     <button id="searchQueryButton" class="hide">Run Query</button>
     <button id="resetButton">Reset Graph</button>
     <p id='errorMessage'>(There are no documents in this selected time range)</p>
@@ -422,7 +410,8 @@
       <p><b>Valid Time</b></p>
       <select id="valDropdown"></select>
     </div>
-    <p id="dragInstruct">*Select an operator and drag the red bars to create your selected time range*</p>
+    <p id="dragInstruct">*Select an operator and drag the red bars to create your selected time 
+    range*</p>
     <div id="sysTimes">
       <p><b>System Time</b></p>
       <select id="sysDropdown"></select>
@@ -436,7 +425,6 @@
       <p id="numDocs"></p>
         <ul id="bulletList"></ul>
       </div>
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -451,6 +439,19 @@
       <p class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
       <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
     </div>
+  </div>
+  <div class="hide valTimesDisplay">
+      <p id="horzBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
+      <p id="horzBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
+  </div>
+  <div class="hide sysTimesDisplay">
+      <p id="vertBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
+      <p id="vertBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
+  </div>
 
   </body>
 </html>
