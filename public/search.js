@@ -16,14 +16,14 @@ function getSelected(id) {
 $('#valDropdown').change(function() {
   $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay').css({'visibility': 'hidden'});
   if (getSelected('valDropdown') !== 'None') {
-    $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay').css({'visibility': 'visible'});
+    $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
   }
 });
 
 $('#sysDropdown').change(function() {
   $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay').css({'visibility': 'hidden'});
   if (getSelected('sysDropdown') !== 'None') {
-    $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay').css({'visibility': 'visible'});
+    $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
 });
 
@@ -32,7 +32,14 @@ $('#searchQueryButton').click(function() {
 });
 
 $('#resetButton').click(function() {
-  window.location.reload();
+  var selectedColl = getSelected('dropdown');
+  ajaxTimesCall(selectedColl, null);
+  document.getElementById('valDropdown').disabled = false;
+  document.getElementById('sysDropdown').disabled = false;
+  document.getElementById('dropdown').disabled = false;
+  $('#valDropdown, #sysDropdown').val('None');
+  document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the red bars to create your selected time range*';
+  $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage').css({'visibility': 'hidden'});
 });
 
 function runSearchQuery() {
@@ -111,7 +118,7 @@ function formatData(response) {
 }
 
 $('#dropdown').change(function() {
-  $('#next, #prev, .hide').css({'visibility': 'hidden'});
+  $('#next, #prev, .hide, #startValBox, #endValBox, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null);
   $('#bulletList, #numDocs').empty();
@@ -132,6 +139,9 @@ function ajaxTimesCall(selectedColl, dataToDisplay) {
         var drag = true;
         if(dataToDisplay !== null) {
           data = formatData(dataToDisplay);
+          if (data.length <= 0) {
+            $('#errorMessage').css({'visibility': 'visible'});
+          }
           drag = false;
         }
 
@@ -144,10 +154,10 @@ function ajaxTimesCall(selectedColl, dataToDisplay) {
         };
 
         if(!drag) {
-          document.getElementById('vertBar1').innerHTML = 'Start Time: ' + $('#startSysBox').val().bold();
-          document.getElementById('vertBar2').innerHTML = 'End Time: ' + $('#endSysBox').val().bold();
-          document.getElementById('horzBar1').innerHTML = 'Start Time: ' + $('#startValBox').val().bold();
-          document.getElementById('horzBar2').innerHTML = 'End Time: ' + $('#endValBox').val().bold();
+          document.getElementById('vertBar1').innerHTML = 'Start Time:' + '&nbsp;&nbsp;' + $('#startSysBox').val().bold();
+          document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endSysBox').val().bold();
+          document.getElementById('horzBar1').innerHTML = 'Start Time:'+ '&nbsp;&nbsp;' + $('#startValBox').val().bold();
+          document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endValBox').val().bold();
           document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
           $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton').css({'visibility': 'hidden'});
           $('#resetButton').css({'visibility': 'visible'});

@@ -103,7 +103,7 @@ var barChart = function() {
         .scale(xScale)
         .ticks(10)
         .tickFormat(d3.time.format('%Y-%m-%d'))
-        .tickSize(8,0)
+        .tickSize(10,0)
         .orient('end');
 
     }
@@ -198,14 +198,15 @@ var barChart = function() {
         .call(xAxis)
         .selectAll('text')
           .style('text-anchor', 'end')
-          .attr('dx', '-0.9em')
+          .attr('dx', '-1.4em')
+          .attr('dy', '0.8em')
           .attr('transform', 'rotate(-60)');
 
       //Add x axis label
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', height - margin.bottom + axisLabelMargin +100)
+        .attr('y', height - margin.bottom + axisLabelMargin +110)
         .attr('x', width/2 - axisLabelMargin-300/2)
         .text(xAxisLabel);
     }

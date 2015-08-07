@@ -25,28 +25,28 @@
       #startSysBox {
         resize: none;
         position: absolute;
-        left: 700px;
+        left: 695px;
         top: 148px;
       }
 
       #endSysBox {
         resize: none;
         position: absolute;
-        left: 700px;
+        left: 695px;
         top: 180px;
       }
 
       #startValBox {
         resize: none;
         position: absolute;
-        left: 222px;
+        left: 218px;
         top: 148px;
       }
 
       #endValBox {
         resize: none;
         position: absolute;
-        left: 222px;
+        left: 218px;
         top: 180px;
       }
 
@@ -91,6 +91,14 @@
         width: 100px;
         font-size: 1.2em;
         text-align: center;
+        visibility: hidden;
+      }
+
+      #errorMessage {
+        position: absolute;
+        left: 325px;
+        top: 180px;
+        color: #708090;
         visibility: hidden;
       }
 
@@ -150,8 +158,9 @@
       #ctsQuery {
         position: absolute;
         left: 140px;
-        top: 830px;
+        top: 860px;
         font-size: 14px;
+        margin-bottom: 60px;
       }
 
       #queryText {
@@ -406,6 +415,7 @@
     </div>
     <button id="searchQueryButton" class="hide">Run Query</button>
     <button id="resetButton">Reset Graph</button>
+    <p id='errorMessage'>(There were no documents in this selected time range)</p>
     <div id="searchPage">
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps." class="definition">Operators</p>
     <div id="valTimes">
