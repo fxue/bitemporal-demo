@@ -52,7 +52,7 @@ var barChart = function() {
         minStart = xMin;
       }
 
-      else {  
+      else {
         if (data.length) {
           minStart =  moment.min(data.map(function(d){
             return moment(d.content.sysStart);
