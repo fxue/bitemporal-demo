@@ -50,13 +50,17 @@ function parseData(data, collection, numParts) {
         $vStart = $xml.find("valStart"),
         $vEnd = $xml.find("valEnd");
 
+//http://www.itworld.com/article/2784456/development/using-regular-expressions-to-identify-xml-tags.html
+      var matchesArr = itemContent.match(/(<.[^(> <.)]+>)/g);
       itemContent = {
-        xmlString: itemContent,
-        valStart: $vStart.text(),
-        sysStart: $sStart.text(),
-        valEnd: $vEnd.text(),
-        sysEnd: $sEnd.text()
+        xmlString: itemContent
       };
+      for(var j = 0; j < matchesArr.length; j++) {
+        if(!matchesArr[j].startsWith('</')) { //&& $xml.find(matchesArr[j].substring(1,matchesArr[j].length-1))) {
+          itemContent[matchesArr[j].substring(1,matchesArr[j].length-1)] = $xml.find(matchesArr[j].substring(1,matchesArr[j].length-1)).text();
+        }
+      }
+
       itemContent = JSON.stringify(itemContent);
       item.content = JSON.parse(itemContent);
     }
