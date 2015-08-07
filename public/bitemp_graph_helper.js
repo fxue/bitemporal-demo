@@ -245,11 +245,11 @@ function saveNewDoc() {
       uri: newURI,
       type: 'PUT',
       success: function(data) {
-        loadData(uri);
+        loadData(selectedColl);
       },
       error: function(jqXHR, textStatus) {
-        cancel(chart);
-        window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+        window.alert('Put didn\'t work, error code: ' + jqXHR.status);
+        $("#dialogCreateDoc").dialog('close');
       },
       collection: selectedColl,
       format: format
