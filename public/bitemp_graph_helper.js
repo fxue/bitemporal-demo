@@ -254,7 +254,6 @@ function saveNewDoc() {
     data = data.replace(/ /g, '');
     //docData = jQuery.parseXML(data);
   }
-
   $.ajax({
     url: '/v1/documents',
     uri: newURI,
@@ -558,7 +557,6 @@ function formatCreateDocArea() {
   console.log('changing document format property');
   var dropDownList = document.getElementById('docFormat');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-
   if (selectedColl === 'XML')
     initNewXML();
   else {
@@ -629,6 +627,11 @@ var getBarChart = function (params, docProp) {
 
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
+  });
+  
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
   });
 
   $('#docFormat').change(function() {
