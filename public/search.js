@@ -10,10 +10,10 @@ function generateOps() {
 }
 
 $('#dropdown').change(function() {
-  
+
   $('#next').css({'visibility': 'hidden'});
   $('#prev').css({'visibility': 'hidden'});
-  
+
   var dropDownList = document.getElementById('dropdown');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
   //ajaxTimesCall(selectedColl, true);
@@ -38,15 +38,28 @@ $('#sysDropdown').change(function() {
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
-});
 
 //function when search button is clicked
-$('#search').click(function() { 
+$('#search').click(function() {
     firstDoc = 1;
     lastDoc = 10;
     displayDocs(firstDoc, lastDoc);
     var dropDownList = document.getElementById('dropdown');
-    
+
+    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+    //ajaxTimesCall(selectedColl, true);
+    addTempColls(selectedColl, true);
+    $('#next').css({'visibility': 'visible'});
+    $('#prev').css({'visibility': 'visible'});
+});
+
+//function when search button is clicked
+$('#search').click(function() {
+    firstDoc = 1;
+    lastDoc = 10;
+    displayDocs(firstDoc, lastDoc);
+    var dropDownList = document.getElementById('dropdown');
+
     var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
     //ajaxTimesCall(selectedColl, true);
     addTempColls(selectedColl, true);
