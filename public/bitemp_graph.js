@@ -1,4 +1,4 @@
-/*global d3, d3plus, moment */
+/*global d3, moment */
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
@@ -254,8 +254,7 @@ var barChart = function() {
 
     function addBarChartData() {
 
-      var split = g.selectAll('.split')
-      var arr = [];
+      var split = g.selectAll('.split');
 
       split = g.selectAll('.split')
         .data(data)
@@ -291,7 +290,10 @@ var barChart = function() {
           else {
             str = path(d, 'content.' + displayProperty);
           }
-          if(str && str.length > 15) {  //if you want all mouse overs to work, comment out
+          if(str && str.length > 15) {
+            if(Array.isArray(str)) {
+              str = '[' + str + ']';
+            }
             propTooltip.text(str);
           }
           return propTooltip.style('visibility', 'visible');
@@ -342,7 +344,7 @@ var barChart = function() {
             return color(d.content[displayProperty]);
           }
           else {
-            str = path(d, 'content.' + displayProperty);
+            var str = path(d, 'content.' + displayProperty);
             return color(str);
           }
         })
@@ -440,8 +442,8 @@ var barChart = function() {
             }
             return str;
           }
-        })
-    };
+        });
+    }
 
     function path(object, fullPath) {
       var selection = object;
@@ -675,7 +677,7 @@ var barChart = function() {
           displayProperty = 'data';
         }
         
-        document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uriParameter.bold() + " with property " + displayProperty.bold();
+        document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriParameter.bold() + ' with property ' + displayProperty.bold();
       }
     }
 

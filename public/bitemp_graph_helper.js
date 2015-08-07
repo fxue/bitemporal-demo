@@ -139,8 +139,8 @@ function fillText(data, isEditing, id) {
       if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
         strToAdd += ',';
       }
-      strToAdd += '\n\"' + property + '\": ';
-      if (typeof data[property] === 'object') {
+      if (typeof data[property] === 'object' && !(Array.isArray(data[property]))) {
+        strToAdd += '\n\"' + property + '\":';
         var propsInGraph = {};
         findProperties(data[property], null, propsInGraph);
         for(prop in propsInGraph) {
@@ -154,10 +154,12 @@ function fillText(data, isEditing, id) {
           strToAdd += subStr;
         }
       }
-      else if(!property){
-        strToAdd += '\"'+ data[property] + '\"';
+      else if (data[property] instanceof Array) {
+        strToAdd += '\n\"' + property + '\": [';
+        strToAdd +=  data[property] + ']';
       }
-      else { // if the property has a null value then don't put quotes around it.
+      else {
+        strToAdd += '\n\"' + property + '\": ';
         strToAdd += data[property];
       }
       textArea.value += strToAdd;
@@ -488,6 +490,34 @@ function changeTextInGraph(chart, params) {
 }
 
 
+<<<<<<< HEAD
+=======
+/*
+ * @param obj
+ * @param path
+ * @param properties -- modified as new properties are found
+ */
+function findProperties(obj, path, properties) {
+  var newPath;
+  if (typeof obj === 'object') {
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        newPath = path ? path + '.' + prop : prop;
+        /*if (Array.isArray(obj[prop])) {
+          // for (var item in obj[prop]) {
+          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+          // }
+        } else*/ if (typeof obj[prop] === 'object' && Array.isArray([obj][prop] instanceof Array)) {
+          findProperties(obj[prop], newPath, properties);
+        } else {
+          properties[newPath] = true;
+        }
+      }
+    }
+  }
+}
+
+>>>>>>> minor fixes
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
 
