@@ -2,42 +2,110 @@
 /* global loadData */
 function addTempColls(id, search) {
   $.ajax(
+  {
+    url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
+    success: function(response, textStatus)
     {
-      url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-      success: function(response, textStatus)
-      {
-        if (search) {
-          generateOps();
-        }
-        //adds names of the collections to the drop down list
-        var addToDrop = $('#'+id);
-        //endpoint is the number of collections
-        var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
-
-        //dropArray is the array containing all the temporal Collections
-        var dropArray = [];
-        for (var j = 0; j < endpoint; j++)
-        {
-          dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
-        }
-        //sorts the array (alphabetically) containing the temporal collections
-        dropArray.sort();
-
-        //this for loop appends the collection names to the drop down list
-        for (var k = 0; k < dropArray.length; k++)
-        {
-          addToDrop.append($('<option>').text(dropArray[k])) ;
-          if( k === 0 && search) {
-            ajaxTimesCall(dropArray[k], null);
-          }
-        }
-      },
-      error: function(jqXHR, textStatus, errorThrown)
-      {
-        console.log('problem');
+      if (search) {
+        displayAxis(response); //don't want to call this if not on search page, clears graph otherwise.
+        respTimes = response;
       }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
     }
-  );
+  });
+}
+
+//function to display axis
+function displayAxis(times) {
+  var showAlertBox = false;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart),
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+var getDocColl = function(uri) {
+  $.ajax({
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
+    success: function(data, textStatus) {
+      console.log('got collections: ' + data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem');
+    },
+    async: false,
+  });
+}
+
+function toReturnDate(time) {
+  if (time) {
+    return new Date(time);
+  } 
+  else {
+    return null;
+  }
+}
+
+var addTempColls = function(id, search) {
+  var rtnVal = $.ajax(
+  {
+    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+    success: function(response, textStatus)
+    {
+      if (search) {
+        generateOps();
+      }
+      //adds names of the collections to the drop down list
+      var addToDrop = $('#'+id);
+      //endpoint is the number of collections
+      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
+
+      //dropArray is the array containing all the temporal Collections
+      var dropArray = [];
+      for (var j = 0; j < endpoint; j++)
+      {
+        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
+      }
+      //sorts the array (alphabetically) containing the temporal collections
+      dropArray.sort();
+
+      //this for loop appends the collection names to the drop down list
+      for (var k = 0; k < dropArray.length; k++)
+      {
+        addToDrop.append($('<option>').text(dropArray[k])) ;
+        if( k === 0 && search) {
+          ajaxTimesCall(dropArray[k], null);
+        }
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
 }
 
 var drawChart = function(params, docProp) {
@@ -76,9 +144,9 @@ function clearTextArea() {
   document.getElementById('newDocContents').value = '';
 }
 
-function fillText(data, isEditing) {
+function fillText(data, isEditing, id) {
   clearTextArea();
-  var textArea = document.getElementById('contents');
+  var textArea = document.getElementById(id);
   textArea.value += '{';
   var strToAdd;
   for (var property in data) {
@@ -145,6 +213,49 @@ function save(chart) {
   });
 }
 
+function initNewDoc() {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = "{\n\"sysStart\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"sysEnd\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"valStart\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"valEnd\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"data\": \"Some cool data\",\n";
+  dialogArea.value += "\"Your Own Property\": \"Your Own Data\"\n";
+  dialogArea.value += "}";
+}
+
+function saveNewDoc() {
+  console.log('Creating a new document');
+  var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  data = jQuery.parseJSON(data);
+  
+  var dropDownList = document.getElementById('selectTempColl');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  
+  var newURI = document.getElementById('newUri').value;
+  console.log(newURI);
+  
+  var formatList = document.getElementById('docFormat');
+  var format = formatList.options[dropDownList.selectedIndex].value;
+  
+  
+  $.ajax({
+      url: '/v1/documents',
+      uri: newURI,
+      type: 'PUT',
+      success: function(data) {
+        loadData(uri);
+      },
+      error: function(jqXHR, textStatus) {
+        cancel(chart);
+        window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+      },
+      collection: selectedColl,
+      format: format
+    });
+  
+}
+
 function setupTextArea(uri, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
@@ -156,10 +267,10 @@ function setupTextArea(uri, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    fillText(data, isEditing);
+    fillText(data, isEditing, 'contents');
   };
   $.ajax({
-    url: 'http://localhost:3000/v1/documents/?uri=' + uri,
+    url: '/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
   });
@@ -453,7 +564,7 @@ var getBarChart = function (params, docProp) {
   if (params) {
     addDataToMenu(chart, params);
   }
-  if(params.timeRanges === null) {
+  if (params.timeRanges === null) {
     initButtons();
     if (uri) {
       document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
@@ -495,15 +606,16 @@ var getBarChart = function (params, docProp) {
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-
+    initNewDoc();
     $("#dialogCreateDoc").dialog({
       autoOpen: true,
       modal: true,
       appendTo: false,
-      width: 450,
+      width: 500,
       height: 500,
       buttons: {
         Save: function() {
+          saveNewDoc();
           $(this).dialog('close');
         },
         Cancel: function() {
@@ -514,9 +626,7 @@ var getBarChart = function (params, docProp) {
   });
 
   $('#deleteOKButton').click(function() {
-    document.body.style.cursor = 'wait';
     deleteDoc(chart);
-    document.body.style.cursor = 'auto';
   });
 
   $('#deleteCancelButton').click(function() {
