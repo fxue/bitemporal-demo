@@ -13,7 +13,7 @@
         background-size: 100px 100px;
         background-position: right top;
         background-repeat: no-repeat;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
 
@@ -49,7 +49,7 @@
       #editDocDiv{
         position: absolute;
         left:850px;
-        top: 400px;
+        top: 470px;
         width: 25em;
       }
 
@@ -67,35 +67,27 @@
       .svg-chart .g { fill: #4682B4; }
 
       .tooltip-txt {
-        margin: 0;
+      /*  margin: 0;*/
         font-family: Helvetica;
         font-size: 18px;
-        line-height: 18px;
+      /*  line-height: 18px;*/
         font-weight: bold;
+        pointer-events: none;
+      }
+
+      .tick text {
+        font-size: 15px;
+        stroke-width: 0;
       }
 
       .axis-label {
-        font-family: Helvetica;
-        font-size: 17px;
-        font-weight: bold;
+        font-size: 20px;
+        stroke-width: 1;
       }
 
-      .yaxis {
-        font-size: 14px;
-      }
-      .svg-chart .xaxis .tick text {
-        transform: rotate(-45deg);
-        text-anchor: end !important;
-        font-size: 15px;
-      }
-
-      #uriEntered {
-        font-size: 16px;
-        position: absolute;
-        left: 5px;
-        top: 20px;
-        width: 25em;
-        word-wrap: normal;
+      .tick {
+        stroke: black;
+        stroke-width: 1;
       }
 
       #uriEntered {
@@ -115,18 +107,17 @@
         cursor: pointer;
       }
 
-
     </style>
   </head>
 
   <body>
-    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
-    <a href="search" id="searchURL">Click to go to search page</a>
-    <div id='instructions'>
+    <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
+    <a href="search" id="searchURL">Search</a>
+    <div id="instructions">
       <p>Change the logical document display to the specified URI of a logical document.</p>
-      <p>Don't forget to include the "dot extension" ie .json.</p>
+      <p>Don"t forget to include the "dot extension" ie .json.</p>
 
-      <b>Enter <span class= 'definition' title = 'URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource'>URI:</span></b><br>
+      <b>Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
       <input type="text" name="collection" value="">
       <input type="button" id="pick-doc" value="Submit">
 
@@ -141,65 +132,86 @@
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
+
     </div>
 
     <p id="uriEntered"></p>
-
     <br></br>
-   <!--onClick="location.href='/'"-->
 
-    <div id="tooltip" class="hidden">
+
+    <div id="tooltip-txt" class="hidden">
       <p><span id="value"></span></p>
     </div>
 
+
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
+
     <div id="bar-chart-large"></div>
-
-    <script type="text/javascript">
-      //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
-      $.urlParam = function(name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results === null) {
-           return null;
-        }
-        else {
-           return results[1] || 0;
-        }
-      }
-
-
-      var uri = $.urlParam('collection');
-      if( uri !== null ) {
-        loadData(uri);
-        document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold();
-      }
-      else { //default
-        loadData('addr.json');
-      }
-
-    </script>
-    <div id='editDocDiv'>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id='editButton' > Edit </button>
-      <button id='viewButton'> View </button>
-      <button id='deleteButton'> Delete </button>
-      <button id='saveButton' hidden="true"> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
-        <br> <br>
-        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
+    <div id="editDocDiv">
+      <div id="dialogCreateDoc" title="Create a new document">
+        <!-- Add contents of creating a document. -->
+        <div id="createDocStuff" hidden="true">
+          <select id="selectTempColl">
+            <option>Choose a temporal collection</option>
+          </select>
+        </div>
+      </div>
+      <button id="createDoc"> Create a Document </button>
+      <p id="selectedURI"> Selected URI: <b> null </b></p>
+      <button id="editButton" > Edit </button>
+      <button id="viewButton"> View </button>
+      <button id="deleteButton"> Delete </button>
+      <p id="deleteErrMessage"> </p>
+      <button id="saveButton" hidden="true"> Save </button>
+      <button id="cancelButton" hidden="true"> Cancel </button>
+      <textarea rows="12" cols="40" id="contents" hidden = "true"> </textarea>
+      <div id="sysTimeDiv">
+        <p> <b> sysStart: </b> <input type="text" id="sysStartBox" value="">
         <script>
           $('#sysTimeDiv').addClass('hideSysTimeBoxes');
         </script>
       </div>
+      <div id="deleteButtonsDiv">
+          <button id="deleteOKButton"> OK </button>
+          <button id="deleteCancelButton"> Cancel </button>
+          <script>
+            $("#deleteButtonsDiv").addClass("hideSysTimeBoxes");
+          </script>
+      </div>
     </div>
+    <script type="text/javascript">
+
+      //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
+      $.urlParam = function(name) {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results === null) {
+          return null;
+        }
+        else {
+          return results[1] || 0;
+        }
+      };
+
+
+      var uri = $.urlParam('collection');
+      if (uri !== null) {
+        loadData(uri);
+        document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uri.bold();
+      }
+      else {
+        loadData('addr.json');
+      }
+
+    </script>
   </body>
 </html>
