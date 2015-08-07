@@ -35,8 +35,4 @@ function get(context, params) {
 
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> added some changes
 exports.GET = get;
