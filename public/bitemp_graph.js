@@ -67,7 +67,7 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.sysStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
       if (xMax) {
         maxEnd = xMax;
@@ -132,7 +132,7 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.valStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
       
       if (yMax) {
