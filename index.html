@@ -13,7 +13,7 @@
         background-size: 100px 100px;
         background-position: right top;
         background-repeat: no-repeat;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
 
@@ -75,11 +75,6 @@
         pointer-events: none;
       }
 
-      .tick {
-        stroke: black;
-        stroke-width: 1;
-      }
-
       .tick text {
         font-size: 15px;
         stroke-width: 0;
@@ -87,6 +82,11 @@
 
       .axis-label {
         font-size: 20px;
+        stroke-width: 1;
+      }
+
+      .tick {
+        stroke: black;
         stroke-width: 1;
       }
 
@@ -111,13 +111,13 @@
   </head>
 
   <body>
-    <h1>MarkLogic <span class='definition' title='Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time'>Bitemporal</span> Visualization Demo</h1>
-    <a href="search" id="searchURL">Click to go to search page</a>
-    <div id='instructions'>
+    <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
+    <a href="search" id="searchURL">Search</a>
+    <div id="instructions">
       <p>Change the logical document display to the specified URI of a logical document.</p>
-      <p>Don't forget to include the "dot extension" ie .json.</p>
+      <p>Don"t forget to include the "dot extension" ie .json.</p>
 
-      <b>Enter <span class= 'definition' title = 'URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource'>URI:</span></b><br>
+      <b>Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
       <input type="text" name="collection" value="">
       <input type="button" id="pick-doc" value="Submit">
 
@@ -129,8 +129,6 @@
       <input type="button" id="change-prop" value="Submit">
       <br><br>
 
-
-      
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
@@ -159,39 +157,40 @@
 
 
     <div id="bar-chart-large"></div>
-    <div id='editDocDiv'>
+    <div id="editDocDiv">
       <div id="dialogCreateDoc" title="Create a new document">
         <!-- Add contents of creating a document. -->
-        <div id='createDocStuff' hidden='true'>
-          <select id='selectTempColl'>
+        <div id="createDocStuff" hidden="true">
+          <select id="selectTempColl">
             <option>Choose a temporal collection</option>
           </select>
         </div>
       </div>
-      <button id='createDoc'> Create a Document </button>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id='editButton' > Edit </button>
-      <button id='viewButton'> View </button>
-      <button id='deleteButton'> Delete </button>
-      <p id='deleteErrMessage'> </p>
-      <button id='saveButton' hidden='true'> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
+      <button id="createDoc"> Create a Document </button>
+      <p id="selectedURI"> Selected URI: <b> null </b></p>
+      <button id="editButton" > Edit </button>
+      <button id="viewButton"> View </button>
+      <button id="deleteButton"> Delete </button>
+      <p id="deleteErrMessage"> </p>
+      <button id="saveButton" hidden="true"> Save </button>
+      <button id="cancelButton" hidden="true"> Cancel </button>
+      <textarea rows="12" cols="40" id="contents" hidden = "true"> </textarea>
+      <div id="sysTimeDiv">
+        <p> <b> sysStart: </b> <input type="text" id="sysStartBox" value="">
         <script>
           $('#sysTimeDiv').addClass('hideSysTimeBoxes');
         </script>
       </div>
-      <div id='deleteButtonsDiv'>
-          <button id='deleteOKButton'> OK </button>
-          <button id='deleteCancelButton'> Cancel </button>
+      <div id="deleteButtonsDiv">
+          <button id="deleteOKButton"> OK </button>
+          <button id="deleteCancelButton"> Cancel </button>
           <script>
-            $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
+            $("#deleteButtonsDiv").addClass("hideSysTimeBoxes");
           </script>
       </div>
     </div>
     <script type="text/javascript">
+
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -213,38 +212,6 @@
         loadData('addr.json');
       }
 
-      $("input[name='insert']").serialize(function() {
-        var col = $("input[name='tempcol']").val();
-        var uri = $("input[name='uri']").val();
-        var vs = $("input[name='validstart']").val();
-        var ve = $("input[name='validend']").val();
-        var sys = $("input[name='systemstart']").val();
-        var d = $("input[name='content']").val();
-        $.get(
-          "/update?collection"+col+"&uri="+uri+
-          "&validstart="+vs+"&validend="+ve+
-          "&system="+sys+"&content="+d);
-        });
     </script>
-
-    </script>
-    <div id='editDocDiv'>
-      <br><br><br>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id="editButton" > Edit </button>
-      <button id="viewButton"> View </button>
-      <button id="deleteButton"> Delete </button>
-      <button id="saveButton" hidden="true"> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
-        <br> <br>
-        <b> sysEnd: </b> <input type='text' id='sysEndBox' value=''> </p>
-        <script>
-          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
-        </script>
-      </div>
-    </div>
   </body>
 </html>

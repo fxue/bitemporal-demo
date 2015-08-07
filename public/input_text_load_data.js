@@ -49,7 +49,7 @@ function parseData(data, collection, numParts) {
         itemContent = '{"xmlString":"' + itemContent + '"}';
       }
       item.content = JSON.parse(itemContent);*/
-      
+
       var matches4 = split[i+numParts-1].match(/(<[^]*>)/);
       if(matches4[1]) {
         matches4 = matches4[1].match(/^(?!.*version).*$/m);
@@ -121,7 +121,7 @@ function loadData(collection) { //Called from top-level code
   else {
     collection = 'addr.json';
   }
-  
+
 
   $.ajax({
     url: '/v1/search?pageLength=1000',
@@ -136,6 +136,7 @@ function loadData(collection) { //Called from top-level code
     async: false,
     success: function(data) {
       var arrData = parseData(data, collection, 1);
+      console.log(arrData);
       getBarChart({
         data: arrData,
         width: 800,
@@ -143,6 +144,7 @@ function loadData(collection) { //Called from top-level code
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         timeRanges: null,
+        draggableBars: false,
         containerId: 'bar-chart-large'
       }, null);
       if(arrData.length === 0 && url !== '') {
@@ -207,5 +209,5 @@ $('#pick-doc').click(function () {
     console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
-}); 
+});
 

@@ -12,14 +12,94 @@
         background-size: 100px 100px;
         background-position: right top;
         background-repeat: no-repeat;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
 
       h1 {
         text-align: center;
         font-style: italic;
-        font-size: 20px;
+        font-size: 23px;
+      }
+
+      #startSysBox {
+        resize: none;
+        position: absolute;
+        left: 695px;
+        top: 148px;
+      }
+
+      #endSysBox {
+        resize: none;
+        position: absolute;
+        left: 695px;
+        top: 180px;
+      }
+
+      #startValBox {
+        resize: none;
+        position: absolute;
+        left: 218px;
+        top: 148px;
+      }
+
+      #endValBox {
+        resize: none;
+        position: absolute;
+        left: 218px;
+        top: 180px;
+      }
+
+      #vertBar1 {
+        position: absolute;
+        left: 635px;
+        top: 140px;
+      }
+
+      #vertBar2 {
+        position: absolute;
+        left: 635px;
+        top: 170px;
+      }
+
+      #horzBar1 {
+        position: absolute;
+        left: 158px;
+        top: 140px;
+      }
+
+      #horzBar2 {
+        position: absolute;
+        left: 158px;
+        top: 170px;
+      }
+
+      #searchQueryButton {
+        position: absolute;
+        left: 425px;
+        top: 160px;
+        height: 22px;
+        width: 85px;
+        font-size: 1.2em;
+      }
+
+       #resetButton {
+        position: absolute;
+        left: 418px;
+        top: 160px;
+        height: 20px;
+        width: 100px;
+        font-size: 1.2em;
+        text-align: center;
+        visibility: hidden;
+      }
+
+      #errorMessage {
+        position: absolute;
+        left: 325px;
+        top: 180px;
+        color: #708090;
+        visibility: hidden;
       }
 
       .svg-chart .background {
@@ -27,9 +107,11 @@
         stroke: #ccc;
         fill: #fdfdfd;
         stroke-width: 1px;
-        z-index: 2;
       }
-      .svg-chart .g { fill: #4682B4; }
+
+      .svg-chart .g {
+        fill: #4682B4;
+      }
 
       .tooltip-txt {
         margin: 0;
@@ -45,19 +127,45 @@
         font-weight: bold;
       }
 
-      .yaxis {
-        font-size: 14px;
+      .yaxis .tick {
+        stroke: black;
+        stroke-width: 1;
       }
-      .svg-chart .xaxis .tick text {
+
+      .xaxis .tick {
+        stroke: black;
+        stroke-width: 1;
+      }
+
+      .yaxis text {
+        font-size: 14px;
+        stroke-width: 0;
+      }
+
+      .xaxis .tick text {
         transform: rotate(-45deg);
         text-anchor: end !important;
         font-size: 15px;
+        stroke-width: 0;
       }
 
       #bar-chart-large {
         position: absolute;
         left: -25px;
-        top: 90px;
+        top: 290px;
+      }
+
+      #ctsQuery {
+        position: absolute;
+        left: 140px;
+        top: 860px;
+        font-size: 14px;
+        margin-bottom: 60px;
+      }
+
+      #queryText {
+        font-size: 14px;
+        resize: none;
       }
 
       #logo {
@@ -73,6 +181,7 @@
         left: 5px;
         top: 4px;
         font-size: 13px;
+        z-index: 1;
       }
 
       #dropdown {
@@ -83,7 +192,6 @@
         display: block;
         padding: 0 16px;
         width: 266px;
-        position: relative;
         cursor: pointer;
         border-left: 4px solid #739cda;
         background: #fff;
@@ -98,6 +206,64 @@
          -ms-transition: all 0.15s linear;
          -o-transition: all 0.15s linear;
          transition: all 0.15s linear;
+      }
+
+      #valDropdown {
+        height: 20px;
+        display: block;
+        padding: 0;
+        margin: 0;
+        width: 160px;
+        cursor: pointer;
+        border-left: 4px solid #739cda;
+        background: #fff;
+        font-size: .8em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+      }
+
+      #valTimes {
+        position: relative;
+        left: 133px;
+        top: 138px;
+        margin-bottom: 0px;
+        font-size: 15px;
+      }
+
+      #dragInstruct {
+        position: absolute;
+        left: 330px;
+        top: 170px;
+        font-size: 13px;
+        text-wrap: normal;
+        display: block;
+        width: 240px;
+        text-align: center;
+        color: #708090;
+      }
+
+      #sysDropdown {
+        height: 20px;
+        display: block;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        border-left: 4px solid #739cda;
+        background: #fff;
+        font-size: .8em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+      }
+
+      #sysTimes {
+        position: absolute;
+        left: 614px;
+        top: 138px;
+        font-size: 15px;
       }
 
       #bold {
@@ -119,7 +285,7 @@
         left: 0px;
         top: -40px;
         font-weight: bold;
-        font-size: 1.55em;
+        font-size: 1.45em;
       }
 
       #bulletList {
@@ -152,7 +318,7 @@
 
       #break {
         position: absolute;
-        width: 30%;
+        width: 100%;
         left: 37px;
         margin-top: -0.13em;
       }
@@ -187,8 +353,8 @@
 
       #page {
         position: relative;
-        left: 860px;
-        top: 50px;
+        left: 840px;
+        top: 100px;
       }
 
       .result a {
@@ -209,17 +375,60 @@
         cursor: pointer;
       }
 
+      #ops {
+        position: absolute;
+        left: 38px;
+        top: 175px;
+        font-size: 1.1em;
+      }
+
+      #searchPage {
+        position: absolute;
+        left: 20px;
+        top: -75px;
+      }
+
+      .hide {
+        visibility: hidden;
+      }
+
     </style>
 
   </head>
   <body>
-    <h1>MarkLogic <span class= 'definition' title= 'Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.'>Bitemporal</span> Search Page</h1>
-    <a href="/" id="homeURL">Click to go to home page</a>
+    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
+    <a href="/" id="homeURL">Home</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
+    <div class="hide sysTimesDisplay">
+      <p id="vertBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
+      <p id="vertBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
+    </div>
+    <div class="hide valTimesDisplay">
+      <p id="horzBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
+      <p id="horzBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
+    </div>
+    <button id="searchQueryButton" class="hide">Run Query</button>
+    <button id="resetButton">Reset Graph</button>
+    <p id='errorMessage'>(There are no documents in this selected time range)</p>
+    <div id="searchPage">
+    <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps." class="definition">Operators</p>
+    <div id="valTimes">
+      <p><b>Valid Time</b></p>
+      <select id="valDropdown"></select>
+    </div>
+    <p id="dragInstruct">*Select an operator and drag the red bars to create your selected time range*</p>
+    <div id="sysTimes">
+      <p><b>System Time</b></p>
+      <select id="sysDropdown"></select>
+    </div>
     <div id= "page">
-      <p id="instructSelect">Select a <span class= 'definition' title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
+      <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
       <select id="dropdown"></select>
       <button type="button" id="search">Search</button>
       <button type="button" id="next">Next</button>
@@ -228,10 +437,6 @@
         <ul id="bulletList"></ul>
       </div>
 
-    <div id="tooltip" class="hidden">
-      <p><span id="value"></span></p>
-    </div>
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/public/search.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
@@ -239,8 +444,13 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
-    <script> addTempColls('dropdown', true); </script>
+    <script> addTempColls("dropdown", true); </script>
     <div id="bar-chart-large"></div>
+
+    <div id="ctsQuery">
+      <p class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
+      <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
+    </div>
 
   </body>
 </html>

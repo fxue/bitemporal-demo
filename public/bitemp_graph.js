@@ -13,16 +13,18 @@ var barChart = function() {
   var xMax = null;
   var yMin = null;
   var yMax = null;
+  var draggableBars;
   var displayProperty = '';
   var lastDoc;
   var data;
   var displayedProps = [];
+  var background;
 
   var margin = {
-    top: 10,
+    top: 0,
     right: 0,
-    bottom: 100,
-    left: 100
+    bottom: 150,
+    left: 170
   };
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
@@ -37,7 +39,7 @@ var barChart = function() {
   var chart = function(container) {
 
     function setDimensions() {
-      axisLabelMargin = 60;
+      axisLabelMargin = 0;
     }
 
     function setupXAxis() {
@@ -49,30 +51,42 @@ var barChart = function() {
       if (xMin) {
         minStart = xMin;
       }
+
       else {
-        minStart =
-          moment.min(data.map(function(d){
-            return moment(d.content.sysStart);
-          })).toDate();
+        if (data.length) {
+          minStart =
+            moment.min(data.map(function(d){
+              return moment(d.content.sysStart);
+            })).toDate();
+        }
+        else {
+          minStart = moment('2001-01-01T00:00:00').toDate();
+        }
       }
+
       maxStart =
         moment.max(data.map(function(d){
-          return moment(d.content.start);
+          return moment(d.content.sysStart);
         })).add('y', 10);
-      
+
       if (xMax) {
         maxEnd = xMax;
       }
       else {
-        maxEnd =
-          moment.max(data.map(function(d){
-            if (d.content.sysEnd.startsWith('9999')) {
-              return maxStart;
-            }
-            else {
-              return moment(d.content.sysEnd);
-            }
-          })).toDate();
+        if (data.length) {
+          maxEnd =
+            moment.max(data.map(function(d){
+              if (d.content.sysEnd.startsWith('9999')) {
+                return maxStart;
+              }
+              else {
+                return moment(d.content.sysEnd);
+              }
+            })).toDate();
+        }
+        else {
+          maxEnd = moment('2015-01-01T00:00:00').toDate();
+        }
       }
 
       xScale = d3.time.scale()
@@ -89,44 +103,54 @@ var barChart = function() {
         .scale(xScale)
         .ticks(10)
         .tickFormat(d3.time.format('%Y-%m-%d'))
-        .tickSize(8,0)
+        .tickSize(10,0)
         .orient('end');
 
     }
 
     function setupYAxis() {
-      // minStart: earliest sysStart
-      // maxEnd: latest non-infinty sysEnd
-      // maxStart: max sysStart time
+      // minStart: earliest valStart
+      // maxEnd: latest non-infinty valEnd
+      // maxStart: max valStart time
       var minStart, maxEnd, maxStart;
 
       if (yMin) {
         minStart = yMin;
       }
       else {
-        minStart =
-          moment.min(data.map(function(d){
-            return moment(d.content.valStart);
-          })).toDate();
+        if (data.length) {
+          minStart =
+            moment.min(data.map(function(d){
+              return moment(d.content.valStart);
+            })).toDate();
+        }
+        else {
+          minStart = moment('2001-01-01T00:00:00').toDate();
+        }
       }
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.valStart);
         })).add('y', 10);
-      
+
       if (yMax) {
         maxEnd = yMax;
       }
       else {
-        maxEnd =
-          moment.max(data.map(function(d){
-            if (d.content.valEnd.startsWith('9999')) {
-              return maxStart;
-            }
-            else {
-              return moment(d.content.valEnd);
-            }
-          })).toDate();
+        if (data.length) {
+          maxEnd =
+            moment.max(data.map(function(d){
+              if (d.content.valEnd.startsWith('9999')) {
+                return maxStart;
+              }
+              else {
+                return moment(d.content.valEnd);
+              }
+            })).toDate();
+        }
+        else {
+          maxEnd = moment('2015-01-01T00:00:00').toDate();
+        }
       }
 
       yScale = d3.time.scale()
@@ -142,7 +166,7 @@ var barChart = function() {
 
       yAxis = d3.svg.axis()
         .scale(yScale)
-        .ticks(15)
+        //ticks(15)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0);
@@ -174,15 +198,16 @@ var barChart = function() {
         .call(xAxis)
         .selectAll('text')
           .style('text-anchor', 'end')
-          .attr('dx', '-0.9em')
+          .attr('dx', '-1.4em')
+          .attr('dy', '0.8em')
           .attr('transform', 'rotate(-60)');
 
       //Add x axis label
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', height - margin.bottom + axisLabelMargin)
-        .attr('x', width/2 - axisLabelMargin/2)
+        .attr('y', height - margin.bottom + axisLabelMargin +110)
+        .attr('x', width/2 - axisLabelMargin-300/2)
         .text(xAxisLabel);
     }
 
@@ -191,27 +216,31 @@ var barChart = function() {
       g.append('g')
         .attr('class', 'yaxis ')
         .attr('transform', 'translate('+axisLabelMargin+', 0)')
-        .call(yAxis)
+        .call(yAxis);
+
+      g.append('g')
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -margin.left)
-        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin) / 2)
+        .attr('y', -margin.left+65)
+        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin-190) / 2)
         .style('text-anchor', 'left')
         .text(yAxisLabel);
 
     }
 
-    function addBackground() {
-
+    function addRectangle() {
       g.append('rect')
+        .style('stroke', 'black')
+        .style('stroke-width', '5')
+        .style('fill', 'white')
         .attr('class', 'background')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
-
     }
+
     function setLastDoc(ld) {
       lastDoc = ld;
     }
@@ -220,7 +249,7 @@ var barChart = function() {
       return lastDoc;
     }
 
-    
+
     function addBarChartData() {
 
       var split = g.selectAll('.split')
@@ -234,7 +263,6 @@ var barChart = function() {
         .attr('stroke', 'black');
 
       var r;
-
       var propTooltip = d3.select('body')
         .append('div')
         .style('z-index', '10')
@@ -244,7 +272,7 @@ var barChart = function() {
         .style('font-size', '18px')
         .style('width', '32em')
         .text('');
-      
+
       r = split
         .append('rect')
         .on('mouseover', function(d) {
@@ -274,6 +302,7 @@ var barChart = function() {
             .style('top', coordinates[1] + 115 + 'px')
             .style('left', coordinates[0] + 110 + 'px');
         })
+
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -297,7 +326,7 @@ var barChart = function() {
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '1')
-        .attr('fill', function(d) {
+        .attr('fill',function(d) {
           if(!displayProperty) {
             displayProperty = 'data';
           }
@@ -306,7 +335,7 @@ var barChart = function() {
               return color(d.content[displayProperty]);
             }
             else {
-              str = path(d, 'content.' + displayProperty);
+              var str = path(d, 'content.' + displayProperty);
               return color(str);
             }
           }
@@ -356,7 +385,7 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return (barx1+barx2)/2;
+            return barx1;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
@@ -393,7 +422,7 @@ var barChart = function() {
           for(var i = 0; i < displayedProps.length; i++) {
             if(displayedProps[i] === str) {
               alreadyInGraph = true;
-            } 
+            }
           }
           if(alreadyInGraph === false) {
             displayedProps.push(str);
@@ -407,28 +436,202 @@ var barChart = function() {
 
     function path(object, fullPath) {
       var selection = object;
-      fullPath.split('.').forEach(function(path) { 
-        selection = selection[path]; 
+      fullPath.split('.').forEach(function(path) {
+        selection = selection[path];
       });
       return selection;
     }
 
-    /*
-      var x = { foo: { bar: { stuff: 'something' } } }
-      var path = 'foo.bar.stuff'
-      var selected = x;
-      path.split('.').forEach(function(path) { selected = selected[path]; });
-      selected
-    */
+    function addBackground() {
+      background = g.append('svg')
+        .style('stroke', 'red')
+        .style('stroke-width', '5')
+        .style('fill', 'white')
+        .attr('class', 'background')
+        .attr('x', axisLabelMargin)
+        .attr('y', -axisLabelMargin)
+        .attr('width', width - axisLabelMargin - margin.left - margin.right)
+        .attr('height', height - margin.top - margin.bottom);
+    }
 
-    setDimensions();
-    setupXAxis();
-    setupYAxis();
-    setupBarChartLayout();
-    addBackground();
-    addXAxisLabel();
-    addYAxisLabel();
-    addBarChartData();
+    function addDragBars() {
+      var format = d3.time.format('%Y-%m-%d');
+
+      function lineCreator(x1, x2, y1, y2, direction, id) {
+        background
+          .append('line')
+          .attr('x1', x1)
+          .attr('x2', x2)
+          .attr('y1', y1)
+          .attr('y2', y2)
+          .style('opacity', '.99')
+          .style('position', 'relative')
+          .style('cursor', 'pointer')
+          .style('z-index', '1')
+          .attr('stroke-width', '8')
+          .attr('stroke', 'red')
+          .data([ {'x':0, 'y':0} ])
+          .attr('class', 'hide')
+          .attr('id', id)
+          .call(direction);
+      }
+
+      var dragLeft = d3.behavior.drag()
+        .on('dragend', function(d,i) {
+          $('#endSysBox').css({'border': '1px solid black'});
+          $('#vertBar2').css({'font-weight': 'normal'});
+        })
+        .on('drag', function(d,i) {
+          $('#endSysBox').css({'border': '2px solid red'});
+          $('#vertBar2').css({'font-weight': 'bold'});
+          var scale = xScale.invert( d.x + width - margin.left - margin.right );
+          $('#endSysBox').val(format(scale));
+          if (d.x+d3.event.dx >= 0) {
+            d.x = 0;
+          }
+          else if(d.x + d3.event.dx <= -1*(width - margin.left - margin.right)){
+            d.x = -1*(width - margin.left - margin.right);
+          }
+          else {
+            d.x+=d3.event.dx;
+          }
+            d.y += 0;
+          d3.select(this).attr('transform', function(d,i){
+            return 'translate(' + [ d.x,d.y ] + ')';
+        });
+      });
+
+      var dragRight = d3.behavior.drag()
+        .on('dragend', function(d,i) {
+          $('#startSysBox').css({'border': '1px solid black'});
+          $('#vertBar1').css({'font-weight': 'normal'});
+        })
+        .on('drag', function(d,i) {
+          $('#startSysBox').css({'border': '2px solid red'});
+          $('#vertBar1').css({'font-weight': 'bold'});
+          var scale = xScale.invert( d.x );
+          $('#startSysBox').val(format(scale));
+          if (d.x+d3.event.dx <= 0) {
+            d.x = 0;
+          }
+          else if(d.x + d3.event.dx >= width - margin.left - margin.right){
+            d.x = width - margin.left - margin.right;
+          }
+          else {
+            d.x+=d3.event.dx;
+          }
+            d.y += 0;
+          d3.select(this).attr('transform', function(d,i){
+            return 'translate(' + [ d.x,d.y ] + ')';
+          });
+      });
+
+      var dragUp = d3.behavior.drag()
+        .on('dragend', function(d,i) {
+          $('#startValBox').css({'border': '1px solid black'});
+          $('#horzBar1').css({'font-weight': 'normal'});
+        })
+        .on('drag', function(d,i) {
+          $('#startValBox').css({'border': '2px solid red'});
+          $('#horzBar1').css({'font-weight': 'bold'});
+          var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
+          $('#startValBox').val(format(scale));
+          if (d.y+d3.event.dy >= 0) {
+              d.y = 0;
+          }
+          else if(d.y + d3.event.dy <= -1*(height-margin.top-margin.bottom -5)){
+            d.y = -1*(height-margin.top-margin.bottom -5);
+          }
+          else {
+            d.y+=d3.event.dy;
+          }
+          d.x += 0;
+          d3.select(this).attr('transform', function(d,i){
+            return 'translate(' + [ d.x,d.y ] + ')';
+          });
+
+      });
+
+      var dragDown = d3.behavior.drag()
+        .on('dragend', function(d,i) {
+          $('#endValBox').css({'border': '1px solid black'});
+          $('#horzBar2').css({'font-weight': 'normal'});
+        })
+        .on('drag', function(d,i) {
+          $('#endValBox').css({'border': '2px solid red'});
+          $('#horzBar2').css({'font-weight': 'bold'});
+          var scale = yScale.invert(d.y);
+          $('#endValBox').val(format(scale));
+          if(d.y+d3.event.dy <= 0 ) {
+            d.y = 0;
+          }
+          else if(d.y+d3.event.dy >= (height-margin.top-margin.bottom)) {
+            d.y = height-margin.top-margin.bottom;
+          }
+          else {
+            d.y += d3.event.dy;
+          }
+          d.x += 0;
+          d3.select(this).attr('transform', function(d,i){
+            return 'translate(' + [ d.x,d.y ] + ')';
+        });
+      });
+
+      function lineShifter(textId, barId)  {
+      $('#'+textId).change(function(){
+        var input = $('#'+textId).val();
+        var date = new Date(input).toISOString();
+        if (textId.includes('Sys')) {
+          var dx = xScale(moment(date).toDate());
+          if (textId.includes('end')) {
+            dx = -(width - margin.left - dx);
+          }
+          $('#'+barId).attr('transform', 'translate('+dx+', 0)');
+        }
+        else {
+          var dy = yScale(moment(date).toDate());
+          if (textId.includes('start')) {
+            dy = -(height-margin.top-margin.bottom-dy);
+          }
+          $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+        }
+      });
+      }
+
+      lineShifter('startSysBox', 'dragRight');
+      lineShifter('endSysBox', 'dragLeft');
+      lineShifter('startValBox', 'dragUp');
+      lineShifter('endValBox', 'dragDown');
+
+      //right vertical line
+      lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
+      $('#endSysBox').val(format(xScale.invert(width - margin.left - margin.right)));
+
+      //left vertical line
+      lineCreator(3, 3, 3, height-margin.top-margin.bottom, dragRight, 'dragRight');
+      $('#startSysBox').val(format(xScale.invert(0)));
+
+      //bottom horizontal line
+      lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp');
+      $('#startValBox').val(format(yScale.invert(height -margin.top- margin.bottom)));
+
+      //top horizontal line
+      lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
+      $('#endValBox').val(format(yScale.invert(0)));
+  }
+
+  setDimensions();
+  setupXAxis();
+  setupYAxis();
+  setupBarChartLayout();
+  addRectangle();
+  addXAxisLabel();
+  addYAxisLabel();
+  addBarChartData();
+  addBackground();
+  if (draggableBars) {
+    addDragBars();
+  }
 
 };
   d3.selection.prototype.size = function() {
@@ -490,6 +693,14 @@ var barChart = function() {
       return yMax;
     }
     yMax = value;
+    return chart;
+  };
+
+  chart.draggableBars = function(value) {
+    if (!arguments.length) {
+      return draggableBars;
+    }
+    draggableBars = value;
     return chart;
   };
 
