@@ -205,8 +205,8 @@ var barChart = function() {
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', height - margin.bottom + axisLabelMargin +110)
-        .attr('x', width/2 - axisLabelMargin-300/2)
+        .attr('y', height - 20)
+        .attr('x', (width - margin.left)/2)
         .text(xAxisLabel);
     }
 

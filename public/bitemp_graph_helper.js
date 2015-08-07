@@ -557,6 +557,7 @@ function formatCreateDocArea() {
   console.log('changing document format property');
   var dropDownList = document.getElementById('docFormat');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+
   if (selectedColl === 'XML')
     initNewXML();
   else {
@@ -629,6 +630,11 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
   
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
+  });
+
   $('#docFormat').change(function() {
     console.log('changing format of new doc');
     formatCreateDocArea();
