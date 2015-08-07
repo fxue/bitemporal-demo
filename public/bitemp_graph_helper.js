@@ -62,9 +62,9 @@ var getDocColl = function(uri) {
 }
 
 function toReturnDate(time) {
-  if(time) {
+  if (time) {
     return new Date(time);
-  }
+  } 
   else {
     return null;
   }
@@ -153,9 +153,9 @@ function clearTextArea() {
   document.getElementById('newDocContents').value = '';
 }
 
-function fillText(data, isEditing) {
+function fillText(data, isEditing, id) {
   clearTextArea();
-  var textArea = document.getElementById('contents');
+  var textArea = document.getElementById(id);
   textArea.value += '{';
   var strToAdd;
   for (var property in data) {
@@ -222,6 +222,49 @@ function save(chart) {
   });
 }
 
+function initNewDoc() {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = "{\n\"sysStart\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"sysEnd\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"valStart\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"valEnd\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"data\": \"Some cool data\",\n";
+  dialogArea.value += "\"Your Own Property\": \"Your Own Data\"\n";
+  dialogArea.value += "}";
+}
+
+function saveNewDoc() {
+  console.log('Creating a new document');
+  var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  data = jQuery.parseJSON(data);
+  
+  var dropDownList = document.getElementById('selectTempColl');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  
+  var newURI = document.getElementById('newUri').value;
+  console.log(newURI);
+  
+  var formatList = document.getElementById('docFormat');
+  var format = formatList.options[dropDownList.selectedIndex].value;
+  
+  
+  $.ajax({
+      url: '/v1/documents',
+      uri: newURI,
+      type: 'PUT',
+      success: function(data) {
+        loadData(uri);
+      },
+      error: function(jqXHR, textStatus) {
+        cancel(chart);
+        window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+      },
+      collection: selectedColl,
+      format: format
+    });
+  
+}
+
 function setupTextArea(uri, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
@@ -233,10 +276,10 @@ function setupTextArea(uri, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    fillText(data, isEditing);
+    fillText(data, isEditing, 'contents');
   };
   $.ajax({
-    url: 'http://localhost:3000/v1/documents/?uri=' + uri,
+    url: '/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
   });
@@ -530,9 +573,14 @@ var getBarChart = function (params, docProp) {
   if (params) {
     addDataToMenu(chart, params);
   }
-  if(params.timeRanges === null) {
+  if (params.timeRanges === null) {
     initButtons();
-    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
+  }
+  if(params.timeRanges === null && uri) {
+    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " +uri + " with property " + chart.getDisplayProperty().bold();
+  }
+  else {
+    document.getElementById('uriEntered').innerHTML = 'There are no docs.';
   }
 
   $('#editButton').click(function() {
@@ -567,15 +615,16 @@ var getBarChart = function (params, docProp) {
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-
+    initNewDoc();
     $("#dialogCreateDoc").dialog({
       autoOpen: true,
       modal: true,
       appendTo: false,
-      width: 450,
+      width: 500,
       height: 500,
       buttons: {
         Save: function() {
+          saveNewDoc();
           $(this).dialog('close');
         },
         Cancel: function() {
@@ -586,9 +635,7 @@ var getBarChart = function (params, docProp) {
   });
 
   $('#deleteOKButton').click(function() {
-    document.body.style.cursor = 'wait';
     deleteDoc(chart);
-    document.body.style.cursor = 'auto';
   });
 
   $('#deleteCancelButton').click(function() {

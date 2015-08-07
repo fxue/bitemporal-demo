@@ -49,15 +49,19 @@ var barChart = function() {
       if (xMin) {
         minStart = xMin;
       }
-      else {
-        minStart =
-          moment.min(data.map(function(d){
+      else {  
+        if (data.length) {
+          minStart =  moment.min(data.map(function(d){
             return moment(d.content.sysStart);
           })).toDate();
+        }
+        else {
+          minStart = moment('2001-01-01T00:00:00').toDate();
+        }
       }
       maxStart =
         moment.max(data.map(function(d){
-          return moment(d.content.start);
+          return moment(d.content.sysStart);
         })).add('y', 10);
       
       if (xMax) {

@@ -1,5 +1,5 @@
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
-/* global getBarChart */
+/* getBarChart */
 function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
   var items = [];
@@ -122,7 +122,6 @@ function loadData(collection) { //Called from top-level code
     collection = 'addr.json';
   }
   
-
   $.ajax({
     url: '/v1/search?pageLength=1000',
     data: {

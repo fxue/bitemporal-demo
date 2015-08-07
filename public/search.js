@@ -1,22 +1,19 @@
 /* global displayAxis, parseData */
-$('#dropdown').change(function()
-  {
-    
-    $('#next').css({'visibility': 'hidden'});
-    $('#prev').css({'visibility': 'hidden'});
-    
-    var dropDownList = document.getElementById('dropdown');
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    ajaxTimesCall(selectedColl, true);
-    addTempColls(selectedColl, true); // Don't need in change function
-    $('#bulletList').empty();
-  }
-);
+$('#dropdown').change(function() {
+  
+  $('#next').css({'visibility': 'hidden'});
+  $('#prev').css({'visibility': 'hidden'});
+  
+  var dropDownList = document.getElementById('dropdown');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  //ajaxTimesCall(selectedColl, true);
+  addTempColls(selectedColl, true); // Don't need in change function
+  //$('#bulletList').empty();
+});
 
 
 //function when search button is clicked
-$('#search').click(function()
-  { 
+$('#search').click(function() { 
     firstDoc = 1;
     lastDoc = 10;
     displayDocs(firstDoc, lastDoc);
@@ -27,17 +24,14 @@ $('#search').click(function()
     addTempColls(selectedColl, true);
     $('#next').css({'visibility': 'visible'});
     $('#prev').css({'visibility': 'visible'});
-  }
-);
+});
 
 //function when the next button is clicked
-$('#next').click(function()
-  {
+$('#next').click(function() {
     firstDoc+=10;
     lastDoc+=10;
     displayDocs(firstDoc, lastDoc);
-  }
-);
+});
 
 //function when the prev button is clicked
 $('#prev').click(function()
@@ -82,8 +76,7 @@ function displayDocs(start, end)
   {
     var docs;
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
-    if( totalDocLen > 10 )
-    {
+    if (totalDocLen > 10) {
       docs = parseData(data, null, 2);
       document.getElementById('search').disabled = false;
       document.getElementById('next').disabled = false;
