@@ -51,30 +51,42 @@ var barChart = function() {
       if (xMin) {
         minStart = xMin;
       }
+
       else {
-        minStart =
-          moment.min(data.map(function(d){
-            return moment(d.content.sysStart);
-          })).toDate();
+        if (data.length) {
+          minStart =
+            moment.min(data.map(function(d){
+              return moment(d.content.sysStart);
+            })).toDate();
+        }
+        else {
+          minStart = moment('2001-01-01T00:00:00').toDate();
+        }
       }
+
       maxStart =
         moment.max(data.map(function(d){
-          return moment(d.content.start);
+          return moment(d.content.sysStart);
         })).add('y', 10);
 
       if (xMax) {
         maxEnd = xMax;
       }
       else {
-        maxEnd =
-          moment.max(data.map(function(d){
-            if (d.content.sysEnd.startsWith('9999')) {
-              return maxStart;
-            }
-            else {
-              return moment(d.content.sysEnd);
-            }
-          })).toDate();
+        if (data.length) {
+          maxEnd =
+            moment.max(data.map(function(d){
+              if (d.content.sysEnd.startsWith('9999')) {
+                return maxStart;
+              }
+              else {
+                return moment(d.content.sysEnd);
+              }
+            })).toDate();
+        }
+        else {
+          maxEnd = moment('2015-01-01T00:00:00').toDate();
+        }
       }
 
       xScale = d3.time.scale()
@@ -97,19 +109,24 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-      // minStart: earliest sysStart
-      // maxEnd: latest non-infinty sysEnd
-      // maxStart: max sysStart time
+      // minStart: earliest valStart
+      // maxEnd: latest non-infinty valEnd
+      // maxStart: max valStart time
       var minStart, maxEnd, maxStart;
 
       if (yMin) {
         minStart = yMin;
       }
       else {
-        minStart =
-          moment.min(data.map(function(d){
-            return moment(d.content.valStart);
-          })).toDate();
+        if (data.length) {
+          minStart =
+            moment.min(data.map(function(d){
+              return moment(d.content.valStart);
+            })).toDate();
+        }
+        else {
+          minStart = moment('2001-01-01T00:00:00').toDate();
+        }
       }
       maxStart =
         moment.max(data.map(function(d){
@@ -120,15 +137,20 @@ var barChart = function() {
         maxEnd = yMax;
       }
       else {
-        maxEnd =
-          moment.max(data.map(function(d){
-            if (d.content.valEnd.startsWith('9999')) {
-              return maxStart;
-            }
-            else {
-              return moment(d.content.valEnd);
-            }
-          })).toDate();
+        if (data.length) {
+          maxEnd =
+            moment.max(data.map(function(d){
+              if (d.content.valEnd.startsWith('9999')) {
+                return maxStart;
+              }
+              else {
+                return moment(d.content.valEnd);
+              }
+            })).toDate();
+        }
+        else {
+          maxEnd = moment('2015-01-01T00:00:00').toDate();
+        }
       }
 
       yScale = d3.time.scale()

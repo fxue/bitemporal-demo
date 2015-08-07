@@ -115,6 +115,8 @@ $('#dropdown').change(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null);
   $('#bulletList, #numDocs').empty();
+  document.getElementById('valDropdown').disabled=false;
+  document.getElementById('sysDropdown').disabled=false;
   document.getElementById('valDropdown').selectedIndex = 0;
   document.getElementById('sysDropdown').selectedIndex = 0;
 });
@@ -168,6 +170,8 @@ function ajaxTimesCall(selectedColl, dataToDisplay) {
 
         if (!timeRanges.sysStart) {
           alert('There are no documents in this collection. Please select another.');
+          document.getElementById('valDropdown').disabled=true;
+          document.getElementById('sysDropdown').disabled=true;
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
