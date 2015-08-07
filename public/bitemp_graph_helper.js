@@ -213,47 +213,63 @@ function save(chart) {
   });
 }
 
-function initNewDoc() {
+function initNewXML() {
   var dialogArea = document.getElementById('newDocContents');
-  dialogArea.value = "{\n\"sysStart\": \"2024-01-01T00:00:00Z\",\n";
-  dialogArea.value += "\"sysEnd\": \"2024-01-01T00:00:00Z\",\n";
-  dialogArea.value += "\"valStart\": \"2024-01-01T00:00:00Z\",\n";
-  dialogArea.value += "\"valEnd\": \"2024-01-01T00:00:00Z\",\n";
+  dialogArea.value = '<record>\n'
+  dialogArea.value += '  <sysStart>2015-01-01T00:00:00Z</sysStart>\n';
+  dialogArea.value += '  <sysEnd>2018-01-01T00:00:00Z</sysEnd>\n';
+  dialogArea.value += '  <valStart>2009-01-01T00:00:00Z</valStart>\n';
+  dialogArea.value += '  <valEnd>2017-01-01T00:00:00Z</valEnd>\n';
+  dialogArea.value += '  <data>Some cool data of yours</data>\n';
+  dialogArea.value += '  <YourProperty>Your Own Data</YourProperty>\n';
+  dialogArea.value += '</record>';
+}
+
+function initNewJSON() {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = "{\n\"sysStart\": \"2015-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"sysEnd\": \"2018-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"valStart\": \"2009-01-01T00:00:00Z\",\n";
+  dialogArea.value += "\"valEnd\": \"2017-01-01T00:00:00Z\",\n";
   dialogArea.value += "\"data\": \"Some cool data\",\n";
   dialogArea.value += "\"Your Own Property\": \"Your Own Data\"\n";
   dialogArea.value += "}";
 }
 
 function saveNewDoc() {
-  console.log('Creating a new document');
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
   
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  
   var newURI = document.getElementById('newUri').value;
-  console.log(newURI);
   
   var formatList = document.getElementById('docFormat');
-  var format = formatList.options[dropDownList.selectedIndex].value;
+  var format = formatList.options[formatList.selectedIndex].value;
+  var docData;
+  console.log(format);
   
+  if (format === 'JSON') {
+    //docData = jQuery.parseJSON(data);
+  } else {
+    data = data.replace(/ /g, '');
+    //docData = jQuery.parseXML(data);
+  }
   
   $.ajax({
-      url: '/v1/documents',
-      uri: newURI,
-      type: 'PUT',
-      success: function(data) {
-        loadData(selectedColl);
-      },
-      error: function(jqXHR, textStatus) {
-        window.alert('Put didn\'t work, error code: ' + jqXHR.status);
-        $("#dialogCreateDoc").dialog('close');
-      },
-      collection: selectedColl,
-      format: format
-    });
-  
+    url: '/v1/documents',
+    uri: newURI,
+    type: 'PUT',
+    data: docData,
+    success: function(data) {
+      loadData(selectedColl);
+    },
+    error: function(jqXHR, textStatus) {
+      window.alert('The creation of your new document did not work.');
+      $("#dialogCreateDoc").dialog('close');
+    },
+    collection: selectedColl,
+    format: format
+  });  
 }
 
 function setupTextArea(uri, isEditing) {
@@ -538,6 +554,18 @@ function addDataToMenu(chart, params) {
   }
 }
 
+function formatCreateDocArea() {
+  console.log('changing document format property');
+  var dropDownList = document.getElementById('docFormat');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  
+  if (selectedColl === 'XML')
+    initNewXML();
+  else {
+    initNewJSON();
+  }
+}
+
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
@@ -602,11 +630,16 @@ var getBarChart = function (params, docProp) {
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
+  
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
+  });
 
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-    initNewDoc();
+    initNewJSON();
     $("#dialogCreateDoc").dialog({
       autoOpen: true,
       modal: true,
