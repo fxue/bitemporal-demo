@@ -32,6 +32,7 @@ $('#sysDropdown').change(function() {
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
+});
 
 //function when search button is clicked
 $('#search').click(function() {
