@@ -597,7 +597,7 @@ var getBarChart = function (params, docProp) {
     document.getElementById('uriEntered').innerHTML = "You are displaying documents in " +uri + " with property " + chart.getDisplayProperty().bold();
   }
   else {
-    document.getElementById('uriEntered').innerHTML = 'There are no docs.';
+   // document.getElementById('uriEntered').innerHTML = 'There are no docs.';
   }
 
   $('#editButton').click(function() {
