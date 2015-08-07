@@ -1,10 +1,75 @@
 //call to get the list of temporal collection
 /* global loadData */
 function addTempColls(id, search) {
-  $.ajax(
-  {
+  $.ajax({
     url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
     success: function(response, textStatus)
+    {
+      if (search) {
+        displayAxis(response); //don't want to call this if not on search page, clears graph otherwise.
+        respTimes = response;
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
+}
+
+//function to display axis
+function displayAxis(times) {
+  var showAlertBox = false;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart),
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  }
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+var getDocColl = function(uri) {
+  $.ajax({
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
+    success: function(data, textStatus) {
+      console.log('got collections: ' + data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem');
+    },
+    async: false,
+  });
+}
+
+function toReturnDate(time) {
+  if (time) {
+    return new Date(time);
+  }
+  else {
+    return null;
+  }
+}
+
+var addTempColls = function(id, search) {
+  var rtnVal = $.ajax(
     {
       if (search) {
         displayAxis(response); //don't want to call this if not on search page, clears graph otherwise.
@@ -645,12 +710,12 @@ var getBarChart = function (params, docProp) {
   }
   if (params.timeRanges === null) {
     initButtons();
-    if (uri) {
-      document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
-    }
-    else {
-      document.getElementById('uriEntered').innerHTML = "There are no documents in this collection.";
-    }
+  }
+  if(params.timeRanges === null && uri) {
+    document.getElementById('uriEntered').innerHTML = "You are displaying documents in " +uri + " with property " + chart.getDisplayProperty().bold();
+  }
+  else {
+    document.getElementById('uriEntered').innerHTML = 'There are no docs.';
   }
 
   $('#editButton').click(function() {

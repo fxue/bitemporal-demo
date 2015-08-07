@@ -51,8 +51,7 @@ var barChart = function() {
       if (xMin) {
         minStart = xMin;
       }
-
-      else {
+      else {  
         if (data.length) {
           minStart =  moment.min(data.map(function(d){
             return moment(d.content.sysStart);

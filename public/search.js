@@ -9,18 +9,6 @@ function generateOps() {
   }
 }
 
-$('#dropdown').change(function() {
-
-  $('#next').css({'visibility': 'hidden'});
-  $('#prev').css({'visibility': 'hidden'});
-
-  var dropDownList = document.getElementById('dropdown');
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  //ajaxTimesCall(selectedColl, true);
-  addTempColls(selectedColl, true); // Don't need in change function
-  //$('#bulletList').empty();
-});
-
 function getSelected(id) {
   var dropDownList = document.getElementById(id);
   return dropDownList.options[dropDownList.selectedIndex].value;
@@ -46,7 +34,6 @@ $('#sysDropdown').change(function() {
   }
 });
 
-//function when the next button is clicked
 $('#next').click(function() {
     firstDoc+=10;
     lastDoc+=10;
