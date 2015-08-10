@@ -92,19 +92,6 @@
         margin-top: 15px;
       }
       
-      #alignBoxes {
-        float: right; 
-        width: 250px;
-        height: 100px
-      }
-      
-      #alignText {
-        float: left;
-        width: 210px;
-        height: 100px;
-        text-align: right;
-      }
-      
       #newDocContents {
          display: block;
          margin-left: auto;
@@ -126,20 +113,7 @@
         margin-right: auto;
         margin-top: 15px;
       }
-
-      #alignBoxes {
-        float: right;
-        width: 250px;
-        height: 100px
-      }
-
-      #alignText {
-        float: left;
-        width: 210px;
-        height: 100px;
-        text-align: right;
-      }
-
+      
       #newDocContents {
          display: block;
          margin-left: auto;
@@ -147,43 +121,17 @@
          resize: none;
       }
 
-      #selectTempColl {
-        width: 160px;
-      }
-
-      #docFormat {
-        width: 70px;
-      }
-
-      #dialogCreateDoc {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 15px;
-      }
-
       #alignBoxes {
         float: right;
         width: 250px;
         height: 100px
       }
-
+      
       #alignText {
         float: left;
         width: 210px;
         height: 100px;
         text-align: right;
-      }
-
-      #newDocContents {
-         display: block;
-         margin-left: auto;
-         margin-right: auto;
-         resize: none;
-      }
-
-      #selectTempColl {
-        width: 160px;
       }
 
       #docFormat {
@@ -256,53 +204,54 @@
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
     <div id='bar-chart-large'></div>
-    <div id='editDocDiv'>
-      <div id='dialogCreateDoc' hidden title='Create a New Document'>
-        <!-- Add contents of creating a document. -->
-        <div id='createDocStuff' hidden='true'>
-          <div id='alignText'>
-            <b> Temporal Collection: </b>
-            <br></br>
-            <p></p>
-            <b> URI: </b>
-            <br></br>
-            <b>Format: </b>
-            <p></p>
+      <div id='editDocDiv'>
+        <div id='dialogCreateDoc' hidden title='Create a New Document'>
+          <!-- Add contents of creating a document. -->
+          <div id='createDocStuff' hidden='true'>
+            <div id='alignText'>
+              <b> Temporal Collection: </b>
+              <br></br>
+              <p></p>
+              <b> URI: </b>
+              <br></br>
+              <b>Format: </b>
+              <p></p>
+            </div>
+            <div id='alignBoxes'>
+              <select id='selectTempColl' class='dialogue'>
+                <option>Choose a temporal collection</option>
+              </select>
+              <br class='break'></br>
+              <input type='text' id='newUri' placeholder='A custom uri here' class='dialogue'>
+              <br class='break'></br>
+              <select id='docFormat' title='Format' class='dialogue'>
+                <option> JSON </option>
+                <option> XML </option>
+              </select>
+            </div>
+           <p align='center'> These will be the documents contents, choose to your liking! </p>
+           <textarea rows='14' cols='45' id='newDocContents'> </textarea>
           </div>
-          <div id='alignBoxes'>
-            <select id='selectTempColl' class='dialogue'>
-              <option>Choose a temporal collection</option>
-            </select>
-            <br class='break'></br>
-            <input type='text' id='newUri' placeholder='A custom uri here' class='dialogue'>
-            <br class='break'></br>
-            <select id='docFormat' title='Format' class='dialogue'>
-              <option> JSON </option>
-              <option> XML </option>
-            </select>
-           </div>
-         <p align='center'> These will be the documents contents, choose to your liking! </p>
-         <textarea rows='14' cols='45' id='newDocContents'> </textarea>
-        </div>
-      </div> <!-- End editDocDiv -->
+        </div> <!-- End editDocDiv -->
+        
 
-      <button id='createDoc'> Create a Document </button>
-      <p id='selectedURI'> Selected URI: <b> null </b></p>
-      <button id='editButton' > Edit </button>
-      <button id='viewButton'> View </button>
-      <button id='deleteButton'> Delete </button>
-      <p id='deleteErrMessage'> </p>
-      <button id='saveButton' hidden='true'> Save </button>
-      <button id='cancelButton' hidden='true'> Cancel </button>
-      <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
-      <div id='sysTimeDiv' class='hideSysTimeBoxes'>
-        <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
+        <button id='createDoc'> Create a Document </button>
+        <p id='selectedURI'> Selected URI: <b> null </b></p>
+        <button id='editButton' > Edit </button>
+        <button id='viewButton'> View </button>
+        <button id='deleteButton'> Delete </button>
+        <p id='deleteErrMessage'> </p>
+        <button id='saveButton' hidden='true'> Save </button>
+        <button id='cancelButton' hidden='true'> Cancel </button>
+        <textarea rows='12' cols='40' id='contents' hidden = 'true'> </textarea>
+        <div id='sysTimeDiv' class='hideSysTimeBoxes'>
+          <p> <b> sysStart: </b> <input type='text' id='sysStartBox' value=''>
+        </div>
+        <div id='deleteButtonsDiv' class='hideSysTimeBoxes'>
+            <button id='deleteOKButton'> OK </button>
+            <button id='deleteCancelButton'> Cancel </button>
+        </div>
       </div>
-      <div id='deleteButtonsDiv' class='hideSysTimeBoxes'>
-          <button id='deleteOKButton'> OK </button>
-          <button id='deleteCancelButton'> Cancel </button>
-      </div>
-    </div>
     <script type="text/javascript">
 
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery

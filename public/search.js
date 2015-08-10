@@ -9,18 +9,6 @@ function generateOps() {
   }
 }
 
-$('#dropdown').change(function() {
-
-  $('#next').css({'visibility': 'hidden'});
-  $('#prev').css({'visibility': 'hidden'});
-
-  var dropDownList = document.getElementById('dropdown');
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  //ajaxTimesCall(selectedColl, true);
-  addTempColls(selectedColl, true); // Don't need in change function
-  //$('#bulletList').empty();
-});
-
 function getSelected(id) {
   var dropDownList = document.getElementById(id);
   return dropDownList.options[dropDownList.selectedIndex].value;
@@ -38,41 +26,6 @@ $('#sysDropdown').change(function() {
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
-});
-
-//function when search button is clicked
-$('#search').click(function() {
-    firstDoc = 1;
-    lastDoc = 10;
-    displayDocs(firstDoc, lastDoc);
-    var dropDownList = document.getElementById('dropdown');
-
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    //ajaxTimesCall(selectedColl, true);
-    addTempColls(selectedColl, true);
-    $('#next').css({'visibility': 'visible'});
-    $('#prev').css({'visibility': 'visible'});
-});
-
-//function when search button is clicked
-$('#search').click(function() {
-    firstDoc = 1;
-    lastDoc = 10;
-    displayDocs(firstDoc, lastDoc);
-    var dropDownList = document.getElementById('dropdown');
-
-    var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-    //ajaxTimesCall(selectedColl, true);
-    addTempColls(selectedColl, true);
-    $('#next').css({'visibility': 'visible'});
-    $('#prev').css({'visibility': 'visible'});
-});
-
-//function when the next button is clicked
-$('#next').click(function() {
-    firstDoc+=10;
-    lastDoc+=10;
-    displayDocs(firstDoc, lastDoc);
 });
 
 $('#searchQueryButton').click(function() {
@@ -281,6 +234,7 @@ function displayDocs(start, end) {
   var bullet = $('#bulletList');
   bullet.empty();
   var selectedColl = getSelected('dropdown');
+  console.log('start: ' + start + 'end: ' + end);
 
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   $.ajax(
@@ -296,86 +250,85 @@ function displayDocs(start, end) {
       console.log('problem');
     }
   });
-}
 
-function onDisplayDocs(data, textStatus, response) {
-  var docs;
-  var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
-  if (totalDocLen > 10) {
-    docs = parseData(data, null, 2);
-    document.getElementById('next').disabled = false;
-    document.getElementById('prev').disabled = false;
-  }
-  else if( totalDocLen > 0 )
-  {
-    docs = parseData(data, null, 2);
-  }
-  // Checks and sets boundary points.
-  // Looks at the index of the first and last document (passed into the function)
-  // and disables or enables the next/previous buttons based on those indexes.
-  document.getElementById('prev').disabled = start <= 1;
+  function onDisplayDocs(data, textStatus, response) {
+    var docs;
+    var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
+    if (totalDocLen > 10) {
+      docs = parseData(data, null, 2);
+      document.getElementById('next').disabled = false;
+      document.getElementById('prev').disabled = false;
+    }
+    else if( totalDocLen > 0 )
+    {
+      docs = parseData(data, null, 2);
+    }
+    // Checks and sets boundary points.
+    // Looks at the index of the first and last document (passed into the function)
+    // and disables or enables the next/previous buttons based on those indexes.
+    document.getElementById('prev').disabled = start <= 1;
 
-  if (end >= totalDocLen) {
-    document.getElementById('next').disabled = true;
-    end = totalDocLen;
-  }
-  else {
-    document.getElementById('next').disabled = false;
-  }
-
-  if (parseInt(totalDocLen) === 0) {
-    document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
-  }
-  else {
-    document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
-  }
-
-  //Loops through the documents to get the URI and the valid and system times
-  //Calls functions to display the information on the search page
-  //Checks if docs has a defined value
-  for (var i=0; docs && i < docs.length ; i++)
-  {
-    var uri = docs[i].uri;
-    var uriLogical;
-    var collArr = docs[i].collections.collections;
-    for (var t = 0; t < collArr.length; t++) {
-      if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
-        uriLogical = collArr[t];
-      }
+    if (end >= totalDocLen) {
+      document.getElementById('next').disabled = true;
+      end = totalDocLen;
+    }
+    else {
+      document.getElementById('next').disabled = false;
     }
 
-    var sysStart = docs[i].content.sysStart;
-    var sysEnd = docs[i].content.sysEnd;
-    var validStart = docs[i].content.valStart;
-    var validEnd = docs[i].content.valEnd;
+    if (parseInt(totalDocLen) === 0) {
+      document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
+    }
+    else {
+      document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
+    }
 
-    bullet
-      .append($('<hr id=\'break\'>')
-      )
-      .append(
-        $('<div>')
-          .addClass('result')
-          .append(
-            $('<em>')
-              .attr('id', 'physicalDoc')
-              .attr('class', 'definition')
-              .attr('title', 'Physical Document: Represent specific visual effects which are intended to be reproduced in a precise manner, and carry no connotation as to their semantic meaning')
-              .text(uri)
-          )
-          .append(
-            $('<a>')
-              .attr('href', '/?collection='+uriLogical)
-              .attr('class', 'definition')
-              .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
-              .text('('+uriLogical+')')
-          )
-          .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: ', false))
-          .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: ', true))
-          .append('<br>')
-      );
+    //Loops through the documents to get the URI and the valid and system times
+    //Calls functions to display the information on the search page
+    //Checks if docs has a defined value
+    for (var i=0; docs && i < docs.length ; i++)
+    {
+      var uri = docs[i].uri;
+      var uriLogical;
+      var collArr = docs[i].collections.collections;
+      for (var t = 0; t < collArr.length; t++) {
+        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
+          uriLogical = collArr[t];
+        }
+      }
+
+      var sysStart = docs[i].content.sysStart;
+      var sysEnd = docs[i].content.sysEnd;
+      var validStart = docs[i].content.valStart;
+      var validEnd = docs[i].content.valEnd;
+
+      bullet
+        .append($('<hr id=\'break\'>')
+        )
+        .append(
+          $('<div>')
+            .addClass('result')
+            .append(
+              $('<em>')
+                .attr('id', 'physicalDoc')
+                .attr('class', 'definition')
+                .attr('title', 'Physical Document: Represent specific visual effects which are intended to be reproduced in a precise manner, and carry no connotation as to their semantic meaning')
+                .text(uri)
+            )
+            .append(
+              $('<a>')
+                .attr('href', '/?collection='+uriLogical)
+                .attr('class', 'definition')
+                .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
+                .text('('+uriLogical+')')
+            )
+            .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: '))
+            .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: '))
+            .append('<br>')
+        );
+    }
   }
 }
-
 /**
 * Appends the dates to the bullet list.
 *
