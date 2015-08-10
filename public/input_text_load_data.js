@@ -148,7 +148,7 @@ function loadData(collection) { //Called from top-level code
       if(arrData.length === 0 && url !== '') {
         window.alert('Attention!\n\nNo data found in document ' + collection);
       }
-      
+
     },
     error: function(jqXHR, textStatus, errorThrown) {
       // something went wrong. Take a look in jqXHR and find the status code

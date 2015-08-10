@@ -621,7 +621,7 @@ var getBarChart = function (params, docProp) {
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
   });
-  
+
   $('#docFormat').change(function() {
     console.log('changing format of new doc');
     formatCreateDocArea();
