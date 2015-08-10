@@ -23,7 +23,6 @@ var getDocColl = function(uri) {
   });
 };
 
-//function to display axis
 function displayAxis(times) {
   var showAlertBox = false;
   if( !times.valStart ) {
@@ -621,6 +620,21 @@ var getBarChart = function (params, docProp) {
 
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
+  });
+  
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
+  });
+
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
+  });
+
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
   });
 
   $('#docFormat').change(function() {
