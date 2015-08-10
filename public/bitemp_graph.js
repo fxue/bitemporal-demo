@@ -584,6 +584,7 @@ var barChart = function() {
         });
       });
 
+<<<<<<< HEAD
       //shifts draggable bars when textboxes change
       function lineShifter(textId, barId) {
       $('#'+textId).change(function(){
@@ -629,6 +630,27 @@ var barChart = function() {
           $('#'+barId).attr('transform', 'translate(0, '+dy+')');
         }
       });
+=======
+      function lineShifter(textId, barId)  {
+        $('#'+textId).change(function(){
+          var input = $('#'+textId).val();
+          var date = new Date(input).toISOString();
+          if (textId.includes('Sys')) {
+            var dx = xScale(moment(date).toDate());
+            if (textId.includes('end')) {
+              dx = -(width - margin.left - dx);
+            }
+            $('#'+barId).attr('transform', 'translate('+dx+', 0)');
+          }
+          else {
+            var dy = yScale(moment(date).toDate());
+            if (textId.includes('start')) {
+              dy = -(height-margin.top-margin.bottom-dy);
+            }
+            $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+          }
+        });
+>>>>>>> 82503a838786c47f7e2ee5fe913824c2b4f1d267
       }
 
       lineShifter('startSysBox', 'dragRight');
