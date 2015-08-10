@@ -274,16 +274,21 @@ var barChart = function() {
         .style('width', '32em')
         .text('');
 
+      //factor out some code appearing multiple times
+      function setDefaultDispPropBehavior(d) {
+        if(!displayProperty || displayProperty === 'data') {
+          displayProperty = 'data';
+          if(!d.content[displayProperty]) {
+            displayProperty = 'valStart';
+          }
+        }
+      }
+
       r = split
         .append('rect')
         .on('mouseover', function(d) {
           var str = '';
-          if(!displayProperty || displayProperty === 'data') {
-            displayProperty = 'data';
-            if(!d.content[displayProperty]) {
-              displayProperty = 'valStart';
-            }
-          }
+          setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
           }
@@ -334,12 +339,7 @@ var barChart = function() {
         .attr('stroke', 'grey')
         .attr('stroke-width', '1')
         .attr('fill', function(d) {
-          if(!displayProperty || displayProperty === 'data') {
-            displayProperty = 'data';
-            if(!d.content[displayProperty]) {
-              displayProperty = 'valStart';
-            }
-          }
+          setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             return color(d.content[displayProperty]);
           }
@@ -417,12 +417,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(!displayProperty || displayProperty === 'data') {
-            displayProperty = 'data';
-            if(!d.content[displayProperty]) {
-              displayProperty = 'valStart';
-            }
-          }
+          setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
           }
