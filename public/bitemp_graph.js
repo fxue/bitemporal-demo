@@ -579,6 +579,7 @@ var barChart = function() {
         });
       });
 
+      //shifts draggable bars when textboxes change
       function lineShifter(textId, barId)  {
       $('#'+textId).change(function(){
         var input = $('#'+textId).val();
@@ -586,14 +587,14 @@ var barChart = function() {
         if (textId.includes('Sys')) {
           var dx = xScale(moment(date).toDate());
           if (textId.includes('start')) {
-            if (date >= new Date(xMax).toISOString() || date <= new Date(xMin).toISOString()) {
+            if (date > new Date(xMax).toISOString() || date < new Date(xMin).toISOString()) {
               alert('This time is out of the axis time range');
               dx = xScale(moment(xMin).toDate())
               $('#'+textId).val(format(xMin));
             }
           }
           if (textId.includes('end')) {
-            if (date >= new Date(xMax).toISOString() || date <= new Date(xMin).toISOString()) {
+            if (date > new Date(xMax).toISOString() || date < new Date(xMin).toISOString()) {
               alert('This time is out of the axis time range');
               $('#'+textId).val(format(xMax));
               dx = xScale(moment(xMax).toDate());
@@ -605,7 +606,7 @@ var barChart = function() {
         else {
           var dy = yScale(moment(date).toDate());
           if (textId.includes('start')) {
-            if (date >= new Date(yMax).toISOString() || date <= new Date(yMin).toISOString()) {
+            if (date > new Date(yMax).toISOString() || date < new Date(yMin).toISOString()) {
               alert('This time is out of the axis time range');
               $('#'+textId).val(format(yMin));
               dy = yScale(moment(yMin).toDate())
@@ -614,7 +615,7 @@ var barChart = function() {
           }
 
           else {
-            if (date >= new Date(yMax).toISOString() || date <= new Date(yMin).toISOString()) {
+            if (date > new Date(yMax).toISOString() || date < new Date(yMin).toISOString()) {
               alert('This time is out of the axis time range');
               $('#'+textId).val(format(yMax));
               dy = yScale(moment(yMax).toDate());
