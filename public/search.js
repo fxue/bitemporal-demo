@@ -25,7 +25,7 @@ $('#valDropdown').change(function() {
 
 $('#sysDropdown').change(function() {
   $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
-  if (getSelected('valDropdown') === 'None') {
+  if (getSelected('Dropdown') === 'None') {
     $('#searchQueryButton').css({'visibility': 'hidden'});
   }
   if (getSelected('sysDropdown') !== 'None') {
