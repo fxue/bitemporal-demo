@@ -35,9 +35,9 @@ $('#sysDropdown').change(function() {
 });
 
 $('#next').click(function() {
-    firstDoc+=10;
-    lastDoc+=10;
-    displayDocs(firstDoc, lastDoc);
+  firstDoc+=10;
+  lastDoc+=10;
+  displayDocs(firstDoc, lastDoc);
 });
 
 $('#searchQueryButton').click(function() {
@@ -99,8 +99,7 @@ function runSearchQuery() {
     return;
   }
 
-  $.ajax(
-    {
+  $.ajax({
       url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
       success: function(response, textStatus)
       {
@@ -111,8 +110,7 @@ function runSearchQuery() {
       {
         console.log('problem');
       }
-    }
-  );
+  });
 }
 
 function displayQuery(response) {
