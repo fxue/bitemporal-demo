@@ -14,14 +14,20 @@ function getSelected(id) {
 }
 
 $('#valDropdown').change(function() {
-  $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
+  $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
+  if (getSelected('sysDropdown') === 'None') {
+    $('#searchQueryButton').css({'visibility': 'hidden'});
+  }
   if (getSelected('valDropdown') !== 'None') {
     $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
   }
 });
 
 $('#sysDropdown').change(function() {
-  $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
+  $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
+  if (getSelected('valDropdown') === 'None') {
+    $('#searchQueryButton').css({'visibility': 'hidden'});
+  }
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
