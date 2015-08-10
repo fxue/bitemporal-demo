@@ -205,7 +205,6 @@ $('#pick-doc').click(function () {
   else {
     document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
     window.history.pushState('', 'Title', '/?collection='+uriCollection);
-    console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
 });
