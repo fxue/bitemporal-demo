@@ -87,6 +87,7 @@ var barChart = function() {
         else {
           maxEnd = moment('2015-01-01T00:00:00').toDate();
         }
+        xMax = maxEnd;
       }
 
       xScale = d3.time.scale()
@@ -151,6 +152,7 @@ var barChart = function() {
         else {
           maxEnd = moment('2015-01-01T00:00:00').toDate();
         }
+        yMax = maxEnd;
       }
 
       yScale = d3.time.scale()
@@ -385,7 +387,7 @@ var barChart = function() {
           }
           if (d.content.sysEnd.indexOf('9999') === 0) {
             barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
-            return barx1;
+            return (barx1+barx2)/2;
           }
           else {
             barx2 = xScale(moment(d.content.sysEnd).toDate());
@@ -577,13 +579,26 @@ var barChart = function() {
         });
       });
 
+      //shifts draggable bars when textboxes change
       function lineShifter(textId, barId)  {
       $('#'+textId).change(function(){
         var input = $('#'+textId).val();
         var date = new Date(input).toISOString();
         if (textId.includes('Sys')) {
           var dx = xScale(moment(date).toDate());
+          if (textId.includes('start')) {
+            if (date > new Date(xMax).toISOString() || date < new Date(xMin).toISOString()) {
+              alert('This time is out of the axis time range');
+              dx = xScale(moment(xMin).toDate())
+              $('#'+textId).val(format(xMin));
+            }
+          }
           if (textId.includes('end')) {
+            if (date > new Date(xMax).toISOString() || date < new Date(xMin).toISOString()) {
+              alert('This time is out of the axis time range');
+              $('#'+textId).val(format(xMax));
+              dx = xScale(moment(xMax).toDate());
+            }
             dx = -(width - margin.left - dx);
           }
           $('#'+barId).attr('transform', 'translate('+dx+', 0)');
@@ -591,9 +606,22 @@ var barChart = function() {
         else {
           var dy = yScale(moment(date).toDate());
           if (textId.includes('start')) {
+            if (date > new Date(yMax).toISOString() || date < new Date(yMin).toISOString()) {
+              alert('This time is out of the axis time range');
+              $('#'+textId).val(format(yMin));
+              dy = yScale(moment(yMin).toDate())
+            }
             dy = -(height-margin.top-margin.bottom-dy);
           }
-          $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+
+          else {
+            if (date > new Date(yMax).toISOString() || date < new Date(yMin).toISOString()) {
+              alert('This time is out of the axis time range');
+              $('#'+textId).val(format(yMax));
+              dy = yScale(moment(yMax).toDate());
+            }
+          }
+          $('#'+barId).attr('transform', 'translate(0, '+dy+')');
         }
       });
       }

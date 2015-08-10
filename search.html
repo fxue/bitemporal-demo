@@ -41,6 +41,7 @@
         position: absolute;
         left: 218px;
         top: 148px;
+        z-index: 2px;
       }
 
       #endValBox {
@@ -54,6 +55,10 @@
         position: absolute;
         left: 635px;
         top: 140px;
+      }
+
+      #searchPage {
+        z-index: -1px;
       }
 
       #vertBar2 {
@@ -119,6 +124,7 @@
         font-size: 18px;
         line-height: 18px;
         font-weight: bold;
+        pointer-events: none;
       }
 
       .axis-label {
@@ -401,22 +407,10 @@
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <div class="hide sysTimesDisplay">
-      <p id="vertBar1">Start Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
-      <p id="vertBar2">End Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
-    </div>
-    <div class="hide valTimesDisplay">
-      <p id="horzBar1">Start Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
-      <p id="horzBar2">End Time:</p>
-      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
-    </div>
     <button id="searchQueryButton" class="hide">Run Query</button>
     <button id="resetButton">Reset Graph</button>
     <p id='errorMessage'>(There are no documents in this selected time range)</p>
-    <div id="searchPage">
+    <div id='searchPage'>
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps." class="definition">Operators</p>
     <div id="valTimes">
       <p><b>Valid Time</b></p>
@@ -450,6 +444,19 @@
     <div id="ctsQuery">
       <p class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
       <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
+    </div>
+    </div>
+    <div class="hide sysTimesDisplay">
+      <p id="vertBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
+      <p id="vertBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
+    </div>
+    <div class="hide valTimesDisplay">
+      <p id="horzBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
+      <p id="horzBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
     </div>
 
   </body>
