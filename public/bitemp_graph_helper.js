@@ -240,7 +240,6 @@ function saveNewDoc() {
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
   var docData;
-  console.log(format);
 
   if (format === 'JSON') {
     //docData = jQuery.parseJSON(data);
@@ -650,7 +649,7 @@ var getBarChart = function (params, docProp) {
       autoOpen: true,
       modal: true,
       appendTo: false,
-      width: 500,
+      width: 550,
       height: 500,
       buttons: {
         Save: function() {
