@@ -51,19 +51,6 @@ function displayAxis(times) {
   }
 }
 
-var getDocColl = function(uri) {
-  $.ajax({
-    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
-    success: function(data, textStatus) {
-      console.log('got collections: ' + data);
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.log('problem');
-    },
-    async: false,
-  });
-};
-
 var addTempColls = function(id, search) {
   $.ajax(
   {
@@ -498,31 +485,6 @@ function findProperties(obj, path, properties) {
   }
 }
 
-/*
- * @param obj
- * @param path
- * @param properties -- modified as new properties are found
- */
-function findProperties(obj, path, properties) {
-  var newPath;
-  if (typeof obj === 'object') {
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        newPath = path ? path + '.' + prop : prop;
-        if (Array.isArray(obj[prop])) {
-          // for (var item in obj[prop]) {
-          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          // }
-        } else if (typeof obj[prop] === 'object') {
-          findProperties(obj[prop], newPath, properties);
-        } else {
-          properties[newPath] = true;
-        }
-      }
-    }
-  }
-}
-
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
 
@@ -619,21 +581,6 @@ var getBarChart = function (params, docProp) {
 
   $('#change-prop').click(function() {
     changeTextInGraph(chart, params);
-  });
-
-  $('#docFormat').change(function() {
-    console.log('changing format of new doc');
-    formatCreateDocArea();
-  });
-
-  $('#docFormat').change(function() {
-    console.log('changing format of new doc');
-    formatCreateDocArea();
-  });
-
-  $('#docFormat').change(function() {
-    console.log('changing format of new doc');
-    formatCreateDocArea();
   });
 
   $('#docFormat').change(function() {
