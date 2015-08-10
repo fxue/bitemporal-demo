@@ -84,13 +84,13 @@ function fillText(data, isEditing) {
     strToAdd = '';
     if (data.hasOwnProperty(property)) {
       if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
-        data[property] = null;
+        data[property] = 'null';
       }
       if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
         strToAdd += ',';
       }
-      if (typeof data[property] === 'object' && !(Array.isArray(data[property]))) {
-        strToAdd += '\n\"' + property + '\":';
+      strToAdd += '\n\"' + property + '\": ';
+      if (typeof data[property] === 'object') {
         var propsInGraph = {};
         findProperties(data[property], null, propsInGraph);
         for(prop in propsInGraph) {
@@ -101,15 +101,13 @@ function fillText(data, isEditing) {
           else {
             var subStr = path(data, property + '.' + prop);
           }
+          if(typeof subStr === 'object') {
+            subStr = JSON.stringify(subStr);
+          }
           strToAdd += subStr;
         }
       }
-      else if (data[property] instanceof Array) {
-        strToAdd += '\n\"' + property + '\": [';
-        strToAdd +=  data[property] + ']';
-      }
-      else {
-        strToAdd += '\n\"' + property + '\": ';
+      else { // if the property has a null value then don't put quotes around it.
         strToAdd += data[property];
       }
       textArea.value += strToAdd;
