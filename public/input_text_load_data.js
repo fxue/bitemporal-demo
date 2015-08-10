@@ -137,8 +137,10 @@ function loadData(collection) { //Called from top-level code
         containerId: 'bar-chart-large'
       }, null);
       if(arrData.length === 0 && url !== '') {
-        document.getElementById("textBoxForSelectingURI").value = "";
-        window.alert('Attention!\n\nNo data found in document ' + collection);
+        document.getElementById("textBoxForSelectingURI").value = '';
+        if(url !== '/addr.json') {
+          window.alert('Attention!\n\nNo data found in document ' + collection);
+        }
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
