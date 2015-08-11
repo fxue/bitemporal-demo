@@ -61,7 +61,7 @@ function runSearchQuery() {
  
   var valAxis = '';
   var sysAxis = '';
-  
+
   var valStart = '';
   var valEnd = '';
  
@@ -118,7 +118,7 @@ function displayQuery(response) {
  
 function formatData(response) {
   var result = [];
-  if(response.values) { 
+  if(response.values) {
     for(var i = 0; i < response.values.length; i++) {
       result.push({content: response.values[i]});
     }
@@ -178,7 +178,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         getBarChart({
           data: data,
           width: 800,
-          height: 500,
+          height: 600,
           xAxisLabel: 'System',
           yAxisLabel: 'Valid',
           timeRanges: timeRanges,
@@ -281,7 +281,6 @@ function displayDocs(start, end) {
     else if( totalDocLen > 0 )
     {
       docs = parseData(data, null, 2);
-      console.log(docs);
     }
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)

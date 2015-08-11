@@ -108,6 +108,7 @@ var barChart = function() {
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0)
         .orient('end');
+ 
     }
  
     function setupYAxis() {
@@ -178,7 +179,7 @@ var barChart = function() {
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
-        .attr('height', height+100)
+        .attr('height', height)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
  
@@ -394,7 +395,7 @@ var barChart = function() {
           var w=bSysEnd-bSysStart;
           return w;
         });
-        
+
       split.append('text')
         .attr('id', 'box')
         .style('fill', 'DarkMagenta')
