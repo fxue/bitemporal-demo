@@ -1,4 +1,4 @@
-/* global displayAxis, parseData */
+/* global parseData */
 var firstDoc, lastDoc;
 
 function generateOps() {
