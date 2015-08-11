@@ -128,29 +128,89 @@ function clearTextArea() {
 function fillText(data, isEditing, id) {
   clearTextArea();
   var textArea = document.getElementById(id);
-  textArea.value += '{';
-  var strToAdd;
-  for (var property in data) {
-    strToAdd = '';
-    if (data.hasOwnProperty(property)) {
-      if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
-        data[property] = null;
+
+  if(data.contentType.indexOf('xml') > -1) {//view xml doc
+    var xmlStr = data.childNodes[0].outerHTML;
+    //https://gist.github.com/sente/1083506
+    //to format pretty printing of xml
+    function formatXml(xml) {
+      var formatted = '';
+      var reg = /(>)(<)(\/*)/g;
+      xml = xml.replace(reg, '$1\r\n$2$3');
+      var pad = 0;
+      jQuery.each(xml.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match( /.+<\/\w[^>]*>$/ )) {
+          indent = 0;
+        } else if (node.match( /^<\/\w/ )) {
+          if (pad != 0) {
+            pad -= 1;
+          }
+        } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+          indent = 1;
+        } else {
+          indent = 0;
+        }
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+          padding += '  ';
+        }
+        formatted += padding + node + '\r\n';
+        pad += indent;
+      });
+
+      return formatted;
+    }
+    textArea.value = formatXml(xmlStr);
+  }
+  
+  else {//view json doc
+    textArea.value += '{';
+    var strToAdd;
+    for (var property in data) {
+      strToAdd = '';
+      if (data.hasOwnProperty(property)) {
+        if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
+          data[property] = 'null';
+        }
+        if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
+          strToAdd += ',';
+        }
+        strToAdd += '\n\"' + property + '\": ';
+        if (typeof data[property] === 'object') {
+          var propsInGraph = {};
+          findProperties(data[property], null, propsInGraph);
+          for(prop in propsInGraph) {
+            strToAdd += '\n   \"' + prop + '\": ';
+            if (prop.indexOf('.') === -1) {
+              var subStr = data[property][prop];
+            }
+            else {
+              var subStr = path(data, property + '.' + prop);
+            }
+            if(typeof subStr === 'object') {
+              subStr = JSON.stringify(subStr);
+            }
+            strToAdd += subStr;
+          }
+        }
+        else { // if the property has a null value then don't put quotes around it.
+          strToAdd += data[property];
+        }
+        textArea.value += strToAdd;
       }
-      if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
-        strToAdd += ',';
-      }
-      strToAdd += '\n\"' + property + '\": ';
-      if (data[property]) {
-        strToAdd += '\"'+ data[property] + '\"';
-      }
-      else { // if the property has a null value then don't put quotes around it.
-        strToAdd += data[property];
-      }
-      textArea.value += strToAdd;
+    }
+    textArea.value += '\n}';
+    textArea.readOnly = !isEditing;
+
+    function path(object, fullPath) {
+      var selection = object;
+      fullPath.split('.').forEach(function(path) { 
+        selection = selection[path]; 
+      });
+      return selection;
     }
   }
-  textArea.value += '\n}';
-  textArea.readOnly = !isEditing;
 }
 
 function cancel(chart) {
@@ -465,6 +525,12 @@ function changeTextInGraph(chart, params) {
   }
 }
 
+
+/*
+ * @param obj
+ * @param path 
+ * @param properties -- modified as new properties are found
+ */
 function findProperties(obj, path, properties) {
   var newPath;
   if (typeof obj === 'object') {
@@ -472,9 +538,9 @@ function findProperties(obj, path, properties) {
       if (obj.hasOwnProperty(prop)) {
         newPath = path ? path + '.' + prop : prop;
         if (Array.isArray(obj[prop])) {
-          for (var item in obj[prop]) {
-            findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          }
+          // for (var item in obj[prop]) {
+          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
+          // }
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
         } else {
@@ -546,12 +612,6 @@ var getBarChart = function (params, docProp) {
   }
   if (params.timeRanges === null) {
     initButtons();
-  }
-  if (params.timeRanges === null && uri) {
-    document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' +uri + ' with property ' + chart.getDisplayProperty().bold();
-  }
-  else {
-   // document.getElementById('uriEntered').innerHTML = 'There are no docs.';
   }
 
   $('#editButton').click(function() {

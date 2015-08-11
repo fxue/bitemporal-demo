@@ -1,4 +1,4 @@
-/*global d3, d3plus, moment */
+/*global d3, moment */
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
@@ -66,7 +66,7 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.sysStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
       if (xMax) {
         maxEnd = xMax;
@@ -131,8 +131,9 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.valStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
+      
       if (yMax) {
         maxEnd = yMax;
       }
@@ -253,8 +254,7 @@ var barChart = function() {
 
     function addBarChartData() {
 
-      var split = g.selectAll('.split')
-      var arr = [];
+      var split = g.selectAll('.split');
 
       split = g.selectAll('.split')
         .data(data)
@@ -274,20 +274,31 @@ var barChart = function() {
         .style('width', '32em')
         .text('');
 
+      //factor out some code appearing multiple times
+      function setDefaultDispPropBehavior(d) {
+        if(!displayProperty || displayProperty === 'data') {
+          displayProperty = 'data';
+          if(!d.content[displayProperty]) {
+            displayProperty = 'valStart';
+          }
+        }
+      }
+
       r = split
         .append('rect')
         .on('mouseover', function(d) {
           var str = '';
-          if(!displayProperty) {
-            displayProperty = 'data';
-          }
+          setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
           }
           else {
             str = path(d, 'content.' + displayProperty);
           }
-          if(str && str.length > 15) {  //if you want all mouse overs to work, comment out
+          if(str && str.length > 15) {
+            if(Array.isArray(str)) {
+              str = '[' + str + ']';
+            }
             propTooltip.text(str);
           }
           return propTooltip.style('visibility', 'visible');
@@ -327,18 +338,14 @@ var barChart = function() {
         })
         .attr('stroke', 'grey')
         .attr('stroke-width', '1')
-        .attr('fill',function(d) {
-          if(!displayProperty) {
-            displayProperty = 'data';
+        .attr('fill', function(d) {
+          setDefaultDispPropBehavior(d);
+          if (displayProperty.indexOf('.') === -1) {
+            return color(d.content[displayProperty]);
           }
           else {
-            if (displayProperty.indexOf('.') === -1) {
-              return color(d.content[displayProperty]);
-            }
-            else {
-              var str = path(d, 'content.' + displayProperty);
-              return color(str);
-            }
+            var str = path(d, 'content.' + displayProperty);
+            return color(str);
           }
         })
         .attr('x', function(d) {
@@ -410,9 +417,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(!displayProperty) {
-            displayProperty = 'data';
-          }
+          setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
           }
@@ -432,8 +437,8 @@ var barChart = function() {
             }
             return str;
           }
-        })
-      };
+        });
+    }
 
     function path(object, fullPath) {
       var selection = object;
@@ -579,7 +584,7 @@ var barChart = function() {
       });
 
       //shifts draggable bars when textboxes change
-      function lineShifter(textId, barId)  {
+      function lineShifter(textId, barId) {
       $('#'+textId).change(function(){
         var input = $('#'+textId).val();
         var date = new Date(input).toISOString();
@@ -645,22 +650,53 @@ var barChart = function() {
       //top horizontal line
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
-  }
+    }
 
-  setDimensions();
-  setupXAxis();
-  setupYAxis();
-  setupBarChartLayout();
-  addRectangle();
-  addXAxisLabel();
-  addYAxisLabel();
-  addBarChartData();
-  addBackground();
-  if (draggableBars) {
-    addDragBars();
-  }
+    function addDisplayDocAndPropData() {
+      if(document.getElementById('uriEntered')) {
+        $.urlParam = function(name) {
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results === null) {
+            return null;
+          }
+          else {
+            return results[1] || 0;
+          }
+        };
 
-};
+        var uriParameter = $.urlParam('collection');
+        if(!uriParameter) {
+          uriParameter = 'addr.json';
+        }
+        if(!displayProperty) {
+          displayProperty = 'data';
+        }
+        
+        if(data.length > 0) {
+          document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriParameter.bold() + ' with property ' + displayProperty.bold();
+        }
+        else {
+          document.getElementById('uriEntered').innerHTML = 'No data found in document.';
+        }
+      }
+    }
+
+    setDimensions();
+    setupXAxis();
+    setupYAxis();
+    setupBarChartLayout();
+    addRectangle();
+    addXAxisLabel();
+    addYAxisLabel();
+    addBarChartData();
+    addBackground();
+    if (draggableBars) {
+      addDragBars();
+    }
+    addDisplayDocAndPropData();
+
+  };
+
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
@@ -796,6 +832,9 @@ var barChart = function() {
   };
 
   chart.getLogicalURI = function() {
+    if(!logicURI) {
+      return 'addr.json';
+    }
     return logicURI;
   };
 

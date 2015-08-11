@@ -143,7 +143,7 @@
       <p>Don"t forget to include the "dot extension" ie .json.</p>
 
       <b>Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
-      <input type="text" name="collection" value="">
+      <input type="text" name="collection" id="textBoxForSelectingURI" value="">
       <input type="button" id="pick-doc" value="Submit">
 
       <p>Enter a document property to display in the graph or choose one from the drop down menu.</p>
@@ -237,13 +237,11 @@
       };
 
       var uri = $.urlParam("collection");
-      if (uri !== null) {
-        loadData(uri);
-        document.getElementById("uriEntered").innerHTML = "You are displaying documents in " + uri.bold();
+      if (uri === null) {
+        uri = "addr.json";
       }
-      else {
-        loadData("addr.json");
-      }
+      loadData(uri);
+
     </script>
   </body>
 </html>
