@@ -128,50 +128,86 @@ function clearTextArea() {
 function fillText(data, isEditing, id) {
   clearTextArea();
   var textArea = document.getElementById(id);
-  textArea.value += '{';
-  var strToAdd;
-  for (var property in data) {
-    strToAdd = '';
-    if (data.hasOwnProperty(property)) {
-      if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
-        data[property] = 'null';
-      }
-      if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
-        strToAdd += ',';
-      }
-      strToAdd += '\n\"' + property + '\": ';
-      if (typeof data[property] === 'object') {
-        var propsInGraph = {};
-        findProperties(data[property], null, propsInGraph);
-        for(prop in propsInGraph) {
-          strToAdd += '\n   \"' + prop + '\": ';
-          if (prop.indexOf('.') === -1) {
-            var subStr = data[property][prop];
+  if(data.contentType.indexOf('xml') > -1) {//view xml doc
+    var xmlStr = data.childNodes[0].outerHTML;
+    //https://gist.github.com/sente/1083506
+    //to format pretty printing of xml
+    function formatXml(xml) {
+      var formatted = '';
+      var reg = /(>)(<)(\/*)/g;
+      xml = xml.replace(reg, '$1\r\n$2$3');
+      var pad = 0;
+      jQuery.each(xml.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match( /.+<\/\w[^>]*>$/ )) {
+          indent = 0;
+        } else if (node.match( /^<\/\w/ )) {
+          if (pad != 0) {
+            pad -= 1;
           }
-          else {
-            var subStr = path(data, property + '.' + prop);
-          }
-          if(typeof subStr === 'object') {
-            subStr = JSON.stringify(subStr);
-          }
-          strToAdd += subStr;
+        } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+          indent = 1;
+        } else {
+          indent = 0;
         }
-      }
-      else { // if the property has a null value then don't put quotes around it.
-        strToAdd += data[property];
-      }
-      textArea.value += strToAdd;
-    }
-  }
-  textArea.value += '\n}';
-  textArea.readOnly = !isEditing;
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+          padding += '  ';
+        }
+        formatted += padding + node + '\r\n';
+        pad += indent;
+      });
 
-  function path(object, fullPath) {
-    var selection = object;
-    fullPath.split('.').forEach(function(path) { 
-      selection = selection[path]; 
-    });
-    return selection;
+      return formatted;
+    }
+    textArea.value = formatXml(xmlStr);
+  }
+  else {//view json doc
+    textArea.value += '{';
+    var strToAdd;
+    for (var property in data) {
+      strToAdd = '';
+      if (data.hasOwnProperty(property)) {
+        if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
+          data[property] = 'null';
+        }
+        if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
+          strToAdd += ',';
+        }
+        strToAdd += '\n\"' + property + '\": ';
+        if (typeof data[property] === 'object') {
+          var propsInGraph = {};
+          findProperties(data[property], null, propsInGraph);
+          for(prop in propsInGraph) {
+            strToAdd += '\n   \"' + prop + '\": ';
+            if (prop.indexOf('.') === -1) {
+              var subStr = data[property][prop];
+            }
+            else {
+              var subStr = path(data, property + '.' + prop);
+            }
+            if(typeof subStr === 'object') {
+              subStr = JSON.stringify(subStr);
+            }
+            strToAdd += subStr;
+          }
+        }
+        else { // if the property has a null value then don't put quotes around it.
+          strToAdd += data[property];
+        }
+        textArea.value += strToAdd;
+      }
+    }
+    textArea.value += '\n}';
+    textArea.readOnly = !isEditing;
+
+    function path(object, fullPath) {
+      var selection = object;
+      fullPath.split('.').forEach(function(path) { 
+        selection = selection[path]; 
+      });
+      return selection;
+    }
   }
 }
 
