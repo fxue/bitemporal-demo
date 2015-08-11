@@ -132,7 +132,6 @@ var barChart = function() {
           return moment(d.content.valStart);
         })).add(10, 'y');
 
-
       if (yMax) {
         maxEnd = yMax;
       }

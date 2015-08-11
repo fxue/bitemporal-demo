@@ -1,5 +1,5 @@
 //call to get the list of temporal collection
-/* global loadData, d3, barChart */
+/* global loadData, d3, barChart, generateOps, ajaxTimesCall */
 
 function toReturnDate(time) {
   if (time) {
@@ -23,34 +23,6 @@ var getDocColl = function(uri) {
   });
 };
 
-function displayAxis(times) {
-  var showAlertBox = false;
-  if( !times.valStart ) {
-    showAlertBox = true;
-  }
-
-  var timeRanges = {
-    valStart: toReturnDate(times.valStart),
-    valEnd: toReturnDate(times.valEnd),
-    sysStart: toReturnDate(times.sysStart),
-    sysEnd: toReturnDate(times.sysEnd)
-  };
-
-  getBarChart({
-    data: [],
-    width: 800,
-    height: 600,
-    xAxisLabel: 'System',
-    yAxisLabel: 'Valid',
-    timeRanges: timeRanges,
-    containerId: 'bar-chart-large'
-  }, null);
-
-  if (showAlertBox) {
-    window.alert('There are no documents in this collection. Please select another.');
-  }
-}
-
 var addTempColls = function(id, search) {
   $.ajax(
   {
@@ -71,20 +43,18 @@ var addTempColls = function(id, search) {
       {
         dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
       }
-      //sorts the array (alphabetically) containing the temporal collections
+      //sorts alphabetically
       dropArray.sort();
 
-      //this for loop appends the collection names to the drop down list
-      for (var k = 0; k < dropArray.length; k++)
-      {
+      //Append the collection names to the drop down list
+      for (var k = 0; k < dropArray.length; k++) {
         addToDrop.append($('<option>').text(dropArray[k])) ;
         if( k === 0 && search) {
           ajaxTimesCall(dropArray[k], null);
         }
       }
     },
-    error: function(jqXHR, textStatus, errorThrown)
-    {
+    error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem');
     }
   });
@@ -127,6 +97,7 @@ function clearTextArea() {
 
 function fillText(data, isEditing, id) {
   clearTextArea();
+  
   var textArea = document.getElementById(id);
 
   if(data.contentType) {
@@ -407,7 +378,6 @@ function findCommonColl(collArr, tempCollArr) {
 
 var deleteDoc = function (chart) {
   var uri = chart.getLogicalURI();
-  var ajax = true;
   if (!uri) {
     return;
   }
@@ -465,7 +435,11 @@ function deleteSuccess(response, tempColl, chart) {
       url: url,
       type: 'DELETE',
       success: function(data) {
+        console.log('uri: ' + uri);
         loadData(uri);
+        $('#editButton').show();
+        $('#viewButton').show();
+        $('#deleteButton').show();
       },
       error: function(jqXHR, textStatus) {
         cancel(chart);
