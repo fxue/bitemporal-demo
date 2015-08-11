@@ -17,20 +17,21 @@ function getSelected(id) {
 $('#valDropdown').change(function() {
   $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
   if (getSelected('sysDropdown') === 'None') {
-    $('#searchQueryButton').css({'visibility': 'hidden'});
+    $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
   }
   if (getSelected('valDropdown') !== 'None') {
-    $('#searchQueryButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
+    $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
   }
 });
 
 $('#sysDropdown').change(function() {
   $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
-  if (getSelected('Dropdown') === 'None') {
-    $('#searchQueryButton').css({'visibility': 'hidden'});
+  if (getSelected('valDropdown') === 'None') {
+    $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
   }
   if (getSelected('sysDropdown') !== 'None') {
-    $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
+    console.log('hello');
+    $('#searchQueryButton, #resetBarsButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
 });
 
@@ -44,9 +45,16 @@ $('#searchQueryButton').click(function() {
   runSearchQuery();
 });
 
+$('#resetBarsButton').click(function() {
+  var selectedColl = getSelected('dropdown');
+  ajaxTimesCall(selectedColl, null, true);
+  // var selectedOp = getSelected('sysDropdown');
+  // $('#sysDropdown').val('ALN_CONTAINS').change();
+});
+
 $('#resetButton').click(function() {
   var selectedColl = getSelected('dropdown');
-  ajaxTimesCall(selectedColl, null);
+  ajaxTimesCall(selectedColl, null, false);
   document.getElementById('valDropdown').disabled = false;
   document.getElementById('sysDropdown').disabled = false;
   document.getElementById('dropdown').disabled = false;
@@ -95,7 +103,7 @@ function runSearchQuery() {
   }
 
   if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
-    ajaxTimesCall(selectedColl, null);
+    ajaxTimesCall(selectedColl, null, false);
     return;
   }
 
@@ -104,7 +112,7 @@ function runSearchQuery() {
       success: function(response, textStatus)
       {
         displayQuery(response);
-        ajaxTimesCall(response.collection, response);
+        ajaxTimesCall(response.collection, response, false);
       },
       error: function(jqXHR, textStatus, errorThrown)
       {
@@ -130,7 +138,7 @@ function formatData(response) {
 $('#dropdown').change(function() {
   $('#next, #prev, .hide, #startValBox, #endValBox, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
   var selectedColl = getSelected('dropdown');
-  ajaxTimesCall(selectedColl, null);
+  ajaxTimesCall(selectedColl, null, false);
   $('#bulletList, #numDocs').empty();
   document.getElementById('valDropdown').disabled=false;
   document.getElementById('sysDropdown').disabled=false;
@@ -139,7 +147,7 @@ $('#dropdown').change(function() {
 });
 
 //function to make ajax call to get min and max times
-function ajaxTimesCall(selectedColl, dataToDisplay) {
+function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
   $.ajax(
     {
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
@@ -169,7 +177,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay) {
           document.getElementById('horzBar1').innerHTML = 'Start Time:'+ '&nbsp;&nbsp;' + $('#startValBox').val().bold();
           document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endValBox').val().bold();
           document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
-          $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton').css({'visibility': 'hidden'});
+          $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
           $('#resetButton').css({'visibility': 'visible'});
           document.getElementById('dropdown').disabled=true;
           document.getElementById('valDropdown').disabled=true;
@@ -187,6 +195,17 @@ function ajaxTimesCall(selectedColl, dataToDisplay) {
           containerId: 'bar-chart-large'
         }, null);
 
+        if (visibleBars) {
+          console.log('hi');
+          if (getSelected('sysDropdown') !== 'None') {
+            $('#dragLeft').css({'visibility': 'visible'});
+            $('#dragRight').css({'visibility': 'visible'});
+          }
+          if (getSelected('valDropdown') !== 'None') {
+            $('#dragUp').css({'visibility': 'visible'});
+            $('#dragDown').css({'visibility': 'visible'});
+          }
+        }
 
         if (!timeRanges.sysStart) {
           alert('There are no documents in this collection. Please select another.');
