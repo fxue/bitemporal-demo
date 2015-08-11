@@ -596,7 +596,6 @@ var barChart = function() {
         });
       });
 
-
       function lineShifter(textId, barId)  {
 <<<<<<< HEAD
         $('#'+textId).change(function(){
