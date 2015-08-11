@@ -1,3 +1,4 @@
+/* global displayAxis, parseData */
 var firstDoc, lastDoc;
 
 function generateOps() {
@@ -31,6 +32,12 @@ $('#sysDropdown').change(function() {
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
+});
+
+$('#next').click(function() {
+  firstDoc+=10;
+  lastDoc+=10;
+  displayDocs(firstDoc, lastDoc);
 });
 
 $('#searchQueryButton').click(function() {
@@ -92,8 +99,7 @@ function runSearchQuery() {
     return;
   }
 
-  $.ajax(
-    {
+  $.ajax({
       url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
       success: function(response, textStatus)
       {
@@ -104,8 +110,7 @@ function runSearchQuery() {
       {
         console.log('problem');
       }
-    }
-  );
+  });
 }
 
 function displayQuery(response) {
@@ -116,9 +121,7 @@ function formatData(response) {
   var result = [];
   if(response.values) {
     for(var i = 0; i < response.values.length; i++) {
-      result.push({
-        content: response.values[i]
-      });
+      result.push({content: response.values[i]});
     }
   }
   return result;
@@ -242,6 +245,7 @@ function displayDocs(start, end) {
   var bullet = $('#bulletList');
   bullet.empty();
   var selectedColl = getSelected('dropdown');
+  console.log('start: ' + start + 'end: ' + end);
 
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   $.ajax(
@@ -258,11 +262,10 @@ function displayDocs(start, end) {
     }
   });
 
-  function onDisplayDocs(data, textStatus, response ) {
+  function onDisplayDocs(data, textStatus, response) {
     var docs;
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
-    if( totalDocLen > 10 )
-    {
+    if (totalDocLen > 10) {
       docs = parseData(data, null, 2);
       document.getElementById('next').disabled = false;
       document.getElementById('prev').disabled = false;
@@ -337,7 +340,6 @@ function displayDocs(start, end) {
     }
   }
 }
-
 /**
 * Appends the dates to the bullet list.
 *

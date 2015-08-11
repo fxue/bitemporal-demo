@@ -67,10 +67,8 @@
       .svg-chart .g { fill: #4682B4; }
 
       .tooltip-txt {
-      /*  margin: 0;*/
         font-family: Helvetica;
         font-size: 18px;
-      /*  line-height: 18px;*/
         font-weight: bold;
         pointer-events: none;
       }
@@ -83,6 +81,33 @@
       .axis-label {
         font-size: 20px;
         stroke-width: 1;
+      }
+
+      #alignBoxes {
+        float: right;
+        width: 270px;
+        height: 100px
+      }
+
+      #alignText {
+        float: left;
+        width: 230px;
+        height: 100px;
+        text-align: right;
+      }
+
+      #newDocContents {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        resize: none;
+      }
+
+      #dialogCreateDoc {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
       }
 
       .tick {
@@ -111,8 +136,8 @@
   </head>
 
   <body>
-    <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
-    <a href="search" id="searchURL">Search</a>
+    <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different time lines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
+    <a href="search" id="searchURL">Click to go to search page</a>
     <div id="instructions">
       <p>Change the logical document display to the specified URI of a logical document.</p>
       <p>Don"t forget to include the "dot extension" ie .json.</p>
@@ -128,22 +153,17 @@
 
       <input type="button" id="change-prop" value="Submit">
       <br><br>
-
       <select id="select-prop">
         <option>Choose a property</option>
       </select>
-
     </div>
 
     <p id="uriEntered"></p>
     <br></br>
 
-
     <div id="tooltip-txt" class="hidden">
       <p><span id="value"></span></p>
     </div>
-
-
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
@@ -155,45 +175,59 @@
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
 
-
-    <div id="bar-chart-large"></div>
+    <div id="bar-chart-large"> </div>
     <div id="editDocDiv">
-      <div id="dialogCreateDoc" title="Create a new document">
+      <div id="dialogCreateDoc" hidden title="Create a New Document">
         <!-- Add contents of creating a document. -->
         <div id="createDocStuff" hidden="true">
-          <select id="selectTempColl">
-            <option>Choose a temporal collection</option>
-          </select>
+          <div id="alignText">
+            <b> Temporal Collection: </b>
+            <br></br>
+            <p></p>
+            <b> URI: </b>
+            <br></br>
+            <b>Format: </b>
+            <p></p>
+          </div>
+          <div id="alignBoxes">
+            <select id="selectTempColl" class="dialogue">
+              <option>Choose a temporal collection</option>
+            </select>
+            <br class="break"></br>
+            <input type="text" id="newUri" placeholder="A custom uri here" class="dialogue">
+            <br class="break"></br>
+            <select id="docFormat" title="Format" class="dialogue">
+              <option> JSON </option>
+              <option> XML </option>
+            </select>
+          </div>
+          <p align="center"> These will be the documents contents, choose to your liking! </p>
+          <textarea rows="14" cols="45" id="newDocContents"> </textarea>
         </div>
       </div>
+
       <button id="createDoc"> Create a Document </button>
       <p id="selectedURI"> Selected URI: <b> null </b></p>
-      <button id="editButton" > Edit </button>
-      <button id="viewButton"> View </button>
-      <button id="deleteButton"> Delete </button>
+      <button id="editButton" disabled> Edit </button>
+      <button id="viewButton" disabled> View </button>
+      <button id="deleteButton" disabled> Delete </button>
       <p id="deleteErrMessage"> </p>
       <button id="saveButton" hidden="true"> Save </button>
       <button id="cancelButton" hidden="true"> Cancel </button>
       <textarea rows="12" cols="40" id="contents" hidden = "true"> </textarea>
-      <div id="sysTimeDiv">
+      <div id="sysTimeDiv" class="hideSysTimeBoxes">
         <p> <b> sysStart: </b> <input type="text" id="sysStartBox" value="">
-        <script>
-          $('#sysTimeDiv').addClass('hideSysTimeBoxes');
-        </script>
       </div>
-      <div id="deleteButtonsDiv">
+      <div id="deleteButtonsDiv" class="hideSysTimeBoxes">
           <button id="deleteOKButton"> OK </button>
           <button id="deleteCancelButton"> Cancel </button>
-          <script>
-            $("#deleteButtonsDiv").addClass("hideSysTimeBoxes");
-          </script>
       </div>
-    </div>
-    <script type="text/javascript">
+    </div> <!-- End editDocDiv -->
 
+    <script type="text/javascript">
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(window.location.href);
         if (results === null) {
           return null;
         }
@@ -202,16 +236,14 @@
         }
       };
 
-
-      var uri = $.urlParam('collection');
+      var uri = $.urlParam("collection");
       if (uri !== null) {
         loadData(uri);
-        document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uri.bold();
+        document.getElementById("uriEntered").innerHTML = "You are displaying documents in " + uri.bold();
       }
       else {
-        loadData('addr.json');
+        loadData("addr.json");
       }
-
     </script>
   </body>
 </html>

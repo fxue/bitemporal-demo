@@ -1,44 +1,94 @@
 //call to get the list of temporal collection
-/* global loadData */
-function addTempColls(id, search) {
-  $.ajax(
-    {
-      url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-      success: function(response, textStatus)
-      {
-        if (search) {
-          generateOps();
-        }
-        //adds names of the collections to the drop down list
-        var addToDrop = $('#'+id);
-        //endpoint is the number of collections
-        var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
+/* global loadData, d3, barChart */
 
-        //dropArray is the array containing all the temporal Collections
-        var dropArray = [];
-        for (var j = 0; j < endpoint; j++)
-        {
-          dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
-        }
-        //sorts the array (alphabetically) containing the temporal collections
-        dropArray.sort();
-
-        //this for loop appends the collection names to the drop down list
-        for (var k = 0; k < dropArray.length; k++)
-        {
-          addToDrop.append($('<option>').text(dropArray[k])) ;
-          if( k === 0 && search) {
-            ajaxTimesCall(dropArray[k], null);
-          }
-        }
-      },
-      error: function(jqXHR, textStatus, errorThrown)
-      {
-        console.log('problem');
-      }
-    }
-  );
+function toReturnDate(time) {
+  if (time) {
+    return new Date(time);
+  }
+  else {
+    return null;
+  }
 }
+
+var getDocColl = function(uri) {
+  $.ajax({
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
+    success: function(data, textStatus) {
+      console.log('got collections: ' + data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem');
+    },
+    async: false,
+  });
+};
+
+function displayAxis(times) {
+  var showAlertBox = false;
+  if( !times.valStart ) {
+    showAlertBox = true;
+  }
+
+  var timeRanges = {
+    valStart: toReturnDate(times.valStart),
+    valEnd: toReturnDate(times.valEnd),
+    sysStart: toReturnDate(times.sysStart),
+    sysEnd: toReturnDate(times.sysEnd)
+  };
+
+  getBarChart({
+    data: [],
+    width: 800,
+    height: 600,
+    xAxisLabel: 'System',
+    yAxisLabel: 'Valid',
+    timeRanges: timeRanges,
+    containerId: 'bar-chart-large'
+  }, null);
+
+  if (showAlertBox) {
+    window.alert('There are no documents in this collection. Please select another.');
+  }
+}
+
+var addTempColls = function(id, search) {
+  $.ajax(
+  {
+    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
+    success: function(response, textStatus)
+    {
+      if (search) {
+        generateOps();
+      }
+      //adds names of the collections to the drop down list
+      var addToDrop = $('#'+id);
+      //endpoint is the number of collections
+      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
+
+      //dropArray is the array containing all the temporal Collections
+      var dropArray = [];
+      for (var j = 0; j < endpoint; j++)
+      {
+        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
+      }
+      //sorts the array (alphabetically) containing the temporal collections
+      dropArray.sort();
+
+      //this for loop appends the collection names to the drop down list
+      for (var k = 0; k < dropArray.length; k++)
+      {
+        addToDrop.append($('<option>').text(dropArray[k])) ;
+        if( k === 0 && search) {
+          ajaxTimesCall(dropArray[k], null);
+        }
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown)
+    {
+      console.log('problem');
+    }
+  });
+};
 
 var drawChart = function(params, docProp) {
   var chart;
@@ -60,7 +110,6 @@ var drawChart = function(params, docProp) {
       .width(params.width)
       .height(params.height)
       .setDisplayProperty(docProp);
-
   }
 
   var selector = '#' + params.containerId;
@@ -73,11 +122,12 @@ var drawChart = function(params, docProp) {
 function clearTextArea() {
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
+  document.getElementById('newDocContents').value = '';
 }
 
-function fillText(data, isEditing) {
+function fillText(data, isEditing, id) {
   clearTextArea();
-  var textArea = document.getElementById('contents');
+  var textArea = document.getElementById(id);
   textArea.value += '{';
   var strToAdd;
   for (var property in data) {
@@ -144,6 +194,63 @@ function save(chart) {
   });
 }
 
+function initNewXML() {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = '<record>\n';
+  dialogArea.value += '  <sysStart>2015-01-01T00:00:00Z</sysStart>\n';
+  dialogArea.value += '  <sysEnd>2018-01-01T00:00:00Z</sysEnd>\n';
+  dialogArea.value += '  <valStart>2009-01-01T00:00:00Z</valStart>\n';
+  dialogArea.value += '  <valEnd>2017-01-01T00:00:00Z</valEnd>\n';
+  dialogArea.value += '  <data>Some cool data of yours</data>\n';
+  dialogArea.value += '  <YourProperty>Your Own Data</YourProperty>\n';
+  dialogArea.value += '</record>';
+}
+
+function initNewJSON() {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = '{\n\"sysStart\": \"2015-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\"sysEnd\": \"2018-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\"valStart\": \"2009-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\"valEnd\": \"2017-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\"data\": \"Some cool data\",\n';
+  dialogArea.value += '\"Your Own Property\": \"Your Own Data\"\n';
+  dialogArea.value += '}';
+}
+
+function saveNewDoc() {
+  var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+
+  var dropDownList = document.getElementById('selectTempColl');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  var newURI = document.getElementById('newUri').value;
+
+  var formatList = document.getElementById('docFormat');
+  var format = formatList.options[formatList.selectedIndex].value;
+  var docData;
+
+  if (format === 'JSON') {
+    //docData = jQuery.parseJSON(data);
+  } else {
+    data = data.replace(/ /g, '');
+    //docData = jQuery.parseXML(data);
+  }
+  $.ajax({
+    url: '/v1/documents',
+    uri: newURI,
+    type: 'PUT',
+    data: docData,
+    success: function(data) {
+      loadData(selectedColl);
+    },
+    error: function(jqXHR, textStatus) {
+      window.alert('The creation of your new document did not work.');
+      $('#dialogCreateDoc').dialog('close');
+    },
+    collection: selectedColl,
+    format: format
+  });
+}
+
 function setupTextArea(uri, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
@@ -155,10 +262,10 @@ function setupTextArea(uri, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    fillText(data, isEditing);
+    fillText(data, isEditing, 'contents');
   };
   $.ajax({
-    url: 'http://localhost:3000/v1/documents/?uri=' + uri,
+    url: '/v1/documents/?uri=' + uri,
     success: successFunc,
     format: 'json'
   });
@@ -226,7 +333,7 @@ function findCommonColl(collArr, tempCollArr) {
   while (!response) {
     for (var i in collArr) {
       for (var j in tempCollArr) {
-        if (collArr[i] === tempCollArr[j]['nameref']) {
+        if (collArr[i] === tempCollArr[j].nameref) {
           console.log('Match: ' + collArr[i]);
           response = collArr[i];
         }
@@ -248,7 +355,7 @@ var deleteDoc = function (chart) {
 
   var tempColl;
   if (collArr && tempCollArr) {
-    collArr = collArr['collections'];
+    collArr = collArr.collections;
     tempColl = findCommonColl(collArr, tempCollArr);
   }
 
@@ -267,7 +374,8 @@ var deleteDoc = function (chart) {
       }
     });
   }
-}
+};
+
 function deleteSuccess(response, tempColl, chart) {
   var sysBoxDate;
   var tempDate = new Date(response.sysEnd);
@@ -277,7 +385,7 @@ function deleteSuccess(response, tempColl, chart) {
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
   //Add a system time to ajax request if specified
-  sysBoxDate = document.getElementById('sysStartBox').value
+  sysBoxDate = document.getElementById('sysStartBox').value;
   if (sysBoxDate) {
     url += '&system-time='+sysBoxDate;
     console.log('temporal date: ' + tempDate + ', specified date: ' + sysBoxDate);
@@ -377,34 +485,8 @@ function findProperties(obj, path, properties) {
   }
 }
 
-/*
- * @param obj
- * @param path
- * @param properties -- modified as new properties are found
- */
-function findProperties(obj, path, properties) {
-  var newPath;
-  if (typeof obj === 'object') {
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        newPath = path ? path + '.' + prop : prop;
-        if (Array.isArray(obj[prop])) {
-          // for (var item in obj[prop]) {
-          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          // }
-        } else if (typeof obj[prop] === 'object') {
-          findProperties(obj[prop], newPath, properties);
-        } else {
-          properties[newPath] = true;
-        }
-      }
-    }
-  }
-}
-
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
-    console.log('DoesNOThaveTimeRanges');
 
     $('#select-prop').empty();
     var propsInGraph = {};
@@ -426,6 +508,16 @@ function addDataToMenu(chart, params) {
   }
 }
 
+function formatCreateDocArea() {
+  var dropDownList = document.getElementById('docFormat');
+  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  if (selectedColl === 'XML') {
+    initNewXML();
+  }
+  else {
+    initNewJSON();
+  }
+}
 
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
@@ -452,14 +544,14 @@ var getBarChart = function (params, docProp) {
   if (params) {
     addDataToMenu(chart, params);
   }
-  if(params.timeRanges === null) {
+  if (params.timeRanges === null) {
     initButtons();
-    if (uri) {
-      document.getElementById('uriEntered').innerHTML = "You are displaying documents in " + uri.bold() + " with property " + chart.getDisplayProperty().bold();
-    }
-    else {
-      document.getElementById('uriEntered').innerHTML = "There are no documents in this collection.";
-    }
+  }
+  if (params.timeRanges === null && uri) {
+    document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' +uri + ' with property ' + chart.getDisplayProperty().bold();
+  }
+  else {
+   // document.getElementById('uriEntered').innerHTML = 'There are no docs.';
   }
 
   $('#editButton').click(function() {
@@ -491,16 +583,24 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
+  $('#docFormat').change(function() {
+    console.log('changing format of new doc');
+    formatCreateDocArea();
+  });
+
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-
-    $("#dialogCreateDoc").dialog({
+    initNewJSON();
+    $('#dialogCreateDoc').dialog({
       autoOpen: true,
       modal: true,
       appendTo: false,
+      width: 550,
+      height: 500,
       buttons: {
         Save: function() {
+          saveNewDoc();
           $(this).dialog('close');
         },
         Cancel: function() {
@@ -511,9 +611,7 @@ var getBarChart = function (params, docProp) {
   });
 
   $('#deleteOKButton').click(function() {
-    document.body.style.cursor = 'wait';
     deleteDoc(chart);
-    document.body.style.cursor = 'auto';
   });
 
   $('#deleteCancelButton').click(function() {
@@ -525,3 +623,5 @@ var getBarChart = function (params, docProp) {
     getBarChart(params, selectedText);
   });
 };
+
+

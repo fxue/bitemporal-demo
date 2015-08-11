@@ -1,5 +1,5 @@
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
-/* global getBarChart */
+/* getBarChart */
 function parseData(data, collection, numParts) {
   var split = data.split('--ML_BOUNDARY');
   var items = [];
@@ -122,7 +122,6 @@ function loadData(collection) { //Called from top-level code
     collection = 'addr.json';
   }
 
-
   $.ajax({
     url: '/v1/search?pageLength=1000',
     data: {
@@ -136,7 +135,6 @@ function loadData(collection) { //Called from top-level code
     async: false,
     success: function(data) {
       var arrData = parseData(data, collection, 1);
-      console.log(arrData);
       getBarChart({
         data: arrData,
         width: 800,
@@ -150,6 +148,7 @@ function loadData(collection) { //Called from top-level code
       if(arrData.length === 0 && url !== '') {
         window.alert('Attention!\n\nNo data found in document ' + collection);
       }
+
     },
     error: function(jqXHR, textStatus, errorThrown) {
       // something went wrong. Take a look in jqXHR and find the status code
@@ -206,7 +205,6 @@ $('#pick-doc').click(function () {
   else {
     document.getElementById('uriEntered').innerHTML = 'You are displaying documents in ' + uriCollection.bold();
     window.history.pushState('', 'Title', '/?collection='+uriCollection);
-    console.log('Calling loadData from pick-doc click event handler');
     loadData(uriCollection);
   }
 });
