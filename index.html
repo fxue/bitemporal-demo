@@ -67,10 +67,8 @@
       .svg-chart .g { fill: #4682B4; }
 
       .tooltip-txt {
-      /*  margin: 0;*/
         font-family: Helvetica;
         font-size: 18px;
-      /*  line-height: 18px;*/
         font-weight: bold;
         pointer-events: none;
       }
@@ -104,7 +102,7 @@
         margin-right: auto;
         resize: none;
       }
-      
+
       #dialogCreateDoc {
         display: block;
         margin-left: auto;
@@ -210,9 +208,9 @@
 
       <button id="createDoc"> Create a Document </button>
       <p id="selectedURI"> Selected URI: <b> null </b></p>
-      <button id="editButton" > Edit </button>
-      <button id="viewButton"> View </button>
-      <button id="deleteButton"> Delete </button>
+      <button id="editButton" disabled> Edit </button>
+      <button id="viewButton" disabled> View </button>
+      <button id="deleteButton" disabled> Delete </button>
       <p id="deleteErrMessage"> </p>
       <button id="saveButton" hidden="true"> Save </button>
       <button id="cancelButton" hidden="true"> Cancel </button>
