@@ -128,6 +128,7 @@ function clearTextArea() {
 function fillText(data, isEditing, id) {
   clearTextArea();
   var textArea = document.getElementById(id);
+
   if(data.contentType.indexOf('xml') > -1) {//view xml doc
     var xmlStr = data.childNodes[0].outerHTML;
     //https://gist.github.com/sente/1083506
@@ -162,6 +163,7 @@ function fillText(data, isEditing, id) {
     }
     textArea.value = formatXml(xmlStr);
   }
+  
   else {//view json doc
     textArea.value += '{';
     var strToAdd;
