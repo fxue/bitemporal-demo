@@ -21,7 +21,7 @@ var barChart = function() {
   var background;
 
   var margin = {
-    top: 0,
+    top: 5,
     right: 0,
     bottom: 150,
     left: 170
