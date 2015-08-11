@@ -1,4 +1,4 @@
-/*global d3, moment */
+/*global d3, moment*/
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
@@ -595,7 +595,6 @@ var barChart = function() {
             return 'translate(' + [ d.x,d.y ] + ')';
         });
       });
-
 
       function lineShifter(textId, barId)  {
         $('#'+textId).change(function(){
