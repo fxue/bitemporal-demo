@@ -1,4 +1,4 @@
-/*global d3, moment */
+/*global d3, moment*/
 
 function showCurrURI(uri) {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
