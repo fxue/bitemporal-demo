@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
-
+ 
     <style>
       body {
         background: #CCE9F1;
@@ -15,28 +15,28 @@
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 12px;
       }
-
+ 
       h1 {
         text-align: center;
         font-style: italic;
         font-size: 23px;
         margin-right: 50px;
       }
-
+ 
       #startSysBox {
         resize: none;
         position: absolute;
         left: 682px;
         top: 148px;
       }
-
+ 
       #endSysBox {
         resize: none;
         position: absolute;
         left: 682px;
         top: 180px;
       }
-
+ 
       #startValBox {
         resize: none;
         position: absolute;
@@ -44,14 +44,14 @@
         top: 148px;
         z-index: 2px;
       }
-
+ 
       #endValBox {
         resize: none;
         position: absolute;
         left: 215px;
         top: 180px;
       }
-
+ 
       #vertBar1 {
         position: absolute;
         left: 622px;
@@ -63,13 +63,13 @@
         left: 622px;
         top: 170px;
       }
-
+ 
       #horzBar1 {
         position: absolute;
         left: 155px;
         top: 140px;
       }
-
+ 
       #horzBar2 {
         position: absolute;
         left: 155px;
@@ -155,7 +155,7 @@
         text-align: center;
         visibility: hidden;
       }
-
+ 
       #errorMessage {
         position: absolute;
         left: 317px;
@@ -163,18 +163,18 @@
         color: #708090;
         visibility: hidden;
       }
-
+ 
       .svg-chart .background {
         shape-rendering: crispEdges;
         stroke: #ccc;
         fill: #fdfdfd;
         stroke-width: 1px;
       }
-
+ 
       .svg-chart .g {
         fill: #4682B4;
       }
-
+ 
       .tooltip-txt {
         margin: 0;
         font-family: Helvetica;
@@ -183,41 +183,41 @@
         font-weight: bold;
         pointer-events: none;
       }
-
+ 
       .axis-label {
         font-family: Helvetica;
         font-size: 17px;
         font-weight: bold;
       }
-
+ 
       .yaxis .tick {
         stroke: black;
         stroke-width: 1;
       }
-
+ 
       .xaxis .tick {
         stroke: black;
         stroke-width: 1;
       }
-
+ 
       .yaxis text {
         font-size: 14px;
         stroke-width: 0;
       }
-
+ 
       .xaxis .tick text {
         transform: rotate(-45deg);
         text-anchor: end !important;
         font-size: 15px;
         stroke-width: 0;
       }
-
+ 
       #bar-chart-large {
         position: absolute;
         left: -25px;
         top: 215px;
       }
-
+ 
       #ctsQuery {
         position: absolute;
         left: 140px;
@@ -225,7 +225,7 @@
         font-size: 14px;
         margin-bottom: 60px;
       }
-
+ 
       #queryText {
         font-size: 14px;
         resize: none;
@@ -245,7 +245,7 @@
         left: 120px;
         top: 200px;
       }
-
+ 
        #homeURL {
         position: absolute;
         left: 5px;
@@ -253,7 +253,7 @@
         font-size: 13px;
         z-index: 1;
       }
-
+ 
       #dropdown {
         height: 40px;
         position: relative;
@@ -265,7 +265,7 @@
         cursor: pointer;
         background: #fff;
         font-size: 1.55em;
-        color: #000000;
+       color: #000000;
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
@@ -295,7 +295,7 @@
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
       }
-
+ 
       #valTimes {
         position: relative;
         left: 142px;
@@ -360,7 +360,7 @@
         margin-bottom: 0px;
         font-size: 15px;
       }
-
+ 
       #dragInstruct {
         position: absolute;
         left: 330px;
@@ -372,7 +372,7 @@
         color: #708090;
         visibility: hidden;
       }
-
+ 
       #sysDropdown {
         height: 20px;
         display: block;
@@ -383,75 +383,18 @@
         background: #fff;
         font-size: .8em;
         color: #000000;
-        font-weight: normal;
+       font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
       }
-
+ 
       #sysTimes {
         position: absolute;
         left: 614px;
-        top: 138px;
+        top: 60px;
         font-size: 15px;
       }
-
-      #valDropdown {
-        height: 20px;
-        display: block;
-        padding: 13px 16px;
-        width: 160px;
-        cursor: pointer;
-        border-left: 4px solid #739cda;
-        background: #fff;
-        font-size: .8em;
-        color: #000000;
-        font-weight: normal;
-        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        -webkit-transition: all 0.15s linear;
-      }
-
-      #valTimes {
-        position: relative;
-        left: 133px;
-        top: 138px;
-        margin-bottom: 0px;
-        font-size: 15px;
-      }
-
-      #dragInstruct {
-        position: absolute;
-        left: 330px;
-        top: 170px;
-        text-wrap: normal;
-        display: block;
-        width: 240px;
-        text-align: center;
-        color: #708090;
-        visibility: hidden;
-      }
-
-      #sysDropdown {
-        height: 20px;
-        display: block;
-        padding: 13px 16px;
-        width: 160px;
-        cursor: pointer;
-        border-left: 4px solid #739cda;
-        background: #fff;
-        font-size: .8em;
-        color: #000000;
-        font-weight: normal;
-        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        -webkit-transition: all 0.15s linear;
-      }
-
-      #sysTimes {
-        position: absolute;
-        left: 614px;
-        top: 138px;
-        font-size: 15px;
-      }
-
+ 
       #bold {
         font-weight: bold;
       }
@@ -461,7 +404,7 @@
         color: #fff;
         border-left-color: #6c6d70;
       }
-
+ 
       #instructSelect {
         position: absolute;
         left: 0px;
@@ -469,14 +412,14 @@
         font-weight: bold;
         font-size: 1.45em;
       }
-
+ 
       #bulletList {
         position: relative;
         left: -40px;
         top: 105px;
         font-size: 1.0em;
       }
-
+ 
       #search {
         position: absolute;
         left: 0px;
@@ -485,7 +428,7 @@
         width: 80px;
         font-size: 1.2em;
       }
-
+ 
       #prev {
         position: absolute;
         left: 0px;
@@ -497,7 +440,7 @@
         line-height: 9px;
         text-align: center;
       }
-
+ 
       #break {
         position: absolute;
         width: 33%;
@@ -507,14 +450,14 @@
         border: 1px solid #000080;
         height: 0.2%;
       }
-
+ 
       #numDocs {
         position: absolute;
         left: 50px;
         top: 110px;
         font-size: 1.2em;
       }
-
+ 
       #next {
         position: absolute;
         left: 225px;
@@ -526,32 +469,32 @@
         line-height: 9px;
         text-align: center;
       }
-
+ 
       #links {
         font-size: 1.15em;
         color: blue;
       }
-
+ 
       #physicalDoc {
         font-size: 1.25em;
       }
-
+ 
       #page {
         position: relative;
         left: 840px;
         top: -34px;
       }
-
+ 
       .result a {
         font-size: 1.15em;
         color: blue;
         margin-left: 5px;
       }
-
+ 
       .result .date {
         margin-left: 40px;
       }
-
+ 
       .definition {
         background-color: white;
         opacity: 1px;
@@ -566,26 +509,26 @@
         background-color: #3399FF;
         color: black;
       }
-
+ 
       #ops {
         position: absolute;
         left: 38px;
         top: 95px;
         font-size: 1.1em;
       }
-
+ 
       #searchPage {
         position: absolute;
         left: 20px;
         top: -75px;
       }
-
+ 
       .hide {
         visibility: hidden;
       }
-
+ 
     </style>
-
+ 
   </head>
   <body>
     <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it
@@ -632,7 +575,7 @@ a different schema for the timestamps.">Temporal Collection</span></p>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script> addTempColls("dropdown", true); </script>
     <div id="bar-chart-large"></div>
-
+ 
     <div id="ctsQuery">
       <p id='ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by
 matching documents that have relevant time ranges">cts:query</p>
@@ -650,7 +593,7 @@ matching documents that have relevant time ranges">cts:query</p>
       <p id="horzBar2">End Time:</p>
       <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
     </div>
-
+ 
   </body>
 </html>
 

@@ -1,13 +1,14 @@
 /* global parseData */
 var firstDoc, lastDoc;
+ 
 function generateOps() {
   var operators = ['None', 'ALN_EQUALS', 'ALN_CONTAINS', 'ALN_CONTAINED_BY', 'ALN_MEETS', 'ALN_MET_BY', 'ALN_BEFORE', 'ALN_AFTER', 'ALN_STARTS', 'ALN_STARTED_BY', 'ALN_FINISHES', 'ALN_FINISHED_BY', 'ALN_OVERLAPS', 'ALN_OVERLAPPED_BY', 'ISO_OVERLAPS', 'ISO CONTAINS', 'ISO_PRECEDES', 'ISO_SUCCEEDS', 'ISO_IMM_PRECEDES', 'ISO_IMM_SUCCEEDS', 'ISO_EQUALS'];
-  for( var i = 0; i < operators.length; i++ ) {
+  for( var i= 0; i < operators.length; i++ ) {
     $('#valDropdown').append($('<option>').text(operators[i]));
     $('#sysDropdown').append($('<option>').text(operators[i]));
   }
 }
-
+ 
 function getSelected(id) {
   var dropDownList = document.getElementById(id);
   return dropDownList.options[dropDownList.selectedIndex].value;
@@ -37,12 +38,10 @@ $('#sysDropdown').change(function() {
 $('#searchQueryButton').click(function() {
   runSearchQuery();
 });
-
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
 });
-
 $('#resetButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, false);
@@ -54,18 +53,18 @@ $('#resetButton').click(function() {
   document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the red bars to create your selected time range*';
   $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage').css({'visibility': 'hidden'});
 });
-
+ 
 function runSearchQuery() {
   var selectedColl = getSelected('dropdown');
   var valSelectedOp = getSelected('valDropdown');
   var sysSelectedOp = getSelected('sysDropdown');
-
+ 
   var valAxis = '';
   var sysAxis = '';
-
+ 
   var valStart = '';
   var valEnd = '';
-
+ 
   if(valSelectedOp !== 'None') {
     valAxis = 'myValid';
     valStart = document.getElementById('startValBox').value;
@@ -77,10 +76,10 @@ function runSearchQuery() {
     valStart = new Date(valStart).toISOString();
     valEnd = new Date(valEnd).toISOString();
   }
-
+ 
   var sysStart = '';
   var sysEnd = '';
-
+ 
   if(sysSelectedOp !== 'None') {
     sysAxis = 'mySystem';
     sysStart = document.getElementById('startSysBox').value;
@@ -92,12 +91,12 @@ function runSearchQuery() {
     sysStart = new Date(sysStart).toISOString();
     sysEnd = new Date(sysEnd).toISOString();
   }
-
+ 
   if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
     ajaxTimesCall(selectedColl, null, false);
     return;
   }
-
+ 
   $.ajax({
       url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
       success: function(response, textStatus)
@@ -112,22 +111,21 @@ function runSearchQuery() {
   });
 
 }
-
+ 
 function displayQuery(response) {
   document.getElementById('queryText').innerHTML = response.query;
 }
-
+ 
 function formatData(response) {
   var result = [];
-  if(response.values) { 
+  if(response.values) {
     for(var i = 0; i < response.values.length; i++) {
       result.push({content: response.values[i]});
     }
   }
   return result;
 }
-
-<<<<<<< HEAD
+ 
 $('#dropdown').change(function() {
   $('#next, #prev, .hide, #startValBox, #endValBox, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
   var selectedColl = getSelected('dropdown');
@@ -138,59 +136,7 @@ $('#dropdown').change(function() {
   document.getElementById('valDropdown').selectedIndex = 0;
   document.getElementById('sysDropdown').selectedIndex = 0;
 });
-=======
-
-//call to get the list of temporal collection
-$.ajax(
-  {
-    url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-    success: function(response, textStatus)
-    {
-      generateOps();
-      //adds names of the collections to the drop down list
-      var addToDrop = $('#dropdown');
-      //endpoint is the number of collections
-      var endpoint = parseInt(response['temporal-collection-default-list']['list-items']['list-count'].value);
-
-      //dropArray is the array containing all the temporal Collections
-      var dropArray = [];
-      for (var j = 0; j < endpoint; j++)
-      {
-        dropArray[j] = response['temporal-collection-default-list']['list-items']['list-item'][j].nameref;
-      }
-      //sorts the array (alphabetically) containing the temporal collections
-      dropArray.sort();
-
-      //this for loop appends the collection names to the drop down list
-      for (var k = 0; k < dropArray.length; k++)
-      {
-        addToDrop.append($('<option>').text(dropArray[k])) ;
-        if( k === 0 ) {
-          ajaxTimesCall(dropArray[k], null);
-        }
-      }
-    },
-    error: function(jqXHR, textStatus, errorThrown)
-    {
-      console.log('problem');
-    }
-  });
-
-$('#dropdown').change(function()
-  {
-    $('#next').css({'visibility': 'hidden'});
-    $('#prev').css({'visibility': 'hidden'});
-    var selectedColl = getSelected('dropdown');
-    ajaxTimesCall(selectedColl, null);
-    $('#bulletList').empty();
-    $('#numDocs').empty();
-    document.getElementById("valDropdown").selectedIndex = 0;
-    document.getElementById("sysDropdown").selectedIndex = 0;
-    $('#dragInstruct').css({'visibility': 'hidden'});
-  }
-);
->>>>>>> created draggable bars in d3
-
+ 
 //function to make ajax call to get min and max times
 function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
   $.ajax(
@@ -199,7 +145,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
       success: function(response, textStatus)
       {
         var data = [];
-<<<<<<< HEAD
         var drag = true;
         if(dataToDisplay !== null) {
           data = formatData(dataToDisplay);
@@ -207,16 +152,8 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
             $('#errorMessage').css({'visibility': 'visible'});
           }
           drag = false;
-=======
-        if(dataToDisplay !== null) {
-          data = createCorrData(dataToDisplay);
-        } 
-
-        if(data.length <= 0) {
-          $('#dragInstruct').css({'visibility': 'hidden'});
->>>>>>> created draggable bars in d3
         }
-
+ 
         var times = response;
         var timeRanges = {
           valStart: toReturnDate(times.valStart),
@@ -224,7 +161,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
           sysStart: toReturnDate(times.sysStart),
           sysEnd: toReturnDate(times.sysEnd)
         };
-
+ 
         if(!drag) {
           document.getElementById('vertBar1').innerHTML = 'Start Time:' + '&nbsp;&nbsp;' + $('#startSysBox').val().bold();
           document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endSysBox').val().bold();
@@ -237,18 +174,18 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
           document.getElementById('valDropdown').disabled=true;
           document.getElementById('sysDropdown').disabled=true;
         }
-
+ 
         getBarChart({
           data: data,
           width: 800,
-          height: 500,
+          height: 600,
           xAxisLabel: 'System',
           yAxisLabel: 'Valid',
           timeRanges: timeRanges,
           draggableBars: drag,
-          containerId: 'bar-chart-large'
+         containerId: 'bar-chart-large'
         }, null);
-
+        
         if (visibleBars) {
           if (getSelected('sysDropdown') !== 'None') {
             $('#dragLeft').css({'visibility': 'visible'});
@@ -273,37 +210,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
     }
   );
 }
-
-//function to display axis
-function displayAxis(times)
-{
-  var showAlertBox;
-  if( !times.valStart ) {
-    showAlertBox = true;
-  }
-
-  var timeRanges = {
-    valStart: toReturnDate(times.valStart),
-    valEnd: toReturnDate(times.valEnd),
-    sysStart: toReturnDate(times.sysStart),
-    sysEnd: toReturnDate(times.sysEnd)
-  }
-
-  getBarChart({
-    data: [],
-    width: 800,
-    height: 600,
-    xAxisLabel: 'System',
-    yAxisLabel: 'Valid',
-    timeRanges: timeRanges,
-    containerId: 'bar-chart-large'
-  }, null);
-
-  if (showAlertBox) {
-    alert('There are no documents in this collection. Please select another.');
-  }
-}
-
+ 
 function toReturnDate(time) {
   if( time ) {
     return new Date(time);
@@ -312,7 +219,7 @@ function toReturnDate(time) {
     return null;
   }
 }
-
+ 
 //function when search button is clicked
 $('#search').click(function() {
   firstDoc = 1;
@@ -320,21 +227,21 @@ $('#search').click(function() {
   displayDocs(firstDoc, lastDoc);
   $('#next, #prev').css({'visibility': 'visible'});
 });
-
+ 
 //function when the next button is clicked
 $('#next').click(function() {
   firstDoc+=10;
   lastDoc+=10;
   displayDocs(firstDoc, lastDoc);
 });
-
+ 
 //function when the prev button is clicked
 $('#prev').click(function() {
   firstDoc-=10;
   lastDoc-=10;
   displayDocs(firstDoc, lastDoc);
 });
-
+ 
 /**
 * Display docs is a function that displays the physical and logcial documents
 * corresponding to the collection selected in the dropdown box.
@@ -362,7 +269,7 @@ function displayDocs(start, end) {
       console.log('problem');
     }
   });
-
+ 
   function onDisplayDocs(data, textStatus, response) {
     var docs;
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
@@ -374,28 +281,27 @@ function displayDocs(start, end) {
     else if( totalDocLen > 0 )
     {
       docs = parseData(data, null, 2);
-      console.log(docs);
     }
     // Checks and sets boundary points.
     // Looks at the index of the first and last document (passed into the function)
     // and disables or enables the next/previous buttons based on those indexes.
     document.getElementById('prev').disabled = start <= 1;
-
+ 
     if (end >= totalDocLen) {
-      document.getElementById('next').disabled = true;
+     document.getElementById('next').disabled = true;
       end = totalDocLen;
     }
     else {
       document.getElementById('next').disabled = false;
     }
-
+ 
     if (parseInt(totalDocLen) === 0) {
       document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
     }
     else {
       document.getElementById('numDocs').innerHTML = start + ' to ' + end + ' of ' + totalDocLen;
     }
-
+ 
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
     //Checks if docs has a defined value
@@ -409,12 +315,12 @@ function displayDocs(start, end) {
           uriLogical = collArr[t];
         }
       }
-
+ 
       var sysStart = docs[i].content.sysStart;
       var sysEnd = docs[i].content.sysEnd;
       var validStart = docs[i].content.valStart;
       var validEnd = docs[i].content.valEnd;
-
+ 
       bullet
         .append($('<hr id=\'break\'>')
         )
@@ -462,16 +368,16 @@ function buildDate( startDate, endDate, label ) {
       $('<div>')
         .text(startDate + ' -- ' + endDate)
     );
-
+ 
   return date;
 }
-
+ 
 /**
- * Shortens the date to only include the day, month, year, and time.
- * The time appears as hours, minutes, seconds, excluding 'GMT'
- *
- * @param date: the date to shorten
- */
+* Shortens the date to only include the day, month, year, and time.
+* The time appears as hours, minutes, seconds, excluding 'GMT'
+*
+* @param date: the date to shorten
+*/
 function shortenDate( date ) {
   date = date.toString().split(' ');
   if (date[3] >= '9999') {
