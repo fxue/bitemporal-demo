@@ -30,7 +30,6 @@ $('#sysDropdown').change(function() {
     $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
   }
   if (getSelected('sysDropdown') !== 'None') {
-    console.log('hello');
     $('#searchQueryButton, #resetBarsButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
 });
@@ -48,8 +47,6 @@ $('#searchQueryButton').click(function() {
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
-  // var selectedOp = getSelected('sysDropdown');
-  // $('#sysDropdown').val('ALN_CONTAINS').change();
 });
 
 $('#resetButton').click(function() {
