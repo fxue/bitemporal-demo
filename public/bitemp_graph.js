@@ -243,7 +243,7 @@ var barChart = function() {
         .attr('height', height - margin.top - margin.bottom)
         .on('click', function() {
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
-            chart.setCurrentURI('null');
+            chart.setCurrentURI(null);
             showCurrURI('null');
             if (document.getElementById('editButton')) {
               document.getElementById('editButton').disabled = true;
@@ -257,6 +257,7 @@ var barChart = function() {
               $(getLastDoc()).attr('stroke-width', '1');
               $(getLastDoc()).attr('fill-opacity', 0.9);
             }
+            setLastDoc(null);
           }
         });
     }
