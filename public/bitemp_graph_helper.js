@@ -180,7 +180,7 @@ function fillText(data, isEditing, id) {
         }
         strToAdd += '\n\"' + property + '\": ';
         if (typeof data[property] === 'object') {
-          var propsInGraph = {};
+         /* var propsInGraph = {};
           findProperties(data[property], null, propsInGraph);
           for(prop in propsInGraph) {
             strToAdd += '\n   \"' + prop + '\": ';
@@ -191,13 +191,20 @@ function fillText(data, isEditing, id) {
               var subStr = path(data, property + '.' + prop);
             }
             if(typeof subStr === 'object') {
+
               subStr = JSON.stringify(subStr);
             }
             strToAdd += subStr;
-          }
+          }*/
+          strToAdd += JSON.stringify(data[property], null, 2);
         }
         else { // if the property has a null value then don't put quotes around it.
-          strToAdd += data[property];
+          if(data[property] !== 'null') {
+            strToAdd += "\"" + data[property] + "\"";
+          }
+          else {
+            strToAdd += data[property];
+          }
         }
         textArea.value += strToAdd;
       }

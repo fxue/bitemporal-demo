@@ -19,6 +19,7 @@ var barChart = function() {
   var data;
   var displayedProps = [];
   var background;
+  var timeRanges;
 
   var margin = {
     top: 0,
@@ -66,13 +67,14 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.sysStart);
-        })).add(10, 'y');
+        })).add('y', 10);
 
       if (xMax) {
         maxEnd = xMax;
+        console.log("HIIIIIII");
       }
       else {
-        if (data.length) {
+        if (data.length > 0) {
           maxEnd =
             moment.max(data.map(function(d){
               if (d.content.sysEnd.startsWith('9999')) {
@@ -84,9 +86,14 @@ var barChart = function() {
             })).toDate();
         }
         else {
-          maxEnd = moment('2015-01-01T00:00:00').toDate();
+          maxEnd = moment('2020-01-01T00:00:00').toDate();
         }
       }
+
+      if(maxStart > maxEnd) {
+        maxEnd = maxStart;
+      }
+
 
       xScale = d3.time.scale()
         .domain([minStart, maxEnd])
@@ -238,7 +245,17 @@ var barChart = function() {
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
-        .attr('height', height - margin.top - margin.bottom);
+        .attr('height', height - margin.top - margin.bottom)
+        .on('click', function(datum, index) {
+          document.getElementById('editButton').disabled = true;
+          document.getElementById('deleteButton').disabled = true;
+          document.getElementById('viewButton').disabled = true;
+          document.getElementById('deleteErrMessage').innerHTML = '';
+
+          $(getLastDoc()).attr('stroke', 'grey');
+          $(getLastDoc()).attr('stroke-width', '1');
+          $(getLastDoc()).attr('fill-opacity', 0.9);
+        });
     }
 
     function setLastDoc(ld) {
@@ -312,7 +329,6 @@ var barChart = function() {
             .style('top', coordinates[1] + 115 + 'px')
             .style('left', coordinates[0] + 110 + 'px');
         })
-
         .on('click', function(datum, index) {
           document.getElementById('editButton').disabled = false;
           document.getElementById('deleteButton').disabled = false;
@@ -667,6 +683,7 @@ var barChart = function() {
       addDragBars();
     }
     addDisplayDocAndPropData();
+
 
   };
 
