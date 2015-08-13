@@ -169,7 +169,6 @@ var barChart = function() {
 
       yAxis = d3.svg.axis()
         .scale(yScale)
-        //ticks(15)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0);
@@ -237,22 +236,28 @@ var barChart = function() {
         .style('stroke', 'black')
         .style('stroke-width', '5')
         .style('fill', 'white')
-        .attr('class', 'background')
+        .attr('class', 'background2')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom)
-        .on('click', function(datum, index) {
-          document.getElementById('editButton').disabled = true;
-          document.getElementById('deleteButton').disabled = true;
-          document.getElementById('viewButton').disabled = true;
-          document.getElementById('deleteErrMessage').innerHTML = '';
-
+        .on('click', function() {    
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
-            $(getLastDoc()).attr('stroke', 'grey');
-            $(getLastDoc()).attr('stroke-width', '1');
-            $(getLastDoc()).attr('fill-opacity', 0.9);
-          }
+            chart.setCurrentURI('null');
+            showCurrURI('null');
+            if (document.getElementById('editButton')) {
+              document.getElementById('editButton').disabled = true;
+              document.getElementById('deleteButton').disabled = true;
+              document.getElementById('viewButton').disabled = true;
+              document.getElementById('deleteErrMessage').innerHTML = '';
+            }
+            
+            if (getLastDoc()) {
+              $(getLastDoc()).attr('stroke', 'grey');
+              $(getLastDoc()).attr('stroke-width', '1');
+              $(getLastDoc()).attr('fill-opacity', 0.9);
+            } 
+          }            
         });
     }
 
@@ -263,7 +268,6 @@ var barChart = function() {
     function getLastDoc() {
       return lastDoc;
     }
-
 
     function addBarChartData() {
 
@@ -464,14 +468,17 @@ var barChart = function() {
 
     function addBackground() {
       background = g.append('svg')
+        .attr('class', 'background1')
         .style('stroke', 'red')
         .style('stroke-width', '5')
         .style('fill', 'white')
         .attr('class', 'background')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
-        .attr('width', width - axisLabelMargin - margin.left - margin.right)
-        .attr('height', height - margin.top - margin.bottom);
+        .attr('width', width)// - axisLabelMargin - margin.left - margin.right)
+        .attr('height', height);// - margin.top - margin.bottom);
+      
+        
     }
 
     function addDragBars() {

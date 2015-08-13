@@ -97,7 +97,7 @@ function clearTextArea() {
 
 function fillText(data, isEditing, id) {
   clearTextArea();
-
+  
   var textArea = document.getElementById(id);
 
   if(data.contentType) {
@@ -169,8 +169,8 @@ function fillText(data, isEditing, id) {
 
     function path(object, fullPath) {
       var selection = object;
-      fullPath.split('.').forEach(function(path) {
-        selection = selection[path];
+      fullPath.split('.').forEach(function(path) { 
+        selection = selection[path]; 
       });
       return selection;
     }
@@ -232,12 +232,12 @@ function initNewXML() {
 
 function initNewJSON() {
   var dialogArea = document.getElementById('newDocContents');
-  dialogArea.value = '{\n\"sysStart\": \"2015-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\"sysEnd\": \"2018-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\"valStart\": \"2009-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\"valEnd\": \"2017-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\"data\": \"Some cool data\",\n';
-  dialogArea.value += '\"Your Own Property\": \"Your Own Data\"\n';
+  dialogArea.value = '{\n\  "sysStart\": \"2015-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "sysEnd\": \"2018-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "valStart\": \"2009-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "valEnd\": \"2017-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "data\": \"Some cool data\",\n';
+  dialogArea.value += '\  "Your Own Property\": \"Your Own Data\"\n';
   dialogArea.value += '}';
 }
 
@@ -495,7 +495,7 @@ function changeTextInGraph(chart, params) {
 
 /*
  * @param obj
- * @param path
+ * @param path 
  * @param properties -- modified as new properties are found
  */
 function findProperties(obj, path, properties) {
