@@ -43,9 +43,9 @@ var barChart = function() {
     }
 
     function setupXAxis() {
-      // minStart: earliest sysStart
-      // maxEnd: latest non-infinty sysEnd
-      // maxStart: max sysStart time
+      // minStart: earliest system start
+      // maxEnd: latest non-infinty system end
+      // maxStart: max system start time
       var minStart, maxEnd, maxStart;
 
       if (xMin) {
@@ -112,9 +112,9 @@ var barChart = function() {
     }
 
     function setupYAxis() {
-      // minStart: earliest valStart
-      // maxEnd: latest non-infinty valEnd
-      // maxStart: max valStart time
+      // minStart: earliest valid start
+      // maxEnd: latest non-infinty valid end
+      // maxStart: max valid start time
       var minStart, maxEnd, maxStart;
 
       if (yMin) {
