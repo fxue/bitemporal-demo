@@ -92,7 +92,6 @@ var barChart = function() {
         maxEnd = maxStart;
       }
 
-
       xScale = d3.time.scale()
         .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
