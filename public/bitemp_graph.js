@@ -605,7 +605,6 @@ var barChart = function() {
       });
 
       function lineShifter(textId, barId)  {
-<<<<<<< HEAD
         $('#'+textId).change(function(){
           var input = $('#'+textId).val();
           var date = new Date(input).toISOString();
@@ -613,36 +612,6 @@ var barChart = function() {
             var dx = xScale(moment(date).toDate());
             if (textId.includes('end')) {
               dx = -(width - margin.left - dx);
-=======
-      $('#'+textId).change(function(){
-        var input = $('#'+textId).val();
-        var date = new Date(input).toISOString();
-        if (textId.includes('Sys')) {
-          var dx = xScale(moment(date).toDate());
-          if (textId.includes('start')) {
-            if (date > new Date(xMax).toISOString() || date < new Date(xMin).toISOString()) {
-              window.alert('This time is out of the axis time range');
-              dx = xScale(moment(xMin).toDate());
-              $('#'+textId).val(format(xMin));
-            }
-          }
-          if (textId.includes('end')) {
-            if (date > new Date(xMax).toISOString() || date < new Date(xMin).toISOString()) {
-              window.alert('This time is out of the axis time range');
-              $('#'+textId).val(format(xMax));
-              dx = xScale(moment(xMax).toDate());
-            }
-            dx = -(width - margin.left - dx);
-          }
-          $('#'+barId).attr('transform', 'translate('+dx+', 0)');
-        }
-        else {
-          var dy = yScale(moment(date).toDate());
-          if (textId.includes('start')) {
-            if (date > new Date(yMax).toISOString() || date < new Date(yMin).toISOString()) {
-              window.alert('This time is out of the axis time range');
-              $('#'+textId).val(format(yMin));
-              dy = yScale(moment(yMin).toDate());
             }
             $('#'+barId).attr('transform', 'translate('+dx+', 0)');
           }
