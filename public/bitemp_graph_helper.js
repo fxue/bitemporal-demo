@@ -207,8 +207,8 @@ function fillText(data, isEditing, id) {
 
     function path(object, fullPath) {
       var selection = object;
-      fullPath.split('.').forEach(function(path) { 
-        selection = selection[path]; 
+      fullPath.split('.').forEach(function(path) {
+        selection = selection[path];
       });
       return selection;
     }
@@ -530,7 +530,7 @@ function changeTextInGraph(chart, params) {
 
 /*
  * @param obj
- * @param path 
+ * @param path
  * @param properties -- modified as new properties are found
  */
 function findProperties(obj, path, properties) {

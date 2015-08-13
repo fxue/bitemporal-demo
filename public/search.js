@@ -14,15 +14,25 @@ function getSelected(id) {
   return dropDownList.options[dropDownList.selectedIndex].value;
 }
 
-$('#valDropdown').change(function() {
-  $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
-  if (getSelected('sysDropdown') === 'None') {
-    $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
-  }
-  if (getSelected('valDropdown') !== 'None') {
-    $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
+$('#valDropdown')
+  .change(function() {
+    $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
+    if (getSelected('sysDropdown') === 'None') {
+      $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
+    }
+    if (getSelected('valDropdown') !== 'None') {
+      $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
+    }
+  })
+
+$('#valTimes').click(function(event){
+  console.log('hi')
+  if ($('#valDropdown').is('[disabled=disabled]')) {
+      console.log('hello');
+      alert('Button Disabled')
   }
 });
+
 
 $('#sysDropdown').change(function() {
   $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
@@ -32,12 +42,6 @@ $('#sysDropdown').change(function() {
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #resetBarsButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
-});
-
-$('#next').click(function() {
-  firstDoc+=10;
-  lastDoc+=10;
-  displayDocs(firstDoc, lastDoc);
 });
 
 $('#searchQueryButton').click(function() {
