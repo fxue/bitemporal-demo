@@ -329,10 +329,12 @@ var barChart = function() {
             .style('left', coordinates[0] + 110 + 'px');
         })
         .on('click', function(datum, index) {
-          document.getElementById('editButton').disabled = false;
-          document.getElementById('deleteButton').disabled = false;
-          document.getElementById('viewButton').disabled = false;
-          document.getElementById('deleteErrMessage').innerHTML = '';
+          if (document.getElementById('editButton')) {
+            document.getElementById('editButton').disabled = false;
+            document.getElementById('deleteButton').disabled = false;
+            document.getElementById('viewButton').disabled = false;
+            document.getElementById('deleteErrMessage').innerHTML = '';
+          }
 
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
