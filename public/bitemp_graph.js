@@ -478,7 +478,6 @@ var barChart = function() {
         .attr('width', width)// - axisLabelMargin - margin.left - margin.right)
         .attr('height', height);// - margin.top - margin.bottom);
 
-
     }
 
     function addDragBars() {
