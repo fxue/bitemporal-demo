@@ -21,7 +21,7 @@ var barChart = function() {
   var background;
 
   var margin = {
-    top: 5,
+    top: 0,
     right: 0,
     bottom: 150,
     left: 170
@@ -218,7 +218,9 @@ var barChart = function() {
       g.append('g')
         .attr('class', 'yaxis ')
         .attr('transform', 'translate('+axisLabelMargin+', 0)')
-        .call(yAxis);
+        .call(yAxis)
+        .selectAll('text')
+          .attr('dy', '0.5em');
 
       g.append('g')
         .append('text')
@@ -383,6 +385,8 @@ var barChart = function() {
           var bValStart = yScale(moment(d.content.valStart).toDate());
           var bValEnd = yScale(moment(d.content.valEnd).toDate());
           var h=-bValEnd+bValStart;
+          console.log('h = ' + h);
+          
           return h;
         })
         .attr('width', function(d) {
