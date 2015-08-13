@@ -476,8 +476,8 @@ var barChart = function() {
         .attr('class', 'background')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
-        .attr('width', width)// - axisLabelMargin - margin.left - margin.right)
-        .attr('height', height);// - margin.top - margin.bottom);
+        .attr('width', width - axisLabelMargin - margin.left - margin.right)
+        .attr('height', height - margin.top - margin.bottom);
 
     }
 
@@ -680,11 +680,11 @@ var barChart = function() {
     setupXAxis();
     setupYAxis();
     setupBarChartLayout();
-    addRectangle();
     addXAxisLabel();
     addYAxisLabel();
-    addBarChartData();
+    addRectangle();
     addBackground();
+    addBarChartData();
     if (draggableBars) {
       addDragBars();
     }
