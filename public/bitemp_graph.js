@@ -88,6 +88,12 @@ var barChart = function() {
         }
       }
 
+      // Check for the case where there is a non infinity sysEnd time,
+      // but the maxSysStart time is > this sysEnd time.
+      if (maxStart > maxEnd) {
+        maxEnd = maxStart;
+      }
+
       xScale = d3.time.scale()
         .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
@@ -313,10 +319,12 @@ var barChart = function() {
         })
 
         .on('click', function(datum, index) {
-          document.getElementById('editButton').disabled = false;
-          document.getElementById('deleteButton').disabled = false;
-          document.getElementById('viewButton').disabled = false;
-          document.getElementById('deleteErrMessage').innerHTML = '';
+          if (document.getElementById('editButton')) {
+            document.getElementById('editButton').disabled = false;
+            document.getElementById('deleteButton').disabled = false;
+            document.getElementById('viewButton').disabled = false;
+            document.getElementById('deleteErrMessage').innerHTML = '';
+          }
 
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
