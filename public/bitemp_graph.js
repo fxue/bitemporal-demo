@@ -19,7 +19,6 @@ var barChart = function() {
   var data;
   var displayedProps = [];
   var background;
-  var timeRanges;
 
   var margin = {
     top: 0,
@@ -67,11 +66,10 @@ var barChart = function() {
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content.sysStart);
-        })).add('y', 10);
+        })).add(10, 'y');
 
       if (xMax) {
         maxEnd = xMax;
-        console.log("HIIIIIII");
       }
       else {
         if (data.length > 0) {
@@ -252,9 +250,11 @@ var barChart = function() {
           document.getElementById('viewButton').disabled = true;
           document.getElementById('deleteErrMessage').innerHTML = '';
 
-          $(getLastDoc()).attr('stroke', 'grey');
-          $(getLastDoc()).attr('stroke-width', '1');
-          $(getLastDoc()).attr('fill-opacity', 0.9);
+          if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
+            $(getLastDoc()).attr('stroke', 'grey');
+            $(getLastDoc()).attr('stroke-width', '1');
+            $(getLastDoc()).attr('fill-opacity', 0.9);
+          }
         });
     }
 
@@ -683,7 +683,6 @@ var barChart = function() {
       addDragBars();
     }
     addDisplayDocAndPropData();
-
 
   };
 
