@@ -304,6 +304,7 @@ var barChart = function() {
 
       r = split
         .append('rect')
+        .style('cursor', 'pointer')
         .on('mouseover', function(d) {
           var str = '';
           setDefaultDispPropBehavior(d);
@@ -347,6 +348,7 @@ var barChart = function() {
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             $(this).attr('fill-opacity', 0.7);
+           // $(this).attr('cursor', 'pointer');
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
@@ -605,23 +607,31 @@ var barChart = function() {
       });
 
       function lineShifter(textId, barId)  {
-        $('#'+textId).change(function(){
+        $('#'+textId).change(function() {
           var input = $('#'+textId).val();
-          var date = new Date(input).toISOString();
-          if (textId.includes('Sys')) {
-            var dx = xScale(moment(date).toDate());
-            if (textId.includes('end')) {
-              dx = -(width - margin.left - dx);
+          inputArray = input.split('-');
+          console.log(inputArray)
+          if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+            var date = new Date(input).toISOString();
+            if (textId.includes('Sys')) {
+              var dx = xScale(moment(date).toDate());
+              if (textId.includes('end')) {
+                dx = -(width - margin.left - dx);
+              }
+              $('#'+barId).attr('transform', 'translate('+dx+', 0)');
             }
-            $('#'+barId).attr('transform', 'translate('+dx+', 0)');
+            else {
+              var dy = yScale(moment(date).toDate());
+              if (textId.includes('start')) {
+                dy = -(height-margin.top-margin.bottom-dy);
+              }
+              $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+            }
           }
           else {
-            var dy = yScale(moment(date).toDate());
-            if (textId.includes('start')) {
-              dy = -(height-margin.top-margin.bottom-dy);
-            }
-            $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+            alert('Bad Date');
           }
+
         });
       }
 
