@@ -521,7 +521,7 @@ function findProperties(obj, path, properties) {
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
 
-    $('#select-prop').empty();
+    $('#selectProp').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
     if(( docProp === 'data' && docProp !== 'valStart' ) || ( docProp !== 'data' && docProp === 'valStart' )) {
@@ -534,7 +534,7 @@ function addDataToMenu(chart, params) {
     for(var i = 0; i < params.data.length; i++) {
       findProperties(params.data[i].content, null, propsInGraph);
     }
-    var select = document.getElementById('select-prop');
+    var select = document.getElementById('selectProp');
     if(select) {
       for(var property in propsInGraph) {
         console.log(property)
@@ -562,8 +562,8 @@ var removeButtonEvents = function () {
   $('#cancelButton').unbind('click');
   $('#viewButton').unbind('click');
   $('#saveButton').unbind('click');
-  $('#change-prop').unbind('click');
-  $('#select-prop').unbind('change');
+  $('#changeProp').unbind('click');
+  $('#selectProp').unbind('change');
 };
 
 function initButtons() {
@@ -609,12 +609,11 @@ var getBarChart = function (params, docProp) {
     save(chart);
   });
 
-  $('#change-prop').click(function() {
+  $('#changeProp').click(function() {
     changeTextInGraph(chart, params);
   });
 
   $('#docFormat').change(function() {
-    console.log('changing format of new doc');
     formatCreateDocArea();
   });
 
@@ -648,7 +647,7 @@ var getBarChart = function (params, docProp) {
     cancel(chart);
   });
 
-  $('#select-prop').change(function() {
+  $('#selectProp').change(function() {
     var selectedText = $(this).find('option:selected').text();
     getBarChart(params, selectedText);
   });
