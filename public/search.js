@@ -50,7 +50,7 @@ $('#resetButton').click(function() {
   document.getElementById('dropdown').disabled = false;
   $('#valDropdown, #sysDropdown').val('None');
   $('#queryText').empty();
-  document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the red bars to create your selected time range*';
+  document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the blue bars to create your selected time range*';
   $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage').css({'visibility': 'hidden'});
 });
 
