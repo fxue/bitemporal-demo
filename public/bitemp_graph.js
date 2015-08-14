@@ -31,13 +31,13 @@ var barChart = function() {
 
   var color =
     d3.scale.category10();
- 
+
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
- 
+
   var chart = function(container) {
- 
+
     function setDimensions() {
       axisLabelMargin = 0;
     }
@@ -260,7 +260,7 @@ var barChart = function() {
           }
         });
     }
- 
+
 
     function setLastDoc(ld) {
       lastDoc = ld;
@@ -806,7 +806,7 @@ var barChart = function() {
   chart.getViewing = function() {
     return isViewing;
   };
- 
+
   chart.setViewing = function(bool) {
     isViewing = bool;
   };

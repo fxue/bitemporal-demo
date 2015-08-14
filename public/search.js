@@ -3,7 +3,7 @@ var firstDoc, lastDoc;
 
 function generateOps() {
   var operators = ['None', 'ALN_EQUALS', 'ALN_CONTAINS', 'ALN_CONTAINED_BY', 'ALN_MEETS', 'ALN_MET_BY', 'ALN_BEFORE', 'ALN_AFTER', 'ALN_STARTS', 'ALN_STARTED_BY', 'ALN_FINISHES', 'ALN_FINISHED_BY', 'ALN_OVERLAPS', 'ALN_OVERLAPPED_BY', 'ISO_OVERLAPS', 'ISO CONTAINS', 'ISO_PRECEDES', 'ISO_SUCCEEDS', 'ISO_IMM_PRECEDES', 'ISO_IMM_SUCCEEDS', 'ISO_EQUALS'];
-  for( var i= 0; i < operators.length; i++ ) {
+  for( var i = 0; i < operators.length; i++ ) {
     $('#valDropdown').append($('<option>').text(operators[i]));
     $('#sysDropdown').append($('<option>').text(operators[i]));
   }
@@ -210,7 +210,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
     }
   );
 }
- 
+
 function toReturnDate(time) {
   if( time ) {
     return new Date(time);
@@ -368,7 +368,7 @@ function buildDate( startDate, endDate, label ) {
       $('<div>')
         .text(startDate + ' -- ' + endDate)
     );
- 
+
   return date;
 }
 
