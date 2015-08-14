@@ -261,7 +261,6 @@ var barChart = function() {
         });
     }
 
-
     function setLastDoc(ld) {
       lastDoc = ld;
     }
