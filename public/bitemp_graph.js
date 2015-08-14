@@ -1,9 +1,5 @@
 /*global d3, moment*/
 
-function showCurrURI(uri) {
-  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
-}
-
 var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
@@ -246,14 +242,6 @@ var barChart = function() {
         .on('click', function() {
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(null);
-            showCurrURI('null');
-            if (document.getElementById('editButton')) {
-              document.getElementById('editButton').disabled = true;
-              document.getElementById('deleteButton').disabled = true;
-              document.getElementById('viewButton').disabled = true;
-              document.getElementById('deleteErrMessage').innerHTML = '';
-            }
-
             if (getLastDoc()) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
@@ -334,27 +322,30 @@ var barChart = function() {
             .style('top', coordinates[1] + 115 + 'px')
             .style('left', coordinates[0] + 110 + 'px');
         })
+        .on('mouseover', function() {
+          d3.select(this).attr('fill-opacity', 0.5);
+        })
+        .on('mouseout', function() {
+          d3.select(this).attr('fill-opacity', 0.9);
+        })
         .on('click', function(datum, index) {
-          if (document.getElementById('editButton')) {
-            document.getElementById('editButton').disabled = false;
-            document.getElementById('deleteButton').disabled = false;
-            document.getElementById('viewButton').disabled = false;
-            document.getElementById('deleteErrMessage').innerHTML = '';
-          }
-
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
-            showCurrURI(datum.uri);
-
+            var lastdoc = getLastDoc();
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             $(this).attr('fill-opacity', 0.7);
-            if (getLastDoc() !== this) {
-              $(getLastDoc()).attr('stroke', 'grey');
-              $(getLastDoc()).attr('stroke-width', '1');
-              $(getLastDoc()).attr('fill-opacity', 0.9);
+            $(lastDoc).attr('stroke', 'grey');
+            $(lastDoc).attr('stroke-width', '1');
+            $(lastDoc).attr('fill-opacity', 0.9);
+            if (lastDoc === this) {
+              chart.setCurrentURI(null);
+              setLastDoc(null);
             }
-            setLastDoc(this);
+            else {
+              chart.setCurrentURI(datum.uri);
+              setLastDoc(this);
+            }
           }
         })
         .attr('stroke', 'grey')
@@ -385,7 +376,6 @@ var barChart = function() {
           var bValStart = yScale(moment(d.content.valStart).toDate());
           var bValEnd = yScale(moment(d.content.valEnd).toDate());
           var h=-bValEnd+bValStart;
-          console.log('h = ' + h);
           
           return h;
         })
@@ -803,7 +793,17 @@ var barChart = function() {
   };
 
   chart.setCurrentURI = function(u) {
-    uri = u;
+    uri = u;  
+    if (document.getElementById('editButton')) {
+      document.getElementById('editButton').disabled = !uri;
+      document.getElementById('deleteButton').disabled = !uri;
+      document.getElementById('viewButton').disabled = !uri;
+      document.getElementById('deleteErrMessage').innerHTML = '';
+    }
+    if (uri == null) {
+      uri = 'null';
+    }
+    document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
   };
 
   chart.xAxisLabel = function(value) {
