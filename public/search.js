@@ -14,15 +14,16 @@ function getSelected(id) {
   return dropDownList.options[dropDownList.selectedIndex].value;
 }
 
-$('#valDropdown').change(function() {
-  $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
-  if (getSelected('sysDropdown') === 'None') {
-    $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
-  }
-  if (getSelected('valDropdown') !== 'None') {
-    $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
-  }
-});
+$('#valDropdown')
+  .change(function() {
+    $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
+    if (getSelected('sysDropdown') === 'None') {
+      $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
+    }
+    if (getSelected('valDropdown') !== 'None') {
+      $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
+    }
+  });
 
 $('#sysDropdown').change(function() {
   $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
@@ -32,12 +33,6 @@ $('#sysDropdown').change(function() {
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #resetBarsButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
   }
-});
-
-$('#next').click(function() {
-  firstDoc+=10;
-  lastDoc+=10;
-  displayDocs(firstDoc, lastDoc);
 });
 
 $('#searchQueryButton').click(function() {
@@ -77,7 +72,7 @@ function runSearchQuery() {
     valStart = document.getElementById('startValBox').value;
     valEnd = document.getElementById('endValBox').value;
     if (valStart >= valEnd) {
-      alert('Valid start time cannot be greater than or equal to valid end time');
+      window.alert('Valid start time cannot be greater than or equal to valid end time');
       return;
     }
     valStart = new Date(valStart).toISOString();
@@ -92,7 +87,7 @@ function runSearchQuery() {
     sysStart = document.getElementById('startSysBox').value;
     sysEnd = document.getElementById('endSysBox').value;
     if (sysStart >= sysEnd) {
-      alert('System start time cannot be greater than or equal to system end time');
+      window.alert('System start time cannot be greater than or equal to system end time');
       return;
     }
     sysStart = new Date(sysStart).toISOString();
@@ -116,6 +111,7 @@ function runSearchQuery() {
         console.log('problem');
       }
   });
+
 }
 
 function displayQuery(response) {
@@ -204,7 +200,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         }
 
         if (!timeRanges.sysStart) {
-          alert('There are no documents in this collection. Please select another.');
+          window.alert('There are no documents in this collection. Please select another.');
           document.getElementById('valDropdown').disabled=true;
           document.getElementById('sysDropdown').disabled=true;
         }
@@ -260,7 +256,6 @@ function displayDocs(start, end) {
   var bullet = $('#bulletList');
   bullet.empty();
   var selectedColl = getSelected('dropdown');
-  console.log('start: ' + start + 'end: ' + end);
 
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   $.ajax(
@@ -366,19 +361,9 @@ function buildDate( startDate, endDate, label ) {
   var date = $('<div>').addClass('date');
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
-
-  var def = label;
-  if (label.includes('Valid')) {
-    def += 'The time at which something actually occured';
-  }
-  else {
-    def += 'The time at which something is recorded in the database';
-  }
   date
     .append(
-      $('<div>')
-        .addClass('definition')
-        .attr('title', def)
+      $('<b>')
         .text(label)
     )
     .append(

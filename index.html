@@ -8,7 +8,7 @@
 
     <style>
       body {
-        background: AliceBlue;
+        background: #CCE9F1;
         background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
         background-size: 100px 100px;
         background-position: right top;
@@ -30,6 +30,55 @@
         font-size: 13px;
         width: 24em;
         word-wrap: normal;
+      }
+
+      input[type=button], button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #54a3f7;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #54a3f7;
+        box-shadow:inset 0px 1px 0px 0px #54a3f7;
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #007dc1), color-stop(1, #0061a7));
+        background:-moz-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+        background:-webkit-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+        background:-o-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+        background:-ms-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+        background:linear-gradient(to bottom, #007dc1 5%, #0061a7 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#007dc1', endColorstr='#0061a7',GradientType=0);
+        background-color:#007dc1;
+        -moz-border-radius:3px;
+        -webkit-border-radius:3px;
+        border-radius:3px;
+        border:1px solid #124d77;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:13px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #154682;
+        text-align: center;
+      }
+
+      input[type=button]:hover , button:hover {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0061a7), color-stop(1, #007dc1));
+        background:-moz-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:-webkit-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:-o-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:-ms-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0061a7', endColorstr='#007dc1',GradientType=0);
+        background-color:#0061a7;
+        border:2px solid #000080;
+      }
+
+      input[type=button]:active, button:active {
+        position:relative;
+        top:1px;
+      }
+
+      input[type=button]:disabled, button[disabled] {
+        background: gray;
+        background-color:gray;
+        cursor: default;
       }
 
       #sysTimeBoxes {
@@ -89,6 +138,10 @@
         height: 100px
       }
 
+      select:hover:not([disabled]) {
+        border: 2.5px solid #000080;
+      }
+
       #alignText {
         float: left;
         width: 230px;
@@ -125,11 +178,18 @@
       }
 
       .definition {
-        background-color: #E2E2E2;
+        background-color: white;
+        opacity: 1px;
         display: inline-block;
         font-weight: bold;
         opacity: .7;
         cursor: pointer;
+        color: black;
+      }
+
+      .definition:hover {
+        background-color: #3399FF;
+        color: black;
       }
 
     </style>
@@ -225,6 +285,8 @@
     </div> <!-- End editDocDiv -->
 
     <script type="text/javascript">
+      $('#saveButton').hide();
+      $('#cancelButton').hide();
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(window.location.href);

@@ -304,6 +304,7 @@ var barChart = function() {
 
       r = split
         .append('rect')
+        .style('cursor', 'pointer')
         .on('mouseover', function(d) {
           var str = '';
           setDefaultDispPropBehavior(d);
@@ -496,7 +497,7 @@ var barChart = function() {
           .style('cursor', 'pointer')
           .style('z-index', '1')
           .attr('stroke-width', '8')
-          .attr('stroke', 'red')
+          .attr('stroke', '#000080')
           .data([ {'x':0, 'y':0} ])
           .attr('class', 'hide')
           .attr('id', id)
@@ -507,9 +508,11 @@ var barChart = function() {
         .on('dragend', function(d,i) {
           $('#endSysBox').css({'border': '1px solid black'});
           $('#vertBar2').css({'font-weight': 'normal'});
+          $('#endSysBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#endSysBox').css({'border': '2px solid red'});
+          $('#endSysBox').css({'border': '2px solid #000080'});
+          $('#endSysBox').css({'font-size': '1.3em'});
           $('#vertBar2').css({'font-weight': 'bold'});
           var scale = xScale.invert( d.x + width - margin.left - margin.right );
           $('#endSysBox').val(format(scale));
@@ -532,10 +535,12 @@ var barChart = function() {
         .on('dragend', function(d,i) {
           $('#startSysBox').css({'border': '1px solid black'});
           $('#vertBar1').css({'font-weight': 'normal'});
+          $('#startSysBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#startSysBox').css({'border': '2px solid red'});
+          $('#startSysBox').css({'border': '2px solid #000080'});
           $('#vertBar1').css({'font-weight': 'bold'});
+          $('#startSysBox').css({'font-size': '1.3em'});
           var scale = xScale.invert( d.x );
           $('#startSysBox').val(format(scale));
           if (d.x+d3.event.dx <= 0) {
@@ -557,10 +562,12 @@ var barChart = function() {
         .on('dragend', function(d,i) {
           $('#startValBox').css({'border': '1px solid black'});
           $('#horzBar1').css({'font-weight': 'normal'});
+          $('#startValBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#startValBox').css({'border': '2px solid red'});
+          $('#startValBox').css({'border': '2px solid #000080'});
           $('#horzBar1').css({'font-weight': 'bold'});
+          $('#startValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
           $('#startValBox').val(format(scale));
           if (d.y+d3.event.dy >= 0) {
@@ -583,10 +590,12 @@ var barChart = function() {
         .on('dragend', function(d,i) {
           $('#endValBox').css({'border': '1px solid black'});
           $('#horzBar2').css({'font-weight': 'normal'});
+          $('#endValBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#endValBox').css({'border': '2px solid red'});
+          $('#endValBox').css({'border': '2px solid #000080'});
           $('#horzBar2').css({'font-weight': 'bold'});
+          $('#endValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert(d.y);
           $('#endValBox').val(format(scale));
           if(d.y+d3.event.dy <= 0 ) {
@@ -605,23 +614,30 @@ var barChart = function() {
       });
 
       function lineShifter(textId, barId)  {
-        $('#'+textId).change(function(){
+        $('#'+textId).change(function() {
           var input = $('#'+textId).val();
-          var date = new Date(input).toISOString();
-          if (textId.includes('Sys')) {
-            var dx = xScale(moment(date).toDate());
-            if (textId.includes('end')) {
-              dx = -(width - margin.left - dx);
+          inputArray = input.split('-');
+          if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+            var date = new Date(input).toISOString();
+            if (textId.includes('Sys')) {
+              var dx = xScale(moment(date).toDate());
+              if (textId.includes('end')) {
+                dx = -(width - margin.left - dx);
+              }
+              $('#'+barId).attr('transform', 'translate('+dx+', 0)');
             }
-            $('#'+barId).attr('transform', 'translate('+dx+', 0)');
+            else {
+              var dy = yScale(moment(date).toDate());
+              if (textId.includes('start')) {
+                dy = -(height-margin.top-margin.bottom-dy);
+              }
+              $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+            }
           }
           else {
-            var dy = yScale(moment(date).toDate());
-            if (textId.includes('start')) {
-              dy = -(height-margin.top-margin.bottom-dy);
-            }
-            $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+            window.alert('This is not a valid date');
           }
+
         });
       }
 
