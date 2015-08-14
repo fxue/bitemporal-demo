@@ -244,7 +244,7 @@ var barChart = function() {
             if (getLastDoc()) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
-              $(getLastDoc()).attr('fill-opacity', 0.9);
+              $(getLastDoc()).attr('fill-opacity', 1);
             }
             setLastDoc(null);
           }
@@ -330,7 +330,7 @@ var barChart = function() {
             .style('pointer-events', 'none');
         })
         .on('click', function(datum, index) {
-          if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
+          if (!chart.getEditing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
             var lastdoc = getLastDoc();
             $(this).attr('stroke-width', '4');
@@ -342,10 +342,16 @@ var barChart = function() {
             if (lastDoc === this) {
               chart.setCurrentURI(null);
               setLastDoc(null);
+              if (isViewing){
+                cancel(chart);
+              }
             }
             else {
               chart.setCurrentURI(datum.uri);
               setLastDoc(this);
+            }
+            if (chart.getViewing()) {
+              fillText(datum['content'], false, 'contents');
             }
           }
         })
@@ -814,9 +820,9 @@ var barChart = function() {
       uri = 'null';
     }
     if (document.getElementById('editButton')) {
-      document.getElementById('editButton').disabled = !uri;
-      document.getElementById('deleteButton').disabled = !uri;
-      document.getElementById('viewButton').disabled = !uri;
+      document.getElementById('editButton').disabled = uri === 'null';
+      document.getElementById('deleteButton').disabled = uri === 'null';
+      document.getElementById('viewButton').disabled = uri === 'null';
       document.getElementById('deleteErrMessage').innerHTML = '';
       document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
     }
