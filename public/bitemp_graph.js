@@ -203,7 +203,7 @@ var barChart = function() {
       //Add x axis label
       g.append('g')
         .append('text')
-        .attr('class', 'axis-label')
+        .attr('class', 'axisLabel')
         .attr('y', height - 20)
         .attr('x', (width - margin.left)/2)
         .text(xAxisLabel);
@@ -220,7 +220,7 @@ var barChart = function() {
 
       g.append('g')
         .append('text')
-        .attr('class', 'axis-label')
+        .attr('class', 'axisLabel')
         .attr('transform', 'rotate(-90)')
         .attr('y', -margin.left+65)
         .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin-190) / 2)
@@ -810,16 +810,16 @@ var barChart = function() {
 
   chart.setCurrentURI = function(u) {
     uri = u;
+    if (uri == null) {
+      uri = 'null';
+    }
     if (document.getElementById('editButton')) {
       document.getElementById('editButton').disabled = !uri;
       document.getElementById('deleteButton').disabled = !uri;
       document.getElementById('viewButton').disabled = !uri;
       document.getElementById('deleteErrMessage').innerHTML = '';
+      document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
     }
-    if (uri == null) {
-      uri = 'null';
-    }
-    document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
   };
 
   chart.xAxisLabel = function(value) {

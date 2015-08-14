@@ -154,7 +154,7 @@ function loadData(collection) { //Called from top-level code
 }
 
 
-$('#pick-doc').click(function () {
+$('#pickDoc').click(function () {
   var uriCollection = $('input[name = collection]').val();
   if(uriCollection === '') {
     window.alert('Please enter a uri.');
