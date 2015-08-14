@@ -240,7 +240,7 @@ var barChart = function() {
         .attr('height', height - margin.top - margin.bottom)
         .on('click', function() { //Deselects a document when clicking on white space in graph
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
-            chart.setCurrentURI(null); 
+            chart.setCurrentURI(null);
             if (getLastDoc()) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
@@ -377,7 +377,7 @@ var barChart = function() {
           var bValStart = yScale(moment(d.content.valStart).toDate());
           var bValEnd = yScale(moment(d.content.valEnd).toDate());
           var h=-bValEnd+bValStart;
-          
+
           return h;
         })
         .attr('width', function(d) {
@@ -809,7 +809,7 @@ var barChart = function() {
   };
 
   chart.setCurrentURI = function(u) {
-    uri = u;  
+    uri = u;
     if (document.getElementById('editButton')) {
       document.getElementById('editButton').disabled = !uri;
       document.getElementById('deleteButton').disabled = !uri;
