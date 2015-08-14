@@ -338,6 +338,7 @@ function displayDocs(start, end) {
               $('<a>')
                 .attr('href', '/?collection='+uriLogical)
                 .attr('class', 'definition')
+                .css('color', 'MediumBlue')
                 .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
                 .text('('+uriLogical+')')
             )
