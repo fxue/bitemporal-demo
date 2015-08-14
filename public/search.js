@@ -50,7 +50,7 @@ $('#resetButton').click(function() {
   document.getElementById('dropdown').disabled = false;
   $('#valDropdown, #sysDropdown').val('None');
   $('#queryText').empty();
-  document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the red bars to create your selected time range*';
+  document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the blue bars to create your selected time range*';
   $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage').css({'visibility': 'hidden'});
 });
 
@@ -164,9 +164,9 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
 
         if(!drag) {
           document.getElementById('vertBar1').innerHTML = 'Start Time:' + '&nbsp;&nbsp;' + $('#startSysBox').val().bold();
-          document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endSysBox').val().bold();
+          document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endSysBox').val().bold();
           document.getElementById('horzBar1').innerHTML = 'Start Time:'+ '&nbsp;&nbsp;' + $('#startValBox').val().bold();
-          document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endValBox').val().bold();
+          document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endValBox').val().bold();
           document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
           $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
           $('#resetButton').css({'visibility': 'visible'});
@@ -338,6 +338,7 @@ function displayDocs(start, end) {
               $('<a>')
                 .attr('href', '/?collection='+uriLogical)
                 .attr('class', 'definition')
+                .css('color', 'MediumBlue')
                 .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
                 .text('('+uriLogical+')')
             )

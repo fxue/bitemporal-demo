@@ -491,7 +491,7 @@ var barChart = function() {
           .style('cursor', 'pointer')
           .style('z-index', '1')
           .attr('stroke-width', '8')
-          .attr('stroke', '#000080')
+          .attr('stroke', 'MediumBlue ')
           .data([ {'x':0, 'y':0} ])
           .attr('class', 'hide')
           .attr('id', id)
@@ -505,7 +505,7 @@ var barChart = function() {
           $('#endSysBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#endSysBox').css({'border': '2px solid #000080'});
+          $('#endSysBox').css({'border': '2px solid MediumBlue'});
           $('#endSysBox').css({'font-size': '1.3em'});
           $('#vertBar2').css({'font-weight': 'bold'});
           var scale = xScale.invert( d.x + width - margin.left - margin.right );
@@ -532,7 +532,7 @@ var barChart = function() {
           $('#startSysBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#startSysBox').css({'border': '2px solid #000080'});
+          $('#startSysBox').css({'border': '2px solid MediumBlue'});
           $('#vertBar1').css({'font-weight': 'bold'});
           $('#startSysBox').css({'font-size': '1.3em'});
           var scale = xScale.invert( d.x );
@@ -559,7 +559,7 @@ var barChart = function() {
           $('#startValBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#startValBox').css({'border': '2px solid #000080'});
+          $('#startValBox').css({'border': '2px solid MediumBlue'});
           $('#horzBar1').css({'font-weight': 'bold'});
           $('#startValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
@@ -587,7 +587,7 @@ var barChart = function() {
           $('#endValBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#endValBox').css({'border': '2px solid #000080'});
+          $('#endValBox').css({'border': '2px solid MediumBlue'});
           $('#horzBar2').css({'font-weight': 'bold'});
           $('#endValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert(d.y);
@@ -608,6 +608,7 @@ var barChart = function() {
       });
 
       function lineShifter(textId, barId)  {
+
         $('#'+textId).change(function() {
           var input = $('#'+textId).val();
           inputArray = input.split('-');
@@ -625,13 +626,12 @@ var barChart = function() {
               if (textId.includes('start')) {
                 dy = -(height-margin.top-margin.bottom-dy);
               }
-              $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+                $('#'+barId).attr('transform', 'translate(0,'+dy+')');
             }
           }
           else {
-            window.alert('This is not a valid date');
+            window.alert('Please enter a valid date. \n [Example: 2015-08-14]');
           }
-
         });
       }
 

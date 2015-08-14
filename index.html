@@ -69,7 +69,6 @@
         background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
         filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0061a7', endColorstr='#007dc1',GradientType=0);
         background-color:#0061a7;
-        border:2px solid #000080;
       }
 
       input[type=button]:active, button:active {
@@ -78,9 +77,14 @@
       }
 
       input[type=button]:disabled, button[disabled] {
-        background: gray;
-        background-color:gray;
+        background: SlateGray;
+        background-color: SlateGray;
+        margin-top: none;
         cursor: default;
+        text-align: center;
+        -webkit-box-shadow:inset 0px 1px 0px 0px SlateGray;
+        box-shadow:inset 0px 0px 0px 0px SlateGray;
+        border:1px solid SlateGray;
       }
 
       #sysTimeBoxes {
@@ -96,7 +100,12 @@
         left: 5px;
         top: 4px;
         font-size: 13px;
+        color: MediumBlue;
         font-family: 'Muli', sans-serif;
+      }
+
+      #searchURL:hover {
+        color: #000080;
       }
 
       #editDocDiv{
@@ -135,7 +144,7 @@
 
       .axis-label {
         font-size: 20px;
-        stroke-width: 1;
+        font-weight: bold;
         font-family: 'Muli', sans-serif;
       }
 
@@ -146,7 +155,6 @@
       }
 
       select:hover:not([disabled]) {
-        border: 2.5px solid #000080;
         cursor: pointer;
       }
 
