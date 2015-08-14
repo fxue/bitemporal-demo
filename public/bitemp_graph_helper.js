@@ -537,9 +537,8 @@ function addDataToMenu(chart, params) {
     var select = document.getElementById('select-prop');
     if(select) {
       for(var property in propsInGraph) {
-        var el = document.createElement('option');
-        el.textContent = el.value = property;
-        select.appendChild(el);
+        console.log(property)
+        $('#select-prop').append($('<option>').text(property));
       }
     }
   }
