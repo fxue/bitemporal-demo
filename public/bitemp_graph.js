@@ -226,7 +226,7 @@ var barChart = function() {
         .attr('transform', 'rotate(-90)')
         .attr('y', -margin.left+65)
         .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin-190) / 2)
-        .style('text-anchor', 'left')  
+        .style('text-anchor', 'left') 
         .text(yAxisLabel);
  
     }
@@ -235,8 +235,8 @@ var barChart = function() {
       g.append('rect')
         .style('stroke', 'black')
         .style('stroke-width', '5')
-        .style('fill', 'white')
-        .attr('class', 'background2')
+        .style('fill', 'AliceBlue')
+        .attr('class', 'background')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
@@ -331,7 +331,8 @@ var barChart = function() {
           coordinates = d3.mouse(this);
           propTooltip.style('position', 'absolute')
             .style('top', coordinates[1] + 115 + 'px')
-            .style('left', coordinates[0] + 110 + 'px');
+            .style('left', coordinates[0] + 110 + 'px')
+            .style('pointer-events', 'none');
         })
         .on('click', function(datum, index) {
           if (document.getElementById('editButton')) {

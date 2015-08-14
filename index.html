@@ -13,7 +13,7 @@
         background-size: 100px 100px;
         background-position: right top;
         background-repeat: no-repeat;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: 'Muli', sans-serif;
         font-size: 12px;
       }
 
@@ -21,6 +21,7 @@
         text-align: center;
         font-style: italic;
         font-size: 20px;
+        font-family: 'Muli', sans-serif;
       }
 
       #instructions {
@@ -30,6 +31,7 @@
         font-size: 13px;
         width: 24em;
         word-wrap: normal;
+        font-family: 'Muli', sans-serif;
       }
 
       input[type=button], button {
@@ -86,6 +88,7 @@
         word-wrap: normal;
         font-size: 13px;
         font-style: italic;
+        font-family: 'Muli', sans-serif;
       }
 
       #searchURL {
@@ -93,6 +96,7 @@
         left: 5px;
         top: 4px;
         font-size: 13px;
+        font-family: 'Muli', sans-serif;
       }
 
       #editDocDiv{
@@ -120,16 +124,19 @@
         font-size: 18px;
         font-weight: bold;
         pointer-events: none;
+        font-family: 'Muli', sans-serif;
       }
 
       .tick text {
         font-size: 15px;
         stroke-width: 0;
+        font-family: 'Muli', sans-serif;
       }
 
       .axis-label {
         font-size: 20px;
         stroke-width: 1;
+        font-family: 'Muli', sans-serif;
       }
 
       #alignBoxes {
@@ -154,6 +161,7 @@
         margin-left: auto;
         margin-right: auto;
         resize: none;
+        font-family: 'Muli', sans-serif;
       }
 
       #dialogCreateDoc {
@@ -192,6 +200,10 @@
         color: black;
       }
 
+      .muliFont, #newUri, #docFormat {
+        font-family: 'Muli', sans-serif;
+      }
+
     </style>
   </head>
 
@@ -203,15 +215,15 @@
       <p>Don"t forget to include the "dot extension" ie .json.</p>
 
       <b>Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
-      <input type="text" name="collection" id="textBoxForSelectingURI" value="">
-      <input type="button" id="pick-doc" value="Submit">
+      <input class= "muliFont" type="text" name="collection" id="textBoxForSelectingURI" value="">
+      <input class= "muliFont" type="button" id="pick-doc" value="Submit">
 
       <p>Enter a document property to display in the graph or choose one from the drop down menu.</p>
 
       <b>Enter Document Property:</b><br>
-      <input type="text" name="documentProperty" value="">
+      <input class= "muliFont" type="text" name="documentProperty" value="">
 
-      <input type="button" id="change-prop" value="Submit">
+      <input class="muliFont" type="button" id="change-prop" value="Submit">
       <br><br>
       <select id="select-prop">
         <option>Choose a property</option>
@@ -234,12 +246,13 @@
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
 
     <div id="bar-chart-large"> </div>
     <div id="editDocDiv">
       <div id="dialogCreateDoc" hidden title="Create a New Document">
         <!-- Add contents of creating a document. -->
-        <div id="createDocStuff" hidden="true">
+        <div class="muliFont" id="createDocStuff" hidden="true">
           <div id="alignText">
             <b> Temporal Collection: </b>
             <br></br>
@@ -262,7 +275,7 @@
             </select>
           </div>
           <p align="center"> These will be the documents contents, choose to your liking! </p>
-          <textarea rows="14" cols="45" id="newDocContents"> </textarea>
+          <textarea class="muliFont" rows="14" cols="45" id="newDocContents"> </textarea>
         </div>
       </div>
 
@@ -274,7 +287,7 @@
       <p id="deleteErrMessage"> </p>
       <button id="saveButton" hidden="true"> Save </button>
       <button id="cancelButton" hidden="true"> Cancel </button>
-      <textarea rows="12" cols="50" id="contents" hidden = "true"> </textarea>
+      <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
       <div id="sysTimeDiv" class="hideSysTimeBoxes">
         <p> <b> sysStart: </b> <input type="text" id="sysStartBox" value="">
       </div>
