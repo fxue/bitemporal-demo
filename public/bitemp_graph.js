@@ -681,7 +681,7 @@ var barChart = function() {
           document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + uriParameter.bold() + ' with property: ' + displayProperty.bold();
         }
         else {
-          document.getElementById('uriEntered').innerHTML = 'No data found in document.';
+          document.getElementById('uriEntered').innerHTML = 'No data found in document.'.bold();
         }
       }
     }
