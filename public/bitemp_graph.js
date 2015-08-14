@@ -810,16 +810,16 @@ var barChart = function() {
 
   chart.setCurrentURI = function(u) {
     uri = u;
+    if (uri == null) {
+      uri = 'null';
+    }
     if (document.getElementById('editButton')) {
       document.getElementById('editButton').disabled = !uri;
       document.getElementById('deleteButton').disabled = !uri;
       document.getElementById('viewButton').disabled = !uri;
       document.getElementById('deleteErrMessage').innerHTML = '';
+      document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
     }
-    if (uri == null) {
-      uri = 'null';
-    }
-    document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
   };
 
   chart.xAxisLabel = function(value) {
@@ -841,6 +841,10 @@ var barChart = function() {
   chart.getDisplayProperty = function() {
     return displayProperty;
   };
+
+  function getDisplayProperty() {
+    return displayProperty;
+  }
 
   chart.setLogicalURI = function(str) {
     logicURI = str;

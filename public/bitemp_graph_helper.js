@@ -1,5 +1,5 @@
 //call to get the list of temporal collection
-/* global loadData, d3, barChart, generateOps, ajaxTimesCall */
+/* global loadData, d3, barChart, generateOps, ajaxTimesCall, getDisplayProperty */
 
 function toReturnDate(time) {
   if (time) {
@@ -523,7 +523,13 @@ function addDataToMenu(chart, params) {
 
     $('#select-prop').empty();
     var propsInGraph = {};
-    propsInGraph['Choose a property'] = true;
+    var docProp = chart.getDisplayProperty();
+    if(docProp === 'data' || docProp === 'valStart') {
+      propsInGraph['Choose a property'] = true;
+    }
+    else {
+      propsInGraph[docProp] = true;
+    }
 
     for(var i = 0; i < params.data.length; i++) {
       findProperties(params.data[i].content, null, propsInGraph);
