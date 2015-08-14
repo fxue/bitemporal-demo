@@ -1,5 +1,5 @@
 //call to get the list of temporal collection
-/* global loadData, d3, barChart, generateOps, ajaxTimesCall, getDisplayProperty */
+/* global loadData, d3, barChart, generateOps, ajaxTimesCall */
 
 function toReturnDate(time) {
   if (time) {
