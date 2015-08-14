@@ -1,9 +1,5 @@
 /*global d3, moment*/
 
-function showCurrURI(uri) {
-  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
-}
-
 var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
@@ -21,7 +17,7 @@ var barChart = function() {
   var background;
 
   var margin = {
-    top: 5,
+    top: 0,
     right: 0,
     bottom: 150,
     left: 170
@@ -218,7 +214,9 @@ var barChart = function() {
       g.append('g')
         .attr('class', 'yaxis ')
         .attr('transform', 'translate('+axisLabelMargin+', 0)')
-        .call(yAxis);
+        .call(yAxis)
+        .selectAll('text')
+          .attr('dy', '0.5em');
 
       g.append('g')
         .append('text')
@@ -240,17 +238,9 @@ var barChart = function() {
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom)
-        .on('click', function() {
+        .on('click', function() { //Deselects a document when clicking on white space in graph
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(null);
-            showCurrURI('null');
-            if (document.getElementById('editButton')) {
-              document.getElementById('editButton').disabled = true;
-              document.getElementById('deleteButton').disabled = true;
-              document.getElementById('viewButton').disabled = true;
-              document.getElementById('deleteErrMessage').innerHTML = '';
-            }
-
             if (getLastDoc()) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
@@ -306,6 +296,7 @@ var barChart = function() {
         .style('cursor', 'pointer')
         .on('mouseover', function(d) {
           var str = '';
+          d3.select(this).attr('fill-opacity', 0.5);
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -321,8 +312,13 @@ var barChart = function() {
           }
           return propTooltip.style('visibility', 'visible');
         })
-        .on('mouseout', function() {
+        .on('mouseout', function(d) {
+          var opac = 0.9;
           propTooltip.text('');
+          if (d.uri === uri) { //Keep selected document with different opacity, if moused-over
+            opac = 0.7;
+          }
+          d3.select(this).attr('fill-opacity', opac);
           return propTooltip.style('visibility', 'hidden');
         })
         .on('mousemove', function() {
@@ -334,26 +330,23 @@ var barChart = function() {
             .style('pointer-events', 'none');
         })
         .on('click', function(datum, index) {
-          if (document.getElementById('editButton')) {
-            document.getElementById('editButton').disabled = false;
-            document.getElementById('deleteButton').disabled = false;
-            document.getElementById('viewButton').disabled = false;
-            document.getElementById('deleteErrMessage').innerHTML = '';
-          }
-
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
-            showCurrURI(datum.uri);
-
+            var lastdoc = getLastDoc();
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             $(this).attr('fill-opacity', 0.7);
-            if (getLastDoc() !== this) {
-              $(getLastDoc()).attr('stroke', 'grey');
-              $(getLastDoc()).attr('stroke-width', '1');
-              $(getLastDoc()).attr('fill-opacity', 0.9);
+            $(lastDoc).attr('stroke', 'grey');
+            $(lastDoc).attr('stroke-width', '1');
+            $(lastDoc).attr('fill-opacity', 0.9);
+            if (lastDoc === this) {
+              chart.setCurrentURI(null);
+              setLastDoc(null);
             }
-            setLastDoc(this);
+            else {
+              chart.setCurrentURI(datum.uri);
+              setLastDoc(this);
+            }
           }
         })
         .attr('stroke', 'grey')
@@ -384,6 +377,7 @@ var barChart = function() {
           var bValStart = yScale(moment(d.content.valStart).toDate());
           var bValEnd = yScale(moment(d.content.valEnd).toDate());
           var h=-bValEnd+bValStart;
+
           return h;
         })
         .attr('width', function(d) {
@@ -816,6 +810,16 @@ var barChart = function() {
 
   chart.setCurrentURI = function(u) {
     uri = u;
+    if (document.getElementById('editButton')) {
+      document.getElementById('editButton').disabled = !uri;
+      document.getElementById('deleteButton').disabled = !uri;
+      document.getElementById('viewButton').disabled = !uri;
+      document.getElementById('deleteErrMessage').innerHTML = '';
+    }
+    if (uri == null) {
+      uri = 'null';
+    }
+    document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
   };
 
   chart.xAxisLabel = function(value) {
