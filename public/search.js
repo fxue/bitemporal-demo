@@ -38,12 +38,10 @@ $('#sysDropdown').change(function() {
 $('#searchQueryButton').click(function() {
   runSearchQuery();
 });
-
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
 });
-
 $('#resetButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, false);
