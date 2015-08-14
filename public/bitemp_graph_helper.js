@@ -100,41 +100,39 @@ function fillText(data, isEditing, id) {
 
   var textArea = document.getElementById(id);
 
-  if(data.contentType) {
-    if(data.contentType.indexOf('xml') > -1) {//view xml doc
-      var xmlStr = data.childNodes[0].outerHTML;
-      //https://gist.github.com/sente/1083506
-      //to format pretty printing of xml
-      function formatXml(xml) {
-        var formatted = '';
-        var reg = /(>)(<)(\/*)/g;
-        xml = xml.replace(reg, '$1\r\n$2$3');
-        var pad = 0;
-        jQuery.each(xml.split('\r\n'), function(index, node) {
-          var indent = 0;
-          if (node.match( /.+<\/\w[^>]*>$/ )) {
-            indent = 0;
-          } else if (node.match( /^<\/\w/ )) {
-            if (pad != 0) {
-              pad -= 1;
-            }
-          } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
-            indent = 1;
-          } else {
-            indent = 0;
+  if(data.contentType && data.contentType.indexOf('xml') > -1) {
+    var xmlStr = data.childNodes[0].outerHTML;
+    //https://gist.github.com/sente/1083506
+    //to format pretty printing of xml
+    function formatXml(xml) {
+      var formatted = '';
+      var reg = /(>)(<)(\/*)/g;
+      xml = xml.replace(reg, '$1\r\n$2$3');
+      var pad = 0;
+      jQuery.each(xml.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match( /.+<\/\w[^>]*>$/ )) {
+          indent = 0;
+        } else if (node.match( /^<\/\w/ )) {
+          if (pad != 0) {
+            pad -= 1;
           }
-          var padding = '';
-          for (var i = 0; i < pad; i++) {
-            padding += '  ';
-          }
-          formatted += padding + node + '\r\n';
-          pad += indent;
-        });
+        } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+          indent = 1;
+        } else {
+          indent = 0;
+        }
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+          padding += '  ';
+        }
+        formatted += padding + node + '\r\n';
+        pad += indent;
+      });
 
-        return formatted;
-      }
-      textArea.value = formatXml(xmlStr);
+      return formatted;
     }
+    textArea.value = formatXml(xmlStr);
   }
 
   else {//view json doc
@@ -322,7 +320,6 @@ function getTemporalColl(uri) {
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
     uri: uri,
     success: function(data, textStatus) {
-     console.log('Success');
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('Problem');
@@ -358,7 +355,6 @@ function findCommonColl(collArr, tempCollArr) {
     for (var i in collArr) {
       for (var j in tempCollArr) {
         if (collArr[i] === tempCollArr[j].nameref) {
-          console.log('Match: ' + collArr[i]);
           response = collArr[i];
         }
       }
@@ -436,7 +432,6 @@ function deleteSuccess(response, tempColl, chart) {
         cancel(chart);
         window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
       },
-      format: 'json'
     });
   }
   else {
