@@ -238,9 +238,9 @@ var barChart = function() {
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom)
-        .on('click', function() {
+        .on('click', function() { //Deselects a document when clicking on white space in graph
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
-            chart.setCurrentURI(null);
+            chart.setCurrentURI(null); 
             if (getLastDoc()) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
@@ -312,9 +312,13 @@ var barChart = function() {
           }
           return propTooltip.style('visibility', 'visible');
         })
-        .on('mouseout', function() {
-          d3.select(this).attr('fill-opacity', 0.9);
+        .on('mouseout', function(d) {
+          var opac = 0.9;
           propTooltip.text('');
+          if (d.uri === uri) { //Keep selected document with different opacity, if moused-over
+            opac = 0.7;
+          }
+          d3.select(this).attr('fill-opacity', opac);
           return propTooltip.style('visibility', 'hidden');
         })
         .on('mousemove', function() {
