@@ -296,6 +296,7 @@ var barChart = function() {
         .style('cursor', 'pointer')
         .on('mouseover', function(d) {
           var str = '';
+          d3.select(this).attr('fill-opacity', 0.5);
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -312,6 +313,7 @@ var barChart = function() {
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function() {
+          d3.select(this).attr('fill-opacity', 0.9);
           propTooltip.text('');
           return propTooltip.style('visibility', 'hidden');
         })
@@ -322,12 +324,6 @@ var barChart = function() {
             .style('top', coordinates[1] + 115 + 'px')
             .style('left', coordinates[0] + 110 + 'px')
             .style('pointer-events', 'none');
-        })
-        .on('mouseover', function() {
-          d3.select(this).attr('fill-opacity', 0.5);
-        })
-        .on('mouseout', function() {
-          d3.select(this).attr('fill-opacity', 0.9);
         })
         .on('click', function(datum, index) {
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
