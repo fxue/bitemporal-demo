@@ -348,7 +348,6 @@ var barChart = function() {
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             $(this).attr('fill-opacity', 0.7);
-           // $(this).attr('cursor', 'pointer');
             if (getLastDoc() !== this) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
@@ -618,7 +617,6 @@ var barChart = function() {
         $('#'+textId).change(function() {
           var input = $('#'+textId).val();
           inputArray = input.split('-');
-          console.log(inputArray)
           if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
             var date = new Date(input).toISOString();
             if (textId.includes('Sys')) {
@@ -637,7 +635,7 @@ var barChart = function() {
             }
           }
           else {
-            alert('Bad Date');
+            window.alert('This is not a valid date');
           }
 
         });

@@ -72,7 +72,7 @@ function runSearchQuery() {
     valStart = document.getElementById('startValBox').value;
     valEnd = document.getElementById('endValBox').value;
     if (valStart >= valEnd) {
-      alert('Valid start time cannot be greater than or equal to valid end time');
+      window.alert('Valid start time cannot be greater than or equal to valid end time');
       return;
     }
     valStart = new Date(valStart).toISOString();
@@ -87,7 +87,7 @@ function runSearchQuery() {
     sysStart = document.getElementById('startSysBox').value;
     sysEnd = document.getElementById('endSysBox').value;
     if (sysStart >= sysEnd) {
-      alert('System start time cannot be greater than or equal to system end time');
+      window.alert('System start time cannot be greater than or equal to system end time');
       return;
     }
     sysStart = new Date(sysStart).toISOString();
@@ -200,7 +200,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         }
 
         if (!timeRanges.sysStart) {
-          alert('There are no documents in this collection. Please select another.');
+          window.alert('There are no documents in this collection. Please select another.');
           document.getElementById('valDropdown').disabled=true;
           document.getElementById('sysDropdown').disabled=true;
         }
