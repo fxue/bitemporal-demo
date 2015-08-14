@@ -23,16 +23,7 @@ $('#valDropdown')
     if (getSelected('valDropdown') !== 'None') {
       $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
     }
-  })
-
-$('#valTimes').click(function(event){
-  console.log('hi')
-  if ($('#valDropdown').is('[disabled=disabled]')) {
-      console.log('hello');
-      alert('Button Disabled')
-  }
-});
-
+  });
 
 $('#sysDropdown').change(function() {
   $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
@@ -265,7 +256,6 @@ function displayDocs(start, end) {
   var bullet = $('#bulletList');
   bullet.empty();
   var selectedColl = getSelected('dropdown');
-  console.log('start: ' + start + 'end: ' + end);
 
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   $.ajax(
@@ -371,21 +361,10 @@ function buildDate( startDate, endDate, label ) {
   var date = $('<div>').addClass('date');
   startDate = shortenDate( startDate );
   endDate = shortenDate( endDate );
-
-  var def = label;
-  if (label.includes('Valid')) {
-    def += 'The time at which something actually occured';
-  }
-  else {
-    def += 'The time at which something is recorded in the database';
-  }
   date
     .append(
       $('<b>')
-        //.addClass('definition')
-        .attr('title', def)
         .text(label)
-        //.append('<i>')
     )
     .append(
       $('<div>')

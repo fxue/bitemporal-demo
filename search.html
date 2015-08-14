@@ -7,7 +7,7 @@
 
     <style>
       body {
-        background: AliceBlue;
+        background: #CCE9F1;
         background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
         background-size: 100px 100px;
         background-position: right top;
@@ -229,6 +229,7 @@
       #queryText {
         font-size: 14px;
         resize: none;
+        border: 1.5px solid black;
       }
 
       #ctsQueryLabel {
@@ -311,7 +312,7 @@
         font-size: 13px;
         text-wrap: normal;
         display: block;
-        width: 240px;
+        width: 232px;
         text-align: center;
         color: #000080;
       }
@@ -333,7 +334,7 @@
       #sysTimes {
         position: absolute;
         left: 614px;
-        top: 60px;
+        top: 57px;
         font-size: 15px;
       }
 
@@ -424,7 +425,7 @@
       #page {
         position: relative;
         left: 840px;
-        top: -15px;
+        top: -34px;
       }
 
       .result a {
@@ -438,18 +439,13 @@
       }
 
       .definition {
-        /*background-color: #E2E2E2;*/
-        background-color: #ACCEF7;
+        background-color: white;
+        opacity: 1px;
         display: inline-block;
         font-weight: bold;
         opacity: .7;
         cursor: pointer;
         color: black;
-      }
-
-      ::selection {
-        background: #cc0000;
-        color: #ffffff;
       }
 
       .definition:hover {
@@ -460,7 +456,7 @@
       #ops {
         position: absolute;
         left: 38px;
-        top: 100px;
+        top: 95px;
         font-size: 1.1em;
       }
 
@@ -478,7 +474,9 @@
 
   </head>
   <body>
-    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
+    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it
+possible to rewind the information “as it actually was” in combination with
+“as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
     <a href="/" id="homeURL">Home</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
@@ -487,18 +485,23 @@
     <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
     <button id="resetButton">Reset Graph</button>
     <p id='errorMessage'>(There are no documents in this selected time range)</p>
-    <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps." class="definition">Operators</p>
+    <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries.
+Temporal queries, for example, are interval operations on time period such as,
+period equalities, containment and overlaps." class="definition">Operators</p>
     <div id="valTimes">
-      <p class='definition'><b>Valid Time</b></p>
+      <p class='definition' title='The time at which something actually occured'><b>Valid Time</b></p>
       <select id="valDropdown"></select>
     </div>
-    <p id="dragInstruct">*Select an operator and drag the red bars to create your selected time range*</p>
+    <p id="dragInstruct">*Select an operator and drag the blue bars to create your selected time range*</p>
     <div id="sysTimes">
-      <p class='definition'><b>System Time</b></p>
+      <p class='definition' title='The time at which something is recorded in the database'><b>System Time</b></p>
       <select id="sysDropdown"></select>
     </div>
       <div id= "page">
-        <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
+        <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents
+that share the same axes with timestamps defined by the same range indices.
+You can create additional temporal collections if you have documents that require
+a different schema for the timestamps.">Temporal Collection</span></p>
         <select id="dropdown"></select>
         <button type="button" id="search">Search</button>
         <button type="button" id="next">Next</button>
@@ -517,7 +520,8 @@
     <div id="bar-chart-large"></div>
 
     <div id="ctsQuery">
-      <p id='ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
+      <p id='ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by
+matching documents that have relevant time ranges">cts:query</p>
       <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
     </div>
     <div class="hide sysTimesDisplay">
