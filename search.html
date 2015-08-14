@@ -80,7 +80,7 @@
         position: absolute;
         left: 408px;
         top: 185px;
-        height: 15px;
+        height: 18px;
         width: 85px;
         font-size: 1em;
         text-align: center;
@@ -129,11 +129,14 @@
         background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
         filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0061a7', endColorstr='#007dc1',GradientType=0);
         background-color:#0061a7;
+        border:2px solid #000080;
       }
 
       button[disabled] {
         background: gray;
         background-color:gray;
+        margin: none;
+        border: 1px solid gray;
         cursor: default;
       }
 
@@ -295,7 +298,7 @@
       #valTimes {
         position: relative;
         left: 142px;
-        top: 20px;
+        top: 0px;
         margin-bottom: 0px;
         font-size: 15px;
         z-index: 20px
@@ -310,7 +313,7 @@
         display: block;
         width: 240px;
         text-align: center;
-        color: #708090;
+        color: #000080;
       }
 
       #sysDropdown {
@@ -336,10 +339,6 @@
 
       #bold {
         font-weight: bold;
-      }
-
-      #dropdown:hover {
-        color: #000000;
       }
 
       #dropdown.open {
@@ -389,6 +388,9 @@
         width: 33%;
         left: 37px;
         margin-top: -0.13em;
+        background-color: #000080;
+        border: 1px solid #000080;
+        height: 0.2%;
       }
 
       #numDocs {
@@ -436,12 +438,13 @@
       }
 
       .definition {
-        background-color: #E2E2E2;
-        /*background-color: #ACCEF7;*/
+        /*background-color: #E2E2E2;*/
+        background-color: #ACCEF7;
         display: inline-block;
         font-weight: bold;
         opacity: .7;
         cursor: pointer;
+        color: black;
       }
 
       ::selection {
@@ -450,7 +453,8 @@
       }
 
       .definition:hover {
-        background-color: #ACCEF7;
+        background-color: #3399FF;
+        color: black;
       }
 
       #ops {
@@ -485,12 +489,12 @@
     <p id='errorMessage'>(There are no documents in this selected time range)</p>
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries. Temporal queries, for example, are interval operations on time period such as, period equalities, containment and overlaps." class="definition">Operators</p>
     <div id="valTimes">
-      <p><b>Valid Time</b></p>
+      <p class='definition'><b>Valid Time</b></p>
       <select id="valDropdown"></select>
     </div>
     <p id="dragInstruct">*Select an operator and drag the red bars to create your selected time range*</p>
     <div id="sysTimes">
-      <p><b>System Time</b></p>
+      <p class='definition'><b>System Time</b></p>
       <select id="sysDropdown"></select>
     </div>
       <div id= "page">
