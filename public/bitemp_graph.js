@@ -235,7 +235,7 @@ var barChart = function() {
       g.append('rect')
         .style('stroke', 'black')
         .style('stroke-width', '5')
-        .style('fill', 'white')
+        .style('fill', '#000080')
         .attr('class', 'background2')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)

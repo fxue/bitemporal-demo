@@ -20,6 +20,7 @@
         text-align: center;
         font-style: italic;
         font-size: 23px;
+        margin-right: 50px;
       }
 
       #startSysBox {
@@ -141,7 +142,6 @@
         top:1px;
       }
 
-
        #resetButton {
         position: absolute;
         left: 408px;
@@ -259,7 +259,6 @@
         padding: 0 16px;
         width: 266px;
         cursor: pointer;
-        border-left: 4px solid #739cda;
         background: #fff;
         font-size: 1.55em;
         color: #000000;
@@ -274,6 +273,10 @@
          transition: all 0.15s linear;
       }
 
+      select:hover:not([disabled]) {
+        border: 2.5px solid #000080;
+      }
+
       #valDropdown {
         height: 20px;
         display: block;
@@ -281,7 +284,6 @@
         margin: 0;
         width: 160px;
         cursor: pointer;
-        border-left: 4px solid #739cda;
         background: #fff;
         font-size: .8em;
         color: #000000;
@@ -317,7 +319,6 @@
         padding: 0;
         margin: 0;
         cursor: pointer;
-        border-left: 4px solid #739cda;
         background: #fff;
         font-size: .8em;
         color: #000000;
@@ -436,10 +437,20 @@
 
       .definition {
         background-color: #E2E2E2;
+        /*background-color: #ACCEF7;*/
         display: inline-block;
         font-weight: bold;
         opacity: .7;
         cursor: pointer;
+      }
+
+      ::selection {
+        background: #cc0000;
+        color: #ffffff;
+      }
+
+      .definition:hover {
+        background-color: #ACCEF7;
       }
 
       #ops {

@@ -120,6 +120,7 @@ function runSearchQuery() {
         console.log('problem');
       }
   });
+
 }
 
 function displayQuery(response) {
@@ -380,10 +381,11 @@ function buildDate( startDate, endDate, label ) {
   }
   date
     .append(
-      $('<div>')
-        .addClass('definition')
+      $('<b>')
+        //.addClass('definition')
         .attr('title', def)
         .text(label)
+        //.append('<i>')
     )
     .append(
       $('<div>')
