@@ -164,9 +164,9 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
 
         if(!drag) {
           document.getElementById('vertBar1').innerHTML = 'Start Time:' + '&nbsp;&nbsp;' + $('#startSysBox').val().bold();
-          document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endSysBox').val().bold();
+          document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endSysBox').val().bold();
           document.getElementById('horzBar1').innerHTML = 'Start Time:'+ '&nbsp;&nbsp;' + $('#startValBox').val().bold();
-          document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;&nbsp;' + $('#endValBox').val().bold();
+          document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endValBox').val().bold();
           document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
           $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
           $('#resetButton').css({'visibility': 'visible'});
