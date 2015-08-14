@@ -288,7 +288,7 @@ function displayDocs(start, end) {
     document.getElementById('prev').disabled = start <= 1;
 
     if (end >= totalDocLen) {
-     document.getElementById('next').disabled = true;
+      document.getElementById('next').disabled = true;
       end = totalDocLen;
     }
     else {
