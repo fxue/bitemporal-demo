@@ -135,6 +135,7 @@
         text-align: center;
         -webkit-box-shadow:inset 0px 1px 0px 0px SlateGray;
         box-shadow:inset 0px 0px 0px 0px SlateGray;
+        border:1px solid SlateGray;
       }
 
       button:active {
@@ -259,8 +260,13 @@
         left: 5px;
         top: 4px;
         font-size: 13px;
+        color: MediumBlue;
         z-index: 1;
         font-family: 'Muli', sans-serif;
+      }
+
+      #homeURL:hover {
+        color: #000080;
       }
 
       #dropdown {
@@ -520,7 +526,7 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
       <select id="sysDropdown"></select>
     </div>
       <div id= "page">
-        <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection</span></p>
+        <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
         <select id="dropdown" class="font"></select>
         <button type="button" id="search">Search</button>
         <button type="button" id="next">Next</button>
