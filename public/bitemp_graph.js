@@ -294,9 +294,10 @@ var barChart = function() {
       r = split
         .append('rect')
         .style('cursor', 'pointer')
-        .on('mouseover', function(d) {
+        .on('mouseover', function(d) { 
+          d3.select(this).attr('fill-opacity', 0.7);
           var str = '';
-          d3.select(this).attr('fill-opacity', 0.5);
+          
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -316,7 +317,7 @@ var barChart = function() {
           var opac = 1;
           propTooltip.text('');
           if (d.uri === uri) { //Keep selected document with different opacity, if moused-over
-            opac = 0.7;
+            opac = 0.4;
           }
           d3.select(this).attr('fill-opacity', opac);
           return propTooltip.style('visibility', 'hidden');
@@ -335,7 +336,7 @@ var barChart = function() {
             var lastdoc = getLastDoc();
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
-            $(this).attr('fill-opacity', 0.7);
+            $(this).attr('fill-opacity', 0.4);
             $(lastDoc).attr('stroke', 'grey');
             $(lastDoc).attr('stroke-width', '1');
             $(lastDoc).attr('fill-opacity', 1);
