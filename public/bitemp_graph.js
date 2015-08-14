@@ -235,7 +235,7 @@ var barChart = function() {
       g.append('rect')
         .style('stroke', 'black')
         .style('stroke-width', '5')
-        .style('fill', '#000080')
+        .style('fill', 'white')
         .attr('class', 'background2')
         .attr('x', axisLabelMargin)
         .attr('y', -axisLabelMargin)
@@ -498,7 +498,7 @@ var barChart = function() {
           .style('cursor', 'pointer')
           .style('z-index', '1')
           .attr('stroke-width', '8')
-          .attr('stroke', 'red')
+          .attr('stroke', '#000080')
           .data([ {'x':0, 'y':0} ])
           .attr('class', 'hide')
           .attr('id', id)
@@ -511,7 +511,7 @@ var barChart = function() {
           $('#vertBar2').css({'font-weight': 'normal'});
         })
         .on('drag', function(d,i) {
-          $('#endSysBox').css({'border': '2px solid red'});
+          $('#endSysBox').css({'border': '2px solid #000080'});
           $('#vertBar2').css({'font-weight': 'bold'});
           var scale = xScale.invert( d.x + width - margin.left - margin.right );
           $('#endSysBox').val(format(scale));
@@ -536,7 +536,7 @@ var barChart = function() {
           $('#vertBar1').css({'font-weight': 'normal'});
         })
         .on('drag', function(d,i) {
-          $('#startSysBox').css({'border': '2px solid red'});
+          $('#startSysBox').css({'border': '2px solid #000080'});
           $('#vertBar1').css({'font-weight': 'bold'});
           var scale = xScale.invert( d.x );
           $('#startSysBox').val(format(scale));
@@ -561,7 +561,7 @@ var barChart = function() {
           $('#horzBar1').css({'font-weight': 'normal'});
         })
         .on('drag', function(d,i) {
-          $('#startValBox').css({'border': '2px solid red'});
+          $('#startValBox').css({'border': '2px solid #000080'});
           $('#horzBar1').css({'font-weight': 'bold'});
           var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
           $('#startValBox').val(format(scale));
@@ -587,7 +587,7 @@ var barChart = function() {
           $('#horzBar2').css({'font-weight': 'normal'});
         })
         .on('drag', function(d,i) {
-          $('#endValBox').css({'border': '2px solid red'});
+          $('#endValBox').css({'border': '2px solid #000080'});
           $('#horzBar2').css({'font-weight': 'bold'});
           var scale = yScale.invert(d.y);
           $('#endValBox').val(format(scale));
