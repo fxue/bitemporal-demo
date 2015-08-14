@@ -524,7 +524,7 @@ function addDataToMenu(chart, params) {
     $('#select-prop').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
-    if(docProp === 'data' || docProp === 'valStart') {
+    if(( docProp === 'data' && docProp !== 'valStart' ) || ( docProp !== 'data' && docProp === 'valStart' )) {
       propsInGraph['Choose a property'] = true;
     }
     else {
@@ -537,10 +537,8 @@ function addDataToMenu(chart, params) {
     var select = document.getElementById('select-prop');
     if(select) {
       for(var property in propsInGraph) {
-        var opt = property;
         var el = document.createElement('option');
-        el.textContent = opt;
-        el.value = opt;
+        el.textContent = el.value = property;
         select.appendChild(el);
       }
     }
