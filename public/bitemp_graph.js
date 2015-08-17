@@ -294,10 +294,10 @@ var barChart = function() {
       r = split
         .append('rect')
         .style('cursor', 'pointer')
-        .on('mouseover', function(d) { 
+        .on('mouseover', function(d) {
           d3.select(this).attr('fill-opacity', 0.7);
           var str = '';
-          
+
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
