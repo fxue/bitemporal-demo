@@ -366,6 +366,7 @@ function findCommonColl(collArr, tempCollArr) {
 var deleteDoc = function (chart) {
   var uri = chart.getLogicalURI();
   if (!uri) {
+    window.alert('Select a document');
     return;
   }
   var collArr = getDocColls(uri);
@@ -406,8 +407,8 @@ function deleteSuccess(response, tempColl, chart) {
   //Add a system time to ajax request if specified
   sysBoxDate = document.getElementById('sysStartBox').value;
   if (sysBoxDate) {
+    sysBoxDate = new Date(sysBoxDate);
     url += '&system-time='+sysBoxDate;
-    console.log('temporal date: ' + tempDate + ', specified date: ' + sysBoxDate);
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
       document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
       ajax=false;
