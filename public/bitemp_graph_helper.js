@@ -11,6 +11,7 @@ function toReturnDate(time) {
 }
 
 var getDocColl = function(uri) {
+  console.log(uri);
   $.ajax({
     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {
@@ -332,6 +333,7 @@ function getTemporalColl(uri) {
 
 //Gets all collections the uri belongs to.
 function getDocColls(uri) {
+  console.log('getting docColls with this uri: ' + uri);
   var docColl = $.ajax({
     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {},
@@ -407,11 +409,10 @@ function deleteSuccess(response, tempColl, chart) {
   //Add a system time to ajax request if specified
   sysBoxDate = document.getElementById('sysStartBox').value;
   if (sysBoxDate) {
-    sysBoxDate = new Date(sysBoxDate);
     url += '&system-time='+sysBoxDate;
+    sysBoxDate = new Date(sysBoxDate);
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
-      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
-      ajax=false;
+      ajax = false;
     }
   }
   else if (currDate.valueOf() < tempDate.valueOf()) {
@@ -447,7 +448,7 @@ function setupDelete(chart) {
   var uri = chart.getCurrentURI();
   document.getElementById('deleteErrMessage').innerHTML = '';
   if (!uri) { // No uri selected
-    uri = 'addr.json';
+    return;
   }
   else {
     var lastPeriodLoc = uri.lastIndexOf('.');

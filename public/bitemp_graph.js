@@ -854,8 +854,8 @@ var barChart = function() {
   };
 
   chart.getLogicalURI = function() {
-    if(!logicURI) {
-      return 'addr.json';
+    if (!logicURI) {
+      return 'NoLogicalUriSpecified';
     }
     return logicURI;
   };
