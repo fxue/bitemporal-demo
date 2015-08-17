@@ -77,13 +77,17 @@ var barChart = function() {
               else {
                 return moment(d.content.sysEnd);
               }
-            })).toDate();
+            }));
         }
         else {
           maxEnd = moment('2020-01-01T00:00:00').toDate();
         }
       }
-
+      
+      maxEnd.add(5, 'y');
+      maxEnd = maxEnd.toDate();
+      maxStart = maxStart.toDate();
+      
       if(maxStart > maxEnd) {
         maxEnd = maxStart;
       }
