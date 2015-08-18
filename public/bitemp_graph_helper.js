@@ -447,14 +447,6 @@ function setupDelete(chart) {
   if (!uri) { // No uri selected
     return;
   }
-  /*else {
-    var lastPeriodLoc = uri.lastIndexOf('.');
-    var firstPeriodLoc = uri.indexOf('.');
-    if (lastPeriodLoc !== firstPeriodLoc) { //More than one '.', indicates a big number within uri.
-      uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
-    }
-  }
-  chart.setLogicalURI(uri);*/
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
