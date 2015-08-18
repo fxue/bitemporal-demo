@@ -77,12 +77,14 @@ var barChart = function() {
               else {
                 return moment(d.content.sysEnd);
               }
-            })).toDate();
+            })).add(5, 'y').toDate();
         }
         else {
           maxEnd = moment('2020-01-01T00:00:00').toDate();
         }
       }
+
+      maxStart = maxStart.toDate();
 
       if(maxStart > maxEnd) {
         maxEnd = maxStart;
@@ -244,7 +246,7 @@ var barChart = function() {
             if (getLastDoc()) {
               $(getLastDoc()).attr('stroke', 'grey');
               $(getLastDoc()).attr('stroke-width', '1');
-              $(getLastDoc()).attr('fill-opacity', 0.9);
+              $(getLastDoc()).attr('fill-opacity', 1);
             }
             setLastDoc(null);
           }
@@ -295,8 +297,9 @@ var barChart = function() {
         .append('rect')
         .style('cursor', 'pointer')
         .on('mouseover', function(d) {
+          d3.select(this).attr('fill-opacity', 0.7);
           var str = '';
-          d3.select(this).attr('fill-opacity', 0.5);
+
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -316,7 +319,7 @@ var barChart = function() {
           var opac = 1;
           propTooltip.text('');
           if (d.uri === uri) { //Keep selected document with different opacity, if moused-over
-            opac = 0.7;
+            opac = 0.4;
           }
           d3.select(this).attr('fill-opacity', opac);
           return propTooltip.style('visibility', 'hidden');
@@ -330,22 +333,28 @@ var barChart = function() {
             .style('pointer-events', 'none');
         })
         .on('click', function(datum, index) {
-          if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
+          if (!chart.getEditing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
             var lastdoc = getLastDoc();
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
-            $(this).attr('fill-opacity', 0.7);
+            $(this).attr('fill-opacity', 0.4);
             $(lastDoc).attr('stroke', 'grey');
             $(lastDoc).attr('stroke-width', '1');
             $(lastDoc).attr('fill-opacity', 1);
             if (lastDoc === this) {
               chart.setCurrentURI(null);
               setLastDoc(null);
+              if (isViewing){
+                cancel(chart);
+              }
             }
             else {
               chart.setCurrentURI(datum.uri);
               setLastDoc(this);
+            }
+            if (chart.getViewing()) {
+              fillText(datum['content'], false, 'contents');
             }
           }
         })
@@ -814,9 +823,9 @@ var barChart = function() {
       uri = 'null';
     }
     if (document.getElementById('editButton')) {
-      document.getElementById('editButton').disabled = !uri;
-      document.getElementById('deleteButton').disabled = !uri;
-      document.getElementById('viewButton').disabled = !uri;
+      document.getElementById('editButton').disabled = uri === 'null';
+      document.getElementById('deleteButton').disabled = uri === 'null';
+      document.getElementById('viewButton').disabled = uri === 'null';
       document.getElementById('deleteErrMessage').innerHTML = '';
       document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
     }
@@ -842,13 +851,15 @@ var barChart = function() {
     return displayProperty;
   };
 
-  chart.setLogicalURI = function(str) {
-    logicURI = str;
-  };
-
   chart.getLogicalURI = function() {
-    if(!logicURI) {
-      return 'addr.json';
+    if (!uri) {
+      return 'NoLogicalUriSpecified';
+    }
+    var logicURI = uri;
+    var lastPeriodLoc = uri.lastIndexOf('.');
+    var firstPeriodLoc = uri.indexOf('.');
+    if (lastPeriodLoc !== firstPeriodLoc) { //More than one '.', indicates a big number within uri.
+      logicURI = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
     }
     return logicURI;
   };

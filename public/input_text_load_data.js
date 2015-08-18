@@ -103,7 +103,7 @@ function parseData(data, collection, numParts) {
 }
 
 
-function loadData(collection) { //Called from top-level code
+function loadData(collection) {
   var url = '';
   if (collection !== undefined) {
     url += '/' + collection;
@@ -111,12 +111,10 @@ function loadData(collection) { //Called from top-level code
   else {
     collection = 'addr.json';
   }
-  console.log(collection);
 
   $.ajax({
     url: '/v1/search?pageLength=1000',
     data: {
-     // format: 'json',
       collection: collection
     },
     type: 'POST',

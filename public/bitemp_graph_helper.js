@@ -14,7 +14,6 @@ var getDocColl = function(uri) {
   $.ajax({
     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {
-      console.log('got collections: ' + data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem');
@@ -100,41 +99,39 @@ function fillText(data, isEditing, id) {
 
   var textArea = document.getElementById(id);
 
-  if(data.contentType) {
-    if(data.contentType.indexOf('xml') > -1) {//view xml doc
-      var xmlStr = data.childNodes[0].outerHTML;
-      //https://gist.github.com/sente/1083506
-      //to format pretty printing of xml
-      function formatXml(xml) {
-        var formatted = '';
-        var reg = /(>)(<)(\/*)/g;
-        xml = xml.replace(reg, '$1\r\n$2$3');
-        var pad = 0;
-        jQuery.each(xml.split('\r\n'), function(index, node) {
-          var indent = 0;
-          if (node.match( /.+<\/\w[^>]*>$/ )) {
-            indent = 0;
-          } else if (node.match( /^<\/\w/ )) {
-            if (pad != 0) {
-              pad -= 1;
-            }
-          } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
-            indent = 1;
-          } else {
-            indent = 0;
+  if(data.contentType && data.contentType.indexOf('xml') > -1) {
+    var xmlStr = data.childNodes[0].outerHTML;
+    //https://gist.github.com/sente/1083506
+    //to format pretty printing of xml
+    function formatXml(xml) {
+      var formatted = '';
+      var reg = /(>)(<)(\/*)/g;
+      xml = xml.replace(reg, '$1\r\n$2$3');
+      var pad = 0;
+      jQuery.each(xml.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match( /.+<\/\w[^>]*>$/ )) {
+          indent = 0;
+        } else if (node.match( /^<\/\w/ )) {
+          if (pad != 0) {
+            pad -= 1;
           }
-          var padding = '';
-          for (var i = 0; i < pad; i++) {
-            padding += '  ';
-          }
-          formatted += padding + node + '\r\n';
-          pad += indent;
-        });
+        } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+          indent = 1;
+        } else {
+          indent = 0;
+        }
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+          padding += '  ';
+        }
+        formatted += padding + node + '\r\n';
+        pad += indent;
+      });
 
-        return formatted;
-      }
-      textArea.value = formatXml(xmlStr);
+      return formatted;
     }
+    textArea.value = formatXml(xmlStr);
   }
 
   else {//view json doc
@@ -322,7 +319,6 @@ function getTemporalColl(uri) {
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
     uri: uri,
     success: function(data, textStatus) {
-     console.log('Success');
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('Problem');
@@ -358,7 +354,6 @@ function findCommonColl(collArr, tempCollArr) {
     for (var i in collArr) {
       for (var j in tempCollArr) {
         if (collArr[i] === tempCollArr[j].nameref) {
-          console.log('Match: ' + collArr[i]);
           response = collArr[i];
         }
       }
@@ -368,12 +363,13 @@ function findCommonColl(collArr, tempCollArr) {
 }
 
 var deleteDoc = function (chart) {
-  var uri = chart.getLogicalURI();
-  if (!uri) {
+  var doc = chart.getLogicalURI();
+  if (!doc) {
+    window.alert('Select a document');
     return;
   }
-  var collArr = getDocColls(uri);
-  var tempCollections = getTemporalColl(uri);
+  var collArr = getDocColls(doc);
+  var tempCollections = getTemporalColl(doc);
   var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
 
   var tempColl;
@@ -381,6 +377,7 @@ var deleteDoc = function (chart) {
     collArr = collArr.collections;
     tempColl = findCommonColl(collArr, tempCollArr);
   }
+  var counter = 0;
 
   if (tempColl) {
     $.ajax( //Gets a temporal collection
@@ -400,7 +397,6 @@ var deleteDoc = function (chart) {
 };
 
 function deleteSuccess(response, tempColl, chart) {
-  var sysBoxDate;
   var tempDate = new Date(response.sysEnd);
   var ajax = true;
   var currDate = new Date();
@@ -408,25 +404,23 @@ function deleteSuccess(response, tempColl, chart) {
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
   //Add a system time to ajax request if specified
-  sysBoxDate = document.getElementById('sysStartBox').value;
-  if (sysBoxDate) {
+  var sysBoxDate = document.getElementById('sysStartBox').value;
+  if (sysBoxDate !== '') {
     url += '&system-time='+sysBoxDate;
-    console.log('temporal date: ' + tempDate + ', specified date: ' + sysBoxDate);
+    sysBoxDate = new Date(sysBoxDate);
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
-      document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time is ' + tempDate;
-      ajax=false;
+      ajax = false;
     }
   }
   else if (currDate.valueOf() < tempDate.valueOf()) {
     ajax = false;
   }
 
-  if (ajax) {
+  if (ajax === true) {
     $.ajax({
       url: url,
       type: 'DELETE',
       success: function(data) {
-        console.log('uri: ' + uri);
         loadData(uri);
         $('#editButton').show();
         $('#viewButton').show();
@@ -436,13 +430,13 @@ function deleteSuccess(response, tempColl, chart) {
         cancel(chart);
         window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
       },
-      format: 'json'
     });
   }
   else {
     cancel(chart);
     document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time for temporal collection is ' + tempDate;
   }
+  clearTextArea();
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
@@ -451,16 +445,8 @@ function setupDelete(chart) {
   var uri = chart.getCurrentURI();
   document.getElementById('deleteErrMessage').innerHTML = '';
   if (!uri) { // No uri selected
-    uri = 'addr.json';
+    return;
   }
-  else {
-    var lastPeriodLoc = uri.lastIndexOf('.');
-    var firstPeriodLoc = uri.indexOf('.');
-    if (lastPeriodLoc !== firstPeriodLoc) { //More than one '.', indicates a big number within uri.
-      uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
-    }
-  }
-  chart.setLogicalURI(uri);
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
@@ -537,7 +523,6 @@ function addDataToMenu(chart, params) {
     var select = document.getElementById('select-prop');
     if(select) {
       for(var property in propsInGraph) {
-        console.log(property)
         $('#select-prop').append($('<option>').text(property));
       }
     }
@@ -564,6 +549,7 @@ var removeButtonEvents = function () {
   $('#saveButton').unbind('click');
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
+  $('#deleteOKButton').unbind('click');
 };
 
 function initButtons() {
@@ -614,7 +600,6 @@ var getBarChart = function (params, docProp) {
   });
 
   $('#docFormat').change(function() {
-    console.log('changing format of new doc');
     formatCreateDocArea();
   });
 

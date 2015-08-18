@@ -227,8 +227,8 @@
       #select-prop {
         position: absolute;
         display: block;
-        padding: 0 16px;
-        width: 140px;
+        padding: 0 5px;
+        width: 170px;
         cursor: pointer;
         background: #fff;
         font-size: .8em;
@@ -237,18 +237,22 @@
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         -webkit-transition: all 0.15s linear;
         -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-         box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-         -moz-transition: all 0.15s linear;
-         -ms-transition: all 0.15s linear;
-         -o-transition: all 0.15s linear;
-         transition: all 0.15s linear;
-         font-family: 'Muli', sans-serif;
-         top: 280px;
-         left: 0px;
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -moz-transition: all 0.15s linear;
+        -ms-transition: all 0.15s linear;
+        -o-transition: all 0.15s linear;
+        transition: all 0.15s linear;
+        font-family: 'Muli', sans-serif;
+        top: 280px;
+        left: 0px;
       }
 
-      .enterInstruct, #selectedURI, #contents, #sysStartTxt {
+      .enterInstruct, #contents, #sysStartTxt {
         font-size: 15px;
+      }
+
+      #selectedURI {
+        font-size: 13px;
       }
 
       #editViewDelButtons {
@@ -278,7 +282,10 @@
 
       <input class="muliFont" type="button" id="change-prop" value="Submit">
       <br><br>
-      <select id="select-prop" class="muliFont"><option selected>Choose a property</option></select>
+
+      <select id="select-prop">
+        <option>Choose a property</option>
+      </select>
     </div>
 
     <p id="uriEntered"></p>
@@ -340,7 +347,7 @@
         <button id="cancelButton" hidden="true"> Cancel </button>
         <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
-          <p id="sysStartTxt"> <b> sysStart: </b> <input class="muliFont" type="text" id="sysStartBox" value="">
+          <p id="sysStartTxt"> <b> sysStart: </b> <input class="muliFont" type="text" id="sysStartBox">
         </div>
         <div id="deleteButtonsDiv" class="hideSysTimeBoxes">
           <button id="deleteOKButton"> OK </button>
