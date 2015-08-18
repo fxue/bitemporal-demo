@@ -11,11 +11,9 @@ function toReturnDate(time) {
 }
 
 var getDocColl = function(uri) {
-  console.log(uri);
   $.ajax({
     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {
-      console.log('got collections: ' + data);
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem');
@@ -333,7 +331,6 @@ function getTemporalColl(uri) {
 
 //Gets all collections the uri belongs to.
 function getDocColls(uri) {
-  console.log('getting docColls with this uri: ' + uri);
   var docColl = $.ajax({
     url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {},
@@ -366,13 +363,13 @@ function findCommonColl(collArr, tempCollArr) {
 }
 
 var deleteDoc = function (chart) {
-  var uri = chart.getLogicalURI();
-  if (!uri) {
+  var doc = chart.getLogicalURI();
+  if (!doc) {
     window.alert('Select a document');
     return;
   }
-  var collArr = getDocColls(uri);
-  var tempCollections = getTemporalColl(uri);
+  var collArr = getDocColls(doc);
+  var tempCollections = getTemporalColl(doc);
   var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
 
   var tempColl;
@@ -380,6 +377,7 @@ var deleteDoc = function (chart) {
     collArr = collArr.collections;
     tempColl = findCommonColl(collArr, tempCollArr);
   }
+  var counter = 0;
 
   if (tempColl) {
     $.ajax( //Gets a temporal collection
@@ -399,7 +397,6 @@ var deleteDoc = function (chart) {
 };
 
 function deleteSuccess(response, tempColl, chart) {
-  var sysBoxDate;
   var tempDate = new Date(response.sysEnd);
   var ajax = true;
   var currDate = new Date();
@@ -407,8 +404,8 @@ function deleteSuccess(response, tempColl, chart) {
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
   //Add a system time to ajax request if specified
-  sysBoxDate = document.getElementById('sysStartBox').value;
-  if (sysBoxDate) {
+  var sysBoxDate = document.getElementById('sysStartBox').value;
+  if (sysBoxDate !== '') {
     url += '&system-time='+sysBoxDate;
     sysBoxDate = new Date(sysBoxDate);
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
@@ -419,12 +416,11 @@ function deleteSuccess(response, tempColl, chart) {
     ajax = false;
   }
 
-  if (ajax) {
+  if (ajax === true) {
     $.ajax({
       url: url,
       type: 'DELETE',
       success: function(data) {
-        console.log('uri: ' + uri);
         loadData(uri);
         $('#editButton').show();
         $('#viewButton').show();
@@ -440,6 +436,7 @@ function deleteSuccess(response, tempColl, chart) {
     cancel(chart);
     document.getElementById('deleteErrMessage').innerHTML = 'Error: System time does not go backward.'.bold() + ' Current time for temporal collection is ' + tempDate;
   }
+  clearTextArea();
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
 }
@@ -450,14 +447,14 @@ function setupDelete(chart) {
   if (!uri) { // No uri selected
     return;
   }
-  else {
+  /*else {
     var lastPeriodLoc = uri.lastIndexOf('.');
     var firstPeriodLoc = uri.indexOf('.');
     if (lastPeriodLoc !== firstPeriodLoc) { //More than one '.', indicates a big number within uri.
       uri = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
     }
   }
-  chart.setLogicalURI(uri);
+  chart.setLogicalURI(uri);*/
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
@@ -560,6 +557,7 @@ var removeButtonEvents = function () {
   $('#saveButton').unbind('click');
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
+  $('#deleteOKButton').unbind('click');
 };
 
 function initButtons() {

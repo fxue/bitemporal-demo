@@ -77,17 +77,15 @@ var barChart = function() {
               else {
                 return moment(d.content.sysEnd);
               }
-            }));
+            })).add(5, 'y').toDate();
         }
         else {
           maxEnd = moment('2020-01-01T00:00:00').toDate();
         }
       }
-      
-      maxEnd.add(5, 'y');
-      maxEnd = maxEnd.toDate();
+
       maxStart = maxStart.toDate();
-      
+
       if(maxStart > maxEnd) {
         maxEnd = maxStart;
       }
@@ -853,13 +851,15 @@ var barChart = function() {
     return displayProperty;
   };
 
-  chart.setLogicalURI = function(str) {
-    logicURI = str;
-  };
-
   chart.getLogicalURI = function() {
-    if (!logicURI) {
+    if (!uri) {
       return 'NoLogicalUriSpecified';
+    }
+    var logicURI = uri;
+    var lastPeriodLoc = uri.lastIndexOf('.');
+    var firstPeriodLoc = uri.indexOf('.');
+    if (lastPeriodLoc !== firstPeriodLoc) { //More than one '.', indicates a big number within uri.
+      logicURI = uri.substring(0, firstPeriodLoc) + uri.substring(lastPeriodLoc, uri.length); // Remove the big number.
     }
     return logicURI;
   };
