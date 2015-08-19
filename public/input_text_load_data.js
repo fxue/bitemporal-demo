@@ -38,16 +38,18 @@ function parseData(data, collection, numParts) {
       item.contentLength = matches3[1];
     }
 
+    var matches4;
     //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
-      var matches4 = split[ndx].match(/(<[^]*>)/);
+      var itemContent;
+      matches4 = split[ndx].match(/(<[^]*>)/);
       var xml = itemContent = matches4[0];
       var xmlDoc = $.parseXML(xml);
       var $xml = $(xmlDoc);
 
 //http://www.itworld.com/article/2784456/development/using-regular-expressions-to-identify-xml-tags.html
       var matchesArr = itemContent.match(/(<.[^(> <.)]+>)/g);
-      var itemContent = {
+      itemContent = {
         xmlString: itemContent
       };
       var propName;
@@ -64,7 +66,7 @@ function parseData(data, collection, numParts) {
     }
     //Handles JSON docs
     else {
-      var matches4 = split[ndx].match(/({[^]*})/);
+      matches4 = split[ndx].match(/({[^]*})/);
       if(matches4 && matches4[1]) {
         item.content = JSON.parse(matches4[1]);
       }
@@ -135,7 +137,7 @@ function loadData(collection) {
         containerId: 'bar-chart-large'
       }, null);
       if(arrData.length === 0 && url !== '') {
-        document.getElementById("textBoxForSelectingURI").value = '';
+        document.getElementById('textBoxForSelectingURI').value = '';
         if(url !== '/addr.json') {
           window.alert('Attention!\n\nNo data found in document ' + collection);
         }

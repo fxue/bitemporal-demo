@@ -5,6 +5,8 @@ function get (context, params) {
   var valPeriod;
   var sysPeriod;
 
+  var uri = params.uri;
+
   var valAxis = params.valAxis;
   var valOperator = params.valSelectedOp;
 

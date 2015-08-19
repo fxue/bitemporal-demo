@@ -94,7 +94,7 @@ function clearTextArea() {
   document.getElementById('newDocContents').value = '';
 }
 
-function fillText(data, isEditing, id) {
+function fillText(data, isEditing, id, chart) {
   clearTextArea();
 
   var textArea = document.getElementById(id);
@@ -135,42 +135,15 @@ function fillText(data, isEditing, id) {
   }
 
   else {//view json doc
-    textArea.value += '{';
-    var strToAdd;
-    for (var property in data) {
-      strToAdd = '';
-      if (data.hasOwnProperty(property)) {
-        if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
-          data[property] = 'null';
-        }
-        if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
-          strToAdd += ',';
-        }
-        strToAdd += '\n\"' + property + '\": ';
-        if (typeof data[property] === 'object') {
-          strToAdd += JSON.stringify(data[property], null, 2);
-        }
-        else { // if the property has a null value then don't put quotes around it.
-          if(data[property] !== 'null') {
-            strToAdd += "\"" + data[property] + "\"";
-          }
-          else {
-            strToAdd += data[property];
-          }
-        }
-        textArea.value += strToAdd;
-      }
-    }
-    textArea.value += '\n}';
-    textArea.readOnly = !isEditing;
+    var strToAdd = '';
+    if (isEditing) {
+      data[chart.getSystemStart()] = null;
+      data[chart.getSystemEnd()] = null;
 
-    function path(object, fullPath) {
-      var selection = object;
-      fullPath.split('.').forEach(function(path) {
-        selection = selection[path];
-      });
-      return selection;
     }
+    strToAdd += JSON.stringify(data, null, 2);
+    textArea.value += strToAdd;
+    textArea.readOnly = !isEditing;
   }
 }
 
@@ -272,7 +245,7 @@ function saveNewDoc() {
   });
 }
 
-function setupTextArea(uri, isEditing) {
+function setupTextArea(chart, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
@@ -283,19 +256,19 @@ function setupTextArea(uri, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    fillText(data, isEditing, 'contents');
+    fillText(data, isEditing, 'contents', chart);
   };
   $.ajax({
-    url: '/v1/documents/?uri=' + uri,
+    url: '/v1/documents/?uri=' + chart.getCurrentURI(),
     success: successFunc,
     format: 'json'
   });
 
 }
 
-function view(uri) {
-  if (uri) {
-    setupTextArea(uri, false); //false so function knows the document is not being edited
+function view(chart) {
+  if (chart.getCurrentURI()) {
+    setupTextArea(chart, false); //false so function knows the document is not being edited
     $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   }
   else {
@@ -303,9 +276,9 @@ function view(uri) {
   }
 }
 
-function edit(uri) {
-  if (uri) {
-    setupTextArea(uri, true); //true so function knows the document is being edited
+function edit(chart) {
+  if (chart.getCurrentURI()) {
+    setupTextArea(chart, true); //true so function knows the document is being edited
     $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
   }
   else {
@@ -550,6 +523,7 @@ var removeButtonEvents = function () {
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
   $('#deleteOKButton').unbind('click');
+  $('#pick-doc').unbind('click');
 };
 
 function initButtons() {
@@ -572,7 +546,7 @@ var getBarChart = function (params, docProp) {
 
   $('#editButton').click(function() {
     document.getElementById('deleteErrMessage').innerHTML = '';
-    edit(chart.getCurrentURI());
+    edit(chart);
     chart.setEditing(true);
   });
 
@@ -587,7 +561,7 @@ var getBarChart = function (params, docProp) {
 
   $('#viewButton').click(function() {
     document.getElementById('deleteErrMessage').innerHTML = '';
-    view(chart.getCurrentURI());
+    view(chart);
     chart.setViewing(true);
   });
 
@@ -636,6 +610,18 @@ var getBarChart = function (params, docProp) {
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
     getBarChart(params, selectedText);
+  });
+
+  $('#pick-doc').click(function () {
+    var uriCollection = $('input[name = collection]').val();
+    if(uriCollection === '') {
+      window.alert('Please enter a uri.');
+    }
+    else {
+      window.history.pushState('', 'Title', '/?collection='+uriCollection);
+      loadData(uriCollection);
+      cancel(chart);
+    }
   });
 };
 
