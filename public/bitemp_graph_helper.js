@@ -31,6 +31,10 @@ var addTempColls = function(id, search) {
       if (search) {
         generateOps();
       }
+      else {
+        $('#' + id).empty();
+        $('#' + id).append($('<option>').text('Choose a temporal collection'));
+      }
       //adds names of the collections to the drop down list
       var addToDrop = $('#'+id);
       //endpoint is the number of collections
@@ -589,8 +593,6 @@ var getBarChart = function (params, docProp) {
 
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
-    $('#selectTempColl').empty();
-    $('#selectTempColl').append($('<option>').text('Choose a temporal collection'));
     getBarChart(params, selectedText);
   });
 
