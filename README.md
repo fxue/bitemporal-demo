@@ -20,17 +20,22 @@ INSTALL INSTRUCTIONS
 10. go to http://localhost:3000/ to see a blank graph with title
 11. go back to Query console and go from workspace 1 to 5, start from tab 1.
 __________
-12. Go through the workspaces, referring to the graph at localhost:3000. Note how the graph changes with document inserts and deletes from the query console. 
-13. It is recommended to go through at least the first two workspaces and create one or two temporal collections before trying the features of the demo. 
-14. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a temporal document.
-	-The home page dropdown menu will drop down the properties of your documents being displayed in the graph. You can select and view new properties.
-	-Click boxes in the graph (which represent physical documents) to edit, view, and delete certain documents. The delete button will cut off a system end time to the current real time. 
-	-Create a document (button) from the home page.
-	-Try entering URIs into the appropriate textbox. This will display the graph to reflect the document URI. 
-	-Check out the search page (upper left corner) for a full list of logical collections and physical documents. Click a physical document hyperlink to return to the home page and see that collection of documents. 
-	-Follow the instructions on the search page for querying. Drag and drop bars in the blank graph with different ALN and ISO operators to query your databases docs. View the query below the graph.
+12. Install curl with command: npm install. Use command: 
+curl --anyauth --user admin:admin -X PUT -i \ -H "Content-type: application/vnd.marklogic-javascript" \ --data-binary @./ext/operators.sjs \ http://localhost:8000/v1/config/resources/operators
 
-	(Note: create a document and edit buttons only works for mac users currently)
+...Run the same command three times, but replace the two instances of 'operators' with 'temporal-range', and then 'axisSetup' in order to install the three curl extensions. Also, if your username and password aren't admin:admin, use yourUsername:yourPassword
+
+13. Go through the workspaces, referring to the graph at localhost:3000. Note how the graph changes with document inserts and deletes from the query console. 
+14. It is recommended to go through at least the first two workspaces and create one or two temporal collections before trying the features of the demo. 
+15. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a temporal document.
+16. The home page dropdown menu will drop down the properties of your documents being displayed in the graph. You can select and view new properties.
+17. Click boxes in the graph (which represent physical documents) to edit, view, and delete certain documents. The delete button will cut off a system end time to the current real time. 
+18. Create a document (button) from the home page.
+19. Try entering URIs into the appropriate textbox. This will display the graph to reflect the document URI. 
+20. Check out the search page (upper left corner) for a full list of logical collections and physical documents. Click a physical document hyperlink to return to the home page and see that collection of documents. 
+21. Follow the instructions on the search page for querying. Drag and drop bars in the blank graph with different ALN and ISO operators to query your databases docs. View the query below the graph.
+
+22. (Note: create a document and edit buttons only works for mac users currently)
 
 
 Guide to Workspaces:

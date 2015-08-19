@@ -16,6 +16,8 @@ var barChart = function() {
   var displayedProps = [];
   var background;
 
+  var systemStart, systemEnd, validStart, validEnd;
+
   var margin = {
     top: 0,
     right: 0,
@@ -31,6 +33,39 @@ var barChart = function() {
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
+
+  function getAxisSetup() {
+    var uriInGraph;
+    if(data.length > 0) {
+      //get a uri of one of the physical documents being displayed
+      for(var i = 0; i < data.length && !uriInGraph; i++) {
+        if(data[i].uri) {
+          uriInGraph = data[i].uri;
+        }
+      }
+      if(uriInGraph !== undefined) {
+        //find the emcompassing collection that the phys doc belongs to.
+        var commonColl = getDocColls(uriInGraph);
+        commonColl = commonColl.collections;
+        var temporalColl = getTemporalColl(uriInGraph);
+        temporalColl = temporalColl['temporal-collection-default-list']['list-items']['list-item'];
+        var myTempColl = findCommonColl(commonColl, temporalColl);
+        $.ajax({
+          url: '/v1/resources/axisSetup?rs:collection=' + myTempColl,
+          async: false,
+          success: function(response, textStatus) {
+            systemStart = response.sysStart;
+            systemEnd = response.sysEnd;
+            validStart = response.valStart;
+            validEnd = response.valEnd;
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log('problem: ' + errorThrown);
+          }
+        });
+      }
+    }
+  }
 
   var chart = function(container) {
 
@@ -51,7 +86,7 @@ var barChart = function() {
       else {
         if (data.length) {
           minStart =  moment.min(data.map(function(d){
-            return moment(d.content.sysStart);
+            return moment(d.content[systemStart]);
           })).toDate();
         }
         else {
@@ -61,7 +96,7 @@ var barChart = function() {
 
       maxStart =
         moment.max(data.map(function(d){
-          return moment(d.content.sysStart);
+          return moment(d.content[systemStart]);
         })).add(10, 'y');
 
       if (xMax) {
@@ -71,11 +106,11 @@ var barChart = function() {
         if (data.length > 0) {
           maxEnd =
             moment.max(data.map(function(d){
-              if (d.content.sysEnd.startsWith('9999')) {
+              if (d.content[systemEnd].startsWith('9999')) {
                 return maxStart;
               }
               else {
-                return moment(d.content.sysEnd);
+                return moment(d.content[systemEnd]);
               }
             })).add(5, 'y').toDate();
         }
@@ -122,7 +157,7 @@ var barChart = function() {
         if (data.length) {
           minStart =
             moment.min(data.map(function(d){
-              return moment(d.content.valStart);
+              return moment(d.content[validStart]);
             })).toDate();
         }
         else {
@@ -131,7 +166,7 @@ var barChart = function() {
       }
       maxStart =
         moment.max(data.map(function(d){
-          return moment(d.content.valStart);
+          return moment(d.content[validStart]);
         })).add(10, 'y');
 
       if (yMax) {
@@ -141,11 +176,11 @@ var barChart = function() {
         if (data.length) {
           maxEnd =
             moment.max(data.map(function(d){
-              if (d.content.valEnd.startsWith('9999')) {
+              if (d.content[validEnd].startsWith('9999')) {
                 return maxStart;
               }
               else {
-                return moment(d.content.valEnd);
+                return moment(d.content[validEnd]);
               }
             })).toDate();
         }
@@ -288,7 +323,7 @@ var barChart = function() {
         if(!displayProperty || displayProperty === 'data') {
           displayProperty = 'data';
           if(!d.content[displayProperty]) {
-            displayProperty = 'valStart';
+            displayProperty = validStart;
           }
         }
       }
@@ -308,9 +343,6 @@ var barChart = function() {
             str = path(d, 'content.' + displayProperty);
           }
           if(str && str.length > 15) {
-            if(Array.isArray(str)) {
-              str = '[' + str + ']';
-            }
             propTooltip.text(str);
           }
           return propTooltip.style('visibility', 'visible');
@@ -335,7 +367,6 @@ var barChart = function() {
         .on('click', function(datum, index) {
           if (!chart.getEditing() && !chart.getDeleting()) {
             chart.setCurrentURI(datum.uri);
-            var lastdoc = getLastDoc();
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             $(this).attr('fill-opacity', 0.4);
@@ -362,7 +393,7 @@ var barChart = function() {
         .attr('stroke-width', '1')
         .attr('fill', function(d) {
           setDefaultDispPropBehavior(d);
-          if (displayProperty.indexOf('.') === -1) {
+          if (displayProperty && displayProperty.indexOf('.') === -1) {
             return color(d.content[displayProperty]);
           }
           else {
@@ -371,11 +402,11 @@ var barChart = function() {
           }
         })
         .attr('x', function(d) {
-          var barx = xScale(moment(d.content.sysStart).toDate());
+          var barx = xScale(moment(d.content[systemStart]).toDate());
           return barx;
         })
         .attr('y', function(d) {
-          var bary = yScale(moment(d.content.valEnd).toDate());
+          var bary = yScale(moment(d.content[validEnd]).toDate());
           return bary;
         })
         .style('opacity', 0)
@@ -383,15 +414,15 @@ var barChart = function() {
         .duration(1500)
         .style('opacity', 0.9)
         .attr('height', function(d) {
-          var bValStart = yScale(moment(d.content.valStart).toDate());
-          var bValEnd = yScale(moment(d.content.valEnd).toDate());
+          var bValStart = yScale(moment(d.content[validStart]).toDate());
+          var bValEnd = yScale(moment(d.content[validEnd]).toDate());
           var h=-bValEnd+bValStart;
 
           return h;
         })
         .attr('width', function(d) {
-          var bSysStart = xScale(moment(d.content.sysStart).toDate());
-          var bSysEnd = xScale(moment(d.content.sysEnd).toDate());
+          var bSysStart = xScale(moment(d.content[systemStart]).toDate());
+          var bSysEnd = xScale(moment(d.content[systemEnd]).toDate());
           if (bSysEnd>width) {
             bSysEnd=width-axisLabelMargin;
           }
@@ -409,32 +440,32 @@ var barChart = function() {
         .style('opacity', 1)
         .style('text-anchor', 'middle')
         .attr('x', function(d) {
-          var barx1 = xScale(moment(d.content.sysStart).toDate());
+          var barx1 = xScale(moment(d.content[systemStart]).toDate());
           var barx2;
-          if (!d.content.sysEnd) {
+          if (!d.content[systemEnd]) {
             return 75;
           }
-          if (d.content.sysEnd.indexOf('9999') === 0) {
-            barx2 = xScale(moment(d.content.sysStart).add(5, 'y').toDate());
+          if (d.content[systemEnd].indexOf('9999') === 0) {
+            barx2 = xScale(moment(d.content[systemStart]).add(5, 'y').toDate());
             return (barx1+barx2)/2;
           }
           else {
-            barx2 = xScale(moment(d.content.sysEnd).toDate());
+            barx2 = xScale(moment(d.content[systemEnd]).toDate());
             return (barx1+barx2)/2;
           }
         })
         .attr('y', function(d) {
-          if (!d.content.valEnd) {
+          if (!d.content[validEnd]) {
             return 0;
           }
-          var bary1 = yScale(moment(d.content.valStart).toDate());
+          var bary1 = yScale(moment(d.content[validStart]).toDate());
           var bary2;
-          if (d.content.valEnd.indexOf('9999') === 0) {
-            bary2 = yScale(moment(d.content.valStart).add(5, 'y').toDate());
+          if (d.content[validEnd].indexOf('9999') === 0) {
+            bary2 = yScale(moment(d.content[validStart]).add(5, 'y').toDate());
             return (bary1+bary2)/2;
           }
           else {
-            bary2 = yScale(moment(d.content.valEnd).toDate());
+            bary2 = yScale(moment(d.content[validEnd]).toDate());
             return (bary1+bary2)/2;
           }
         })
@@ -620,7 +651,7 @@ var barChart = function() {
 
         $('#'+textId).change(function() {
           var input = $('#'+textId).val();
-          inputArray = input.split('-');
+          var inputArray = input.split('-');
           if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
             var date = new Date(input).toISOString();
             if (textId.includes('Sys')) {
@@ -695,6 +726,7 @@ var barChart = function() {
       }
     }
 
+    getAxisSetup();
     setDimensions();
     setupXAxis();
     setupYAxis();
@@ -873,6 +905,38 @@ var barChart = function() {
     }
     return chart;
   };
+
+  chart.getSystemStart = function() {
+    return systemStart;
+  };
+  chart.getSystemEnd = function() {
+    return systemEnd;
+  };
+  chart.getValidStart = function() {
+    return validStart;
+  };
+  chart.getValidEnd = function() {
+    return validEnd;
+  };
+
+  //for creating a document in helper
+  chart.getAxisSetup = function(collection, format) {
+    $.ajax({
+      url: '/v1/resources/axisSetup?rs:collection=' + collection,
+      async: false,
+      success: function(response, textStatus) {
+        if(format === 'JSON') {
+          initNewJSON(response);
+        }
+        else {
+          initNewXML(response);
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('problem: ' + errorThrown);
+      }
+    });
+  }
 
   return chart;
 };

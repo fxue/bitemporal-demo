@@ -31,6 +31,10 @@ var addTempColls = function(id, search) {
       if (search) {
         generateOps();
       }
+      else {
+        $('#' + id).empty();
+        $('#' + id).append($('<option>').text('Choose a temporal collection'));
+      }
       //adds names of the collections to the drop down list
       var addToDrop = $('#'+id);
       //endpoint is the number of collections
@@ -94,7 +98,7 @@ function clearTextArea() {
   document.getElementById('newDocContents').value = '';
 }
 
-function fillText(data, isEditing, id) {
+function fillText(data, isEditing, id, chart) {
   clearTextArea();
 
   var textArea = document.getElementById(id);
@@ -135,42 +139,15 @@ function fillText(data, isEditing, id) {
   }
 
   else {//view json doc
-    textArea.value += '{';
-    var strToAdd;
-    for (var property in data) {
-      strToAdd = '';
-      if (data.hasOwnProperty(property)) {
-        if ((property === 'sysStart' || property === 'sysEnd') && isEditing) {
-          data[property] = 'null';
-        }
-        if (textArea.value !== '{') { //Add a comma onto previous line, if not on the first item.
-          strToAdd += ',';
-        }
-        strToAdd += '\n\"' + property + '\": ';
-        if (typeof data[property] === 'object') {
-          strToAdd += JSON.stringify(data[property], null, 2);
-        }
-        else { // if the property has a null value then don't put quotes around it.
-          if(data[property] !== 'null') {
-            strToAdd += "\"" + data[property] + "\"";
-          }
-          else {
-            strToAdd += data[property];
-          }
-        }
-        textArea.value += strToAdd;
-      }
-    }
-    textArea.value += '\n}';
-    textArea.readOnly = !isEditing;
+    var strToAdd = '';
+    if (isEditing) {
+      data[chart.getSystemStart()] = null;
+      data[chart.getSystemEnd()] = null;
 
-    function path(object, fullPath) {
-      var selection = object;
-      fullPath.split('.').forEach(function(path) {
-        selection = selection[path];
-      });
-      return selection;
     }
+    strToAdd += JSON.stringify(data, null, 2);
+    textArea.value += strToAdd;
+    textArea.readOnly = !isEditing;
   }
 }
 
@@ -194,7 +171,7 @@ function save(chart) {
   data = jQuery.parseJSON(data);
 
   if (document.getElementById('sysStartBox').value) {
-    data.sysStart = document.getElementById('sysStartBox').value;
+    data[chart.getSystemStart()] = document.getElementById('sysStartBox').value;
   }
 
   var success = function() {
@@ -215,24 +192,24 @@ function save(chart) {
   });
 }
 
-function initNewXML() {
+function initNewXML(response) {
   var dialogArea = document.getElementById('newDocContents');
   dialogArea.value = '<record>\n';
-  dialogArea.value += '  <sysStart>2015-01-01T00:00:00Z</sysStart>\n';
-  dialogArea.value += '  <sysEnd>2018-01-01T00:00:00Z</sysEnd>\n';
-  dialogArea.value += '  <valStart>2009-01-01T00:00:00Z</valStart>\n';
-  dialogArea.value += '  <valEnd>2017-01-01T00:00:00Z</valEnd>\n';
+  dialogArea.value += '  <'+ response.sysStart +'>2015-01-01T00:00:00Z</'+ response.sysStart +'>\n';
+  dialogArea.value += '  <'+ response.sysEnd +'>2018-01-01T00:00:00Z</'+ response.sysEnd +'>\n';
+  dialogArea.value += '  <'+ response.valStart +'>2009-01-01T00:00:00Z</'+ response.valStart +'>\n';
+  dialogArea.value += '  <'+ response.valEnd +'>2017-01-01T00:00:00Z</'+ response.valEnd +'>\n';
   dialogArea.value += '  <data>Some cool data of yours</data>\n';
   dialogArea.value += '  <YourProperty>Your Own Data</YourProperty>\n';
   dialogArea.value += '</record>';
 }
 
-function initNewJSON() {
+function initNewJSON(response) {
   var dialogArea = document.getElementById('newDocContents');
-  dialogArea.value = '{\n\  "sysStart\": \"2015-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\  "sysEnd\": \"2018-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\  "valStart\": \"2009-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\  "valEnd\": \"2017-01-01T00:00:00Z\",\n';
+  dialogArea.value = '{\n  "'+ response.sysStart + '": \"2015-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.sysEnd + '": \"2018-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.valStart + '": \"2009-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.valEnd + '": \"2017-01-01T00:00:00Z\",\n';
   dialogArea.value += '\  "data\": \"Some cool data\",\n';
   dialogArea.value += '\  "Your Own Property\": \"Your Own Data\"\n';
   dialogArea.value += '}';
@@ -272,7 +249,7 @@ function saveNewDoc() {
   });
 }
 
-function setupTextArea(uri, isEditing) {
+function setupTextArea(chart, isEditing) {
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
@@ -283,19 +260,19 @@ function setupTextArea(uri, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    fillText(data, isEditing, 'contents');
+    fillText(data, isEditing, 'contents', chart);
   };
   $.ajax({
-    url: '/v1/documents/?uri=' + uri,
+    url: '/v1/documents/?uri=' + chart.getCurrentURI(),
     success: successFunc,
     format: 'json'
   });
 
 }
 
-function view(uri) {
-  if (uri) {
-    setupTextArea(uri, false); //false so function knows the document is not being edited
+function view(chart) {
+  if (chart.getCurrentURI()) {
+    setupTextArea(chart, false); //false so function knows the document is not being edited
     $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   }
   else {
@@ -303,9 +280,9 @@ function view(uri) {
   }
 }
 
-function edit(uri) {
-  if (uri) {
-    setupTextArea(uri, true); //true so function knows the document is being edited
+function edit(chart) {
+  if (chart.getCurrentURI()) {
+    setupTextArea(chart, true); //true so function knows the document is being edited
     $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
   }
   else {
@@ -397,7 +374,7 @@ var deleteDoc = function (chart) {
 };
 
 function deleteSuccess(response, tempColl, chart) {
-  var tempDate = new Date(response.sysEnd);
+  var tempDate = new Date(response[chart.getSystemEnd()]);
   var ajax = true;
   var currDate = new Date();
 
@@ -494,6 +471,7 @@ function findProperties(obj, path, properties) {
           // for (var item in obj[prop]) {
           //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
           // }
+          properties[newPath] = true;
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
         } else {
@@ -510,12 +488,7 @@ function addDataToMenu(chart, params) {
     $('#select-prop').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
-    if(( docProp === 'data' && docProp !== 'valStart' ) || ( docProp !== 'data' && docProp === 'valStart' )) {
-      propsInGraph['Choose a property'] = true;
-    }
-    else {
-      propsInGraph[docProp] = true;
-    }
+    propsInGraph[docProp] = true;
 
     for(var i = 0; i < params.data.length; i++) {
       findProperties(params.data[i].content, null, propsInGraph);
@@ -529,17 +502,6 @@ function addDataToMenu(chart, params) {
   }
 }
 
-function formatCreateDocArea() {
-  var dropDownList = document.getElementById('docFormat');
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  if (selectedColl === 'XML') {
-    initNewXML();
-  }
-  else {
-    initNewJSON();
-  }
-}
-
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
   $('#editButton').unbind('click');
@@ -550,6 +512,7 @@ var removeButtonEvents = function () {
   $('#change-prop').unbind('click');
   $('#select-prop').unbind('change');
   $('#deleteOKButton').unbind('click');
+  $('#pick-doc').unbind('click');
 };
 
 function initButtons() {
@@ -572,7 +535,7 @@ var getBarChart = function (params, docProp) {
 
   $('#editButton').click(function() {
     document.getElementById('deleteErrMessage').innerHTML = '';
-    edit(chart.getCurrentURI());
+    edit(chart);
     chart.setEditing(true);
   });
 
@@ -587,7 +550,7 @@ var getBarChart = function (params, docProp) {
 
   $('#viewButton').click(function() {
     document.getElementById('deleteErrMessage').innerHTML = '';
-    view(chart.getCurrentURI());
+    view(chart);
     chart.setViewing(true);
   });
 
@@ -599,14 +562,9 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
-  $('#docFormat').change(function() {
-    formatCreateDocArea();
-  });
-
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-    initNewJSON();
     $('#dialogCreateDoc').dialog({
       autoOpen: true,
       modal: true,
@@ -636,6 +594,34 @@ var getBarChart = function (params, docProp) {
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
     getBarChart(params, selectedText);
+  });
+
+  function XMLOrJSONTextForCollection() {
+    var formatOption = $('#docFormat').find('option:selected').text();
+    var tempColl = $('#selectTempColl').find('option:selected').text();
+    if(tempColl !== 'Choose a temporal collection') {
+      chart.getAxisSetup(tempColl, formatOption);
+    }
+  }
+
+  $('#selectTempColl').change(function() {
+    XMLOrJSONTextForCollection();
+  });
+
+  $('#docFormat').change(function() {
+    XMLOrJSONTextForCollection();
+  });
+
+  $('#pick-doc').click(function () {
+    var uriCollection = $('input[name = collection]').val();
+    if(uriCollection === '') {
+      window.alert('Please enter a uri.');
+    }
+    else {
+      window.history.pushState('', 'Title', '/?collection='+uriCollection);
+      loadData(uriCollection);
+      cancel(chart);
+    }
   });
 };
 
