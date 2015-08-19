@@ -167,7 +167,7 @@ function save(chart) {
   data = jQuery.parseJSON(data);
 
   if (document.getElementById('sysStartBox').value) {
-    data.sysStart = document.getElementById('sysStartBox').value;
+    data[chart.getSystemStart()] = document.getElementById('sysStartBox').value;
   }
 
   var success = function() {
@@ -200,12 +200,12 @@ function initNewXML() {
   dialogArea.value += '</record>';
 }
 
-function initNewJSON() {
+function initNewJSON(response) {
   var dialogArea = document.getElementById('newDocContents');
-  dialogArea.value = '{\n\  "sysStart\": \"2015-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\  "sysEnd\": \"2018-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\  "valStart\": \"2009-01-01T00:00:00Z\",\n';
-  dialogArea.value += '\  "valEnd\": \"2017-01-01T00:00:00Z\",\n';
+  dialogArea.value = '{\n  "'+ response.sysStart + '": \"2015-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.sysEnd + '": \"2018-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.valStart + '": \"2009-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.valEnd + '": \"2017-01-01T00:00:00Z\",\n';
   dialogArea.value += '\  "data\": \"Some cool data\",\n';
   dialogArea.value += '\  "Your Own Property\": \"Your Own Data\"\n';
   dialogArea.value += '}';
@@ -370,7 +370,7 @@ var deleteDoc = function (chart) {
 };
 
 function deleteSuccess(response, tempColl, chart) {
-  var tempDate = new Date(response.sysEnd);
+  var tempDate = new Date(response[chart.getSystemEnd()]);
   var ajax = true;
   var currDate = new Date();
 
@@ -467,6 +467,7 @@ function findProperties(obj, path, properties) {
           // for (var item in obj[prop]) {
           //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
           // }
+          properties[newPath] = true;
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
         } else {
@@ -483,12 +484,7 @@ function addDataToMenu(chart, params) {
     $('#select-prop').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
-    if(( docProp === 'data' && docProp !== 'valStart' ) || ( docProp !== 'data' && docProp === 'valStart' )) {
-      propsInGraph['Choose a property'] = true;
-    }
-    else {
-      propsInGraph[docProp] = true;
-    }
+    propsInGraph[docProp] = true;
 
     for(var i = 0; i < params.data.length; i++) {
       findProperties(params.data[i].content, null, propsInGraph);
@@ -580,7 +576,13 @@ var getBarChart = function (params, docProp) {
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-    initNewJSON();
+    var dropDownList = document.getElementById('selectTempColl');
+    var ndx = dropDownList.selectedIndex;
+    if(ndx === 0 && dropDownList.length > 1) {
+      ndx  = 1;
+    }
+    var tempCol = dropDownList.options[ndx].value;
+    chart.getAxisSetup(tempCol);
     $('#dialogCreateDoc').dialog({
       autoOpen: true,
       modal: true,

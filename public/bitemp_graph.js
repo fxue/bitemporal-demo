@@ -50,12 +50,10 @@ var barChart = function() {
         var temporalColl = getTemporalColl(uriInGraph);
         temporalColl = temporalColl['temporal-collection-default-list']['list-items']['list-item'];
         var myTempColl = findCommonColl(commonColl, temporalColl);
-        console.log(myTempColl);
         $.ajax({
           url: '/v1/resources/axisSetup?rs:collection=' + myTempColl,
           async: false,
           success: function(response, textStatus) {
-            console.log(response);
             systemStart = response.sysStart;
             systemEnd = response.sysEnd;
             validStart = response.valStart;
@@ -345,9 +343,6 @@ var barChart = function() {
             str = path(d, 'content.' + displayProperty);
           }
           if(str && str.length > 15) {
-            if(Array.isArray(str)) {
-              str = '[' + str + ']';
-            }
             propTooltip.text(str);
           }
           return propTooltip.style('visibility', 'visible');
@@ -398,7 +393,7 @@ var barChart = function() {
         .attr('stroke-width', '1')
         .attr('fill', function(d) {
           setDefaultDispPropBehavior(d);
-          if (displayProperty.indexOf('.') === -1) {
+          if (displayProperty && displayProperty.indexOf('.') === -1) {
             return color(d.content[displayProperty]);
           }
           else {
@@ -923,6 +918,25 @@ var barChart = function() {
   chart.getValidEnd = function() {
     return validEnd;
   };
+
+  chart.getAxisSetup = function(collection) {
+    $.ajax({
+      url: '/v1/resources/axisSetup?rs:collection=' + collection,
+      async: false,
+      success: function(response, textStatus) {
+        initNewJSON(response);
+        /*return {
+          sysStart : response.sysStart,
+          sysEnd : response.sysEnd,
+          valStart : response.valStart,
+          valEnd : response.valEnd
+        };*/
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('problem: ' + errorThrown);
+      }
+    });
+  }
 
   return chart;
 };
