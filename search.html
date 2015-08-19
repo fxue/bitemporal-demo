@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Bitemporal Document Insert/Update Demo</title>
+
+    <style>
+      body {
+        background: #CCE9F1;
+        background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
+        background-size: 100px 100px;
+        background-position: right top;
+        background-repeat: no-repeat;
+        font-family: 'Muli', sans-serif;
+        font-size: 12px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 23px;
+        margin-right: 50px;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #startSysBox {
+        resize: none;
+        position: absolute;
+        left: 682px;
+        top: 178px;
+      }
+
+      #endSysBox {
+        resize: none;
+        position: absolute;
+        left: 682px;
+        top: 210px;
+      }
+
+      #startValBox {
+        resize: none;
+        position: absolute;
+        left: 215px;
+        top: 178px;
+        z-index: 2px;
+      }
+
+      #endValBox {
+        resize: none;
+        position: absolute;
+        left: 215px;
+        top: 210px;
+      }
+
+      #vertBar1 {
+        position: absolute;
+        left: 616px;
+        top: 170px;
+      }
+
+      #vertBar2 {
+        position: absolute;
+        left: 622px;
+        top: 200px;
+      }
+
+      #horzBar1 {
+        position: absolute;
+        left: 149px;
+        top: 170px;
+      }
+
+      #horzBar2 {
+        position: absolute;
+        left: 155px;
+        top: 200px;
+      }
+
+      #resetBarsButton {
+        position: absolute;
+        left: 408px;
+        top: 215px;
+        height: 18px;
+        width: 85px;
+        font-size: 1em;
+        text-align: center;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #searchQueryButton {
+        position: absolute;
+        left: 405px;
+        top: 175px;
+        height: 27px;
+        width: 90px;
+      }
+
+      button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #54a3f7;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #54a3f7;
+        box-shadow:inset 0px 1px 0px 0px #54a3f7;
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #007dc1), color-stop(1, #0061a7));
+        background:-moz-linear-gradient(top, #007dc1 5%, #0061a7 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#007dc1', endColorstr='#0061a7',GradientType=0);
+        background-color:#007dc1;
+        -moz-border-radius:3px;
+        -webkit-border-radius:3px;
+        border-radius:3px;
+        border:1px solid #124d77;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family: 'Muli', sans-serif;
+        font-size:13px;
+        text-decoration:none;
+      }
+
+      button:hover:not([disabled]) {
+        background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #0061a7), color-stop(1, #007dc1));
+        background:-moz-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:-webkit-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:-o-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:-ms-linear-gradient(top, #0061a7 5%, #007dc1 100%);
+        background:linear-gradient(to bottom, #0061a7 5%, #007dc1 100%);
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0061a7', endColorstr='#007dc1',GradientType=0);
+        background-color:#0061a7;
+        border:2px solid MediumBlue;
+      }
+
+      button[disabled] {
+        background: SlateGray;
+        background-color: SlateGray;
+        margin-top: none;
+        cursor: default;
+        text-align: center;
+        -webkit-box-shadow:inset 0px 1px 0px 0px SlateGray;
+        box-shadow:inset 0px 0px 0px 0px SlateGray;
+        border:1px solid SlateGray;
+      }
+
+      button:active {
+        position:relative;
+        top:1px;
+      }
+
+      #resetButton {
+        position: absolute;
+        left: 408px;
+        top: 182px;
+        height: 20px;
+        width: 110px;
+        font-size: 1.2em;
+        text-align: center;
+        visibility: hidden;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #errorMessage {
+        position: absolute;
+        left: 317px;
+        top: 210px;
+        color: #000080;
+        visibility: hidden;
+        font-family: 'Muli', sans-serif;
+      }
+
+      .svg-chart .background {
+        shape-rendering: crispEdges;
+        stroke: #ccc;
+        fill: #fdfdfd;
+        stroke-width: 1px;
+      }
+
+      .svg-chart .g {
+        fill: #4682B4;
+      }
+
+      .tooltip-txt {
+        margin: 0;
+        font-family: Helvetica;
+        font-size: 18px;
+        line-height: 18px;
+        font-weight: bold;
+        pointer-events: none;
+        font-family: 'Muli', sans-serif;
+      }
+
+      .axis-label {
+        font-family: Helvetica;
+        font-size: 17px;
+        font-weight: bold;
+        font-family: 'Muli', sans-serif;
+      }
+
+      .yaxis .tick {
+        stroke: black;
+        stroke-width: 1;
+        font-family: 'Muli', sans-serif;
+      }
+
+      .xaxis .tick {
+        stroke: black;
+        stroke-width: 1;
+        font-family: 'Muli', sans-serif;
+      }
+
+      .yaxis text {
+        font-size: 14px;
+        stroke-width: 0;
+        font-family: 'Muli', sans-serif;
+      }
+
+      .xaxis .tick text {
+        transform: rotate(-45deg);
+        text-anchor: end !important;
+        font-size: 15px;
+        stroke-width: 0;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #bar-chart-large {
+        position: absolute;
+        left: -25px;
+        top: 245px;
+      }
+
+      #ctsQuery {
+        position: absolute;
+        left: 140px;
+        top: 900px;
+        font-size: 14px;
+        margin-bottom: 60px;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #queryText {
+        font-size: 14px;
+        resize: none;
+        border: 1.5px solid black;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #ctsQueryLabel {
+        position: absolute;
+        left: 0px;
+        top: -50px;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #logo {
+        height: 150px;
+        width: 600px;
+        position: absolute;
+        left: 120px;
+        top: 200px;
+      }
+
+      #homeURL {
+        position: absolute;
+        left: 5px;
+        top: 4px;
+        font-size: 13px;
+        color: MediumBlue;
+        z-index: 1;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #homeURL:hover {
+        color: #000080;
+      }
+
+      #dropdown {
+        height: 40px;
+        position: relative;
+        left: 0px;
+        top: 20px;
+        display: block;
+        padding: 0 16px;
+        width: 266px;
+        cursor: pointer;
+        background: #fff;
+        font-size: 1.55em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+        -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+         box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+         -moz-transition: all 0.15s linear;
+         -ms-transition: all 0.15s linear;
+         -o-transition: all 0.15s linear;
+         transition: all 0.15s linear;
+         font-family: 'Muli', sans-serif;
+      }
+
+      select:hover:not([disabled]) {
+        border: 2.5px solid MediumBlue;
+        cursor: pointer;
+      }
+
+      #valDropdown {
+        height: 20px;
+        display: block;
+        padding: 0;
+        margin: 0;
+        width: 160px;
+        cursor: pointer;
+        background: #fff;
+        font-size: .8em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #valTimes {
+        position: relative;
+        left: 142px;
+        top: 30px;
+        margin-bottom: 0px;
+        font-size: 15px;
+        z-index: 20px;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #dragInstruct {
+        position: absolute;
+        left: 340px;
+        top: 120px;
+        font-size: 13px;
+        text-wrap: normal;
+        display: block;
+        width: 250px;
+        text-align: center;
+        color: #000080;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #sysDropdown {
+        height: 20px;
+        display: block;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        background: #fff;
+        font-size: .8em;
+        color: #000000;
+        font-weight: normal;
+        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        -webkit-transition: all 0.15s linear;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #sysTimes {
+        position: absolute;
+        left: 614px;
+        top: 90px;
+        font-size: 15px;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #bold {
+        font-weight: bold;
+      }
+
+      #dropdown.open {
+        background: #5a90e0;
+        color: #fff;
+        border-left-color: #6c6d70;
+      }
+
+      #instructSelect {
+        position: absolute;
+        left: 0px;
+        top: -40px;
+        font-weight: bold;
+        font-size: 1.45em;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #bulletList {
+        position: relative;
+        left: -40px;
+        top: 105px;
+        font-size: 1.0em;
+      }
+
+      #search {
+        position: absolute;
+        left: 0px;
+        top: 80px;
+        height: 30px;
+        width: 80px;
+        font-size: 1.2em;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #prev {
+        position: absolute;
+        left: 0px;
+        top: 125px;
+        height: 15px;
+        width: 40px;
+        font-size: 1.0em;
+        visibility: hidden;
+        line-height: 9px;
+        text-align: center;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #break {
+        position: absolute;
+        width: 33%;
+        left: 37px;
+        margin-top: -0.13em;
+        background-color: #000080;
+        border: 1px solid #000080;
+        height: 0.2%;
+      }
+
+      #numDocs {
+        position: absolute;
+        left: 50px;
+        top: 110px;
+        font-size: 1.2em;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #next {
+        position: absolute;
+        left: 225px;
+        top: 125px;
+        height: 15px;
+        width: 40px;
+        font-size: 1.0em;
+        visibility: hidden;
+        line-height: 9px;
+        text-align: center;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #links {
+        font-size: 1.15em;
+        color: blue;
+      }
+
+      #physicalDoc {
+        font-size: 1.25em;
+      }
+
+      #page {
+        position: relative;
+        left: 840px;
+        top: -4px;
+      }
+
+      .result a {
+        font-size: 1.15em;
+        color: blue;
+        margin-left: 5px;
+      }
+
+      .result .date {
+        margin-left: 40px;
+      }
+
+      .definition {
+        background-color: white;
+        opacity: 1px;
+        display: inline-block;
+        font-weight: bold;
+        opacity: .7;
+        cursor: pointer;
+        color: black;
+      }
+
+      .definition:hover {
+        background-color: #3399FF;
+        color: black;
+      }
+
+      #ops {
+        position: absolute;
+        left: 38px;
+        top: 127px;
+        font-size: 1.1em;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #searchPage {
+        position: absolute;
+        left: 20px;
+        top: -75px;
+      }
+
+      .hide {
+        visibility: hidden;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it
+possible to rewind the information “as it actually was” in combination with
+“as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
+    <a href="/" id="homeURL">Home</a>
+    <div id="tooltip" class="hidden">
+      <p><span id="value"></span></p>
+    </div>
+    <button id="searchQueryButton" class="hide">Run Query</button>
+    <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
+    <button id="resetButton">Reset Graph</button>
+    <p id='errorMessage'>(There are no documents in this selected time range)</p>
+    <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries.
+Temporal queries, for example, are interval operations on time period such as,
+period equalities, containment and overlaps." class="definition">Operators:</p>
+    <div id="valTimes">
+      <p class='definition' title='The time at which something actually occured'><b>Valid Time:</b></p>
+      <select id="valDropdown"></select>
+    </div>
+    <p id="dragInstruct">*Select an operator and drag the blue bars to create your selected time range*</p>
+    <div id="sysTimes">
+      <p class='definition' title='The time at which something is recorded in the database'><b>System Time:</b></p>
+      <select id="sysDropdown"></select>
+    </div>
+      <div id= "page">
+        <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
+        <select id="dropdown" class="font"></select>
+        <button type="button" id="search">Search</button>
+        <button type="button" id="next">Next</button>
+        <button type="button" id="prev">Prev</button>
+        <p id="numDocs"></p>
+          <ul id="bulletList"></ul>
+      </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/public/search.js"></script>
+    <script type="text/javascript" src="public/moment.js"></script>
+    <script type="text/javascript" src="public/d3.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph.js"></script>
+    <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
+    <script type="text/javascript" src="public/input_text_load_data.js"></script>
+    <script> addTempColls("dropdown", true); </script>
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+    <div id="bar-chart-large"></div>
+
+    <div id="ctsQuery">
+      <p id='ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
+      <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
+    </div>
+    <div class="hide sysTimesDisplay">
+      <p id="vertBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
+      <p id="vertBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endSysBox" style="border:solid 1px black;"></textarea>
+    </div>
+    <div class="hide valTimesDisplay">
+      <p id="horzBar1">Start Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="startValBox" style="border:solid 1px black;"></textarea>
+      <p id="horzBar2">End Time:</p>
+      <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
+    </div>
+
+  </body>
+</html>
