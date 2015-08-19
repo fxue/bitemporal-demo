@@ -919,18 +919,18 @@ var barChart = function() {
     return validEnd;
   };
 
-  chart.getAxisSetup = function(collection) {
+  //for creating a document in helper
+  chart.getAxisSetup = function(collection, format) {
     $.ajax({
       url: '/v1/resources/axisSetup?rs:collection=' + collection,
       async: false,
       success: function(response, textStatus) {
-        initNewJSON(response);
-        /*return {
-          sysStart : response.sysStart,
-          sysEnd : response.sysEnd,
-          valStart : response.valStart,
-          valEnd : response.valEnd
-        };*/
+        if(format === 'JSON') {
+          initNewJSON(response);
+        }
+        else {
+          initNewXML(response);
+        }
       },
       error: function(jqXHR, textStatus, errorThrown) {
         console.log('problem: ' + errorThrown);

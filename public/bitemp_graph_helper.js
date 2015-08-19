@@ -188,13 +188,13 @@ function save(chart) {
   });
 }
 
-function initNewXML() {
+function initNewXML(response) {
   var dialogArea = document.getElementById('newDocContents');
   dialogArea.value = '<record>\n';
-  dialogArea.value += '  <sysStart>2015-01-01T00:00:00Z</sysStart>\n';
-  dialogArea.value += '  <sysEnd>2018-01-01T00:00:00Z</sysEnd>\n';
-  dialogArea.value += '  <valStart>2009-01-01T00:00:00Z</valStart>\n';
-  dialogArea.value += '  <valEnd>2017-01-01T00:00:00Z</valEnd>\n';
+  dialogArea.value += '  <'+ response.sysStart +'>2015-01-01T00:00:00Z</'+ response.sysStart +'>\n';
+  dialogArea.value += '  <'+ response.sysEnd +'>2018-01-01T00:00:00Z</'+ response.sysEnd +'>\n';
+  dialogArea.value += '  <'+ response.valStart +'>2009-01-01T00:00:00Z</'+ response.valStart +'>\n';
+  dialogArea.value += '  <'+ response.valEnd +'>2017-01-01T00:00:00Z</'+ response.valEnd +'>\n';
   dialogArea.value += '  <data>Some cool data of yours</data>\n';
   dialogArea.value += '  <YourProperty>Your Own Data</YourProperty>\n';
   dialogArea.value += '</record>';
@@ -498,17 +498,6 @@ function addDataToMenu(chart, params) {
   }
 }
 
-function formatCreateDocArea() {
-  var dropDownList = document.getElementById('docFormat');
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
-  if (selectedColl === 'XML') {
-    initNewXML();
-  }
-  else {
-    initNewJSON();
-  }
-}
-
 var removeButtonEvents = function () {
   //Clear these buttons' previous event handlers
   $('#editButton').unbind('click');
@@ -569,20 +558,9 @@ var getBarChart = function (params, docProp) {
     changeTextInGraph(chart, params);
   });
 
-  $('#docFormat').change(function() {
-    formatCreateDocArea();
-  });
-
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
-    var dropDownList = document.getElementById('selectTempColl');
-    var ndx = dropDownList.selectedIndex;
-    if(ndx === 0 && dropDownList.length > 1) {
-      ndx  = 1;
-    }
-    var tempCol = dropDownList.options[ndx].value;
-    chart.getAxisSetup(tempCol);
     $('#dialogCreateDoc').dialog({
       autoOpen: true,
       modal: true,
@@ -611,7 +589,25 @@ var getBarChart = function (params, docProp) {
 
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
+    $('#selectTempColl').empty();
+    $('#selectTempColl').append($('<option>').text('Choose a temporal collection'));
     getBarChart(params, selectedText);
+  });
+
+  function XMLOrJSONTextForCollection() {
+    var formatOption = $('#docFormat').find('option:selected').text();
+    var tempColl = $('#selectTempColl').find('option:selected').text();
+    if(tempColl !== 'Choose a temporal collection') {
+      chart.getAxisSetup(tempColl, formatOption);
+    }
+  }
+
+  $('#selectTempColl').change(function() {
+    XMLOrJSONTextForCollection();
+  });
+
+  $('#docFormat').change(function() {
+    XMLOrJSONTextForCollection();
   });
 
   $('#pick-doc').click(function () {
